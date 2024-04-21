@@ -1,31 +1,51 @@
 import pygame
 from pygame.locals import *
+from GameController import *
+from Grahpic import ManiaSprite
+from src.Grahpic.ManiaSprite import *
 
 
 class ManiaPygame:
-    def __init__(self):
-        self._running = True
-        self._screen = None
-        self._clock = pygame.time.Clock()
-        self.size = self.weight, self.height = 1920, 1080
+    gameController: ManiaGame
 
-    # on_init calls pygame.init() that initialize all PyGame modules. Then it create main display - 640x400 window and try to use hardware acceleration. At the end this routine sets _running to True.
+    def __init__(self):
+        self.running = True
+        self.screen = None
+        self.clock = pygame.time.Clock()
+        self.size = self.weight, self.height = 1920, 1080
+        self.gameController = ManiaGame()
+
+        note = NoteSprite((200,200))
+        hitPosition = HitPositionSprite((500,500))
+        self.spritesGroup = pygame.sprite.Group()
+        self.spritesGroup.add(note)
+        self.spritesGroup.add(hitPosition)
+
     def on_init(self):
         pygame.init()
-        self._screen = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-        self._running = True
+        # temp
+        self.gameController.load_resource()
+        self.screen = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+
+        self.screen.blit(self.gameController.backgroundImage, self.gameController.backgroundImage.get_rect())
+
+        self.running = True
 
     # on_event check if Quit event happened if so sets _running to False wich will break game loop.
     def on_event(self, event):
         if event.type == pygame.QUIT:
-            self._running = False
+            self.running = False
 
     def on_loop(self):
-        dt = self._clock.tick(60) / 1000
+        dt = self.clock.tick(60) / 1000
+        self.gameController.play_music()
+
+        # pygame.surface.Surface.blit(self.screen,)
 
     def on_render(self):
-        self._screen.fill("purple")
-        pygame.draw.circle(self._screen, "red", (0,0), 40)
+        # self.screen.fill("purple")
+        self.spritesGroup.draw(self.screen)
+        #pygame.draw.circle(self.screen, "red", (0, 0), 40)
         pygame.display.flip()
 
     # on_cleanup call pygame.quit() that quits all PyGame modules. Anything else will be cleaned up by Python.
@@ -36,7 +56,7 @@ class ManiaPygame:
         # if not self.on_init():
         #     self._running = False
 
-        while self._running:
+        while self.running:
             # event()
             for event in pygame.event.get():
                 self.on_event(event)
@@ -48,6 +68,6 @@ class ManiaPygame:
         self.on_cleanup()
 
 
-# theApp = App()
-# theApp.on_init()
-# theApp.on_execute()
+theApp = ManiaPygame()
+theApp.on_init()
+theApp.on_execute()

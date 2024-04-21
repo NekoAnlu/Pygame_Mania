@@ -7,7 +7,7 @@ class MCConverter:
     def __init__(self):
         pass
 
-    def mc_converter(self, path: str):
+    def mc_converter(self, path: str) -> Song:
         path = '../beatmaps/_song_9590/0/1582189649.mc'
 
         song = {}
@@ -29,12 +29,12 @@ class MCConverter:
 
             # 谱面基本信息
             chart['creator'] = data['meta']['creator']
-            chart['backgroundPath'] = data['meta']['background']
+            chart['backgroundPath'] = '../beatmaps/_song_9590/0/' + data['meta']['background']  # temp3
             chart['version'] = data['meta']['version']
             if 'preview' in data['meta']:
                 chart['previewTime'] = data['meta']['preview']
             chart['filePath'] = path  # temp
-            chart['audioPath'] = _noteData[-1]['sound']
+            chart['audioPath'] = '../beatmaps/_song_9590/0/' + _noteData[-1]['sound']  # temp2
             if 'offset' in _noteData[-1]:
                 chart['offset'] = _noteData[-1]['offset']
             chart['noteNum'] = len(_noteData) - 1
@@ -108,6 +108,7 @@ class MCConverter:
             chartModel = Chart(**chart)
             songModel = Song(**song)
 
+            return songModel
 
     def _mc_calculate_svtiming(self, _bpmData, chart: dict, _currBpmIndex, _noteBeat) -> float:
         _currBpmBeat = (_bpmData[_currBpmIndex]['beat'][0], _bpmData[_currBpmIndex]['beat'][1], _bpmData[_currBpmIndex]['beat'][2])

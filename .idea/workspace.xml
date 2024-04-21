@@ -4,22 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/beatmaps/_song_9590/0/1545317450.ogg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/beatmaps/_song_9590/0/1582189649.mc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/beatmaps/_song_9590/0/tmp_1545312245.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Converter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Model/BeatmapModel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Model/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="first init">
+      <change afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Converter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Converter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,9 +37,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.App.executor": "Run",
     "Python.BeatmapModel.executor": "Run",
-    "Python.Converter.executor": "Debug",
+    "Python.Converter.executor": "Run",
     "Python.Game.executor": "Run",
+    "Python.GameController.executor": "Run",
+    "Python.ManiaSprite.executor": "Run",
     "Python.__init__.executor": "Run",
     "Python.test.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -82,20 +75,28 @@
       <option name="presentableId" value="Default" />
       <updated>1713519385974</updated>
     </task>
+    <task id="LOCAL-00001" summary="first init">
+      <option name="closed" value="true" />
+      <created>1713605068892</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1713605068892</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first init" />
+    <option name="LAST_COMMIT_MESSAGE" value="first init" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/Converter.py</url>
-          <line>111</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/Converter.py</url>
-          <line>108</line>
-          <option name="timeStamp" value="8" />
+          <url>file://$PROJECT_DIR$/src/GameController.py</url>
+          <line>32</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
