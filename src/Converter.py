@@ -103,7 +103,6 @@ class MCConverter:
                     note['line'] = _note["column"]
                     chart['noteList'].append(note)
 
-
             song["charts"] = [chart]
             chartModel = Chart(**chart)
             songModel = Song(**song)

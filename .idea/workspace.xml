@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="first init">
-      <change afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
+    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update">
+      <change afterPath="$PROJECT_DIR$/src/Model/GameModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Converter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Converter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +27,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -41,7 +45,8 @@
     "Python.BeatmapModel.executor": "Run",
     "Python.Converter.executor": "Run",
     "Python.Game.executor": "Run",
-    "Python.GameController.executor": "Run",
+    "Python.GameController.executor": "Debug",
+    "Python.GameModel.executor": "Run",
     "Python.ManiaSprite.executor": "Run",
     "Python.__init__.executor": "Run",
     "Python.test.executor": "Run",
@@ -83,19 +88,39 @@
       <option name="project" value="LOCAL" />
       <updated>1713605068892</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="update">
+      <option name="closed" value="true" />
+      <created>1713693802346</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1713693802346</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first init" />
-    <option name="LAST_COMMIT_MESSAGE" value="first init" />
+    <MESSAGE value="update" />
+    <option name="LAST_COMMIT_MESSAGE" value="update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/GameController.py</url>
-          <line>32</line>
+          <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
+          <line>98</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>

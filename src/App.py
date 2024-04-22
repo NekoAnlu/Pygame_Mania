@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from GameController import *
+from GameController import ManiaGame
 from Grahpic import ManiaSprite
 from src.Grahpic.ManiaSprite import *
 
@@ -15,11 +15,11 @@ class ManiaPygame:
         self.size = self.weight, self.height = 1920, 1080
         self.gameController = ManiaGame()
 
-        note = NoteSprite((200,200))
-        hitPosition = HitPositionSprite((500,500))
-        self.spritesGroup = pygame.sprite.Group()
-        self.spritesGroup.add(note)
-        self.spritesGroup.add(hitPosition)
+        # note = NoteSprite((200, 200))
+        # hitPosition = HitPositionSprite((500, 500))
+        # self.spritesGroup = pygame.sprite.Group()
+        # self.spritesGroup.add(note)
+        # self.spritesGroup.add(hitPosition)
 
     def on_init(self):
         pygame.init()
@@ -27,25 +27,27 @@ class ManiaPygame:
         self.gameController.load_resource()
         self.screen = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
 
-        self.screen.blit(self.gameController.backgroundImage, self.gameController.backgroundImage.get_rect())
+        # self.screen.blit(self.gameController.levelModel.backgroundImage, self.gameController.levelModel.backgroundImage.get_rect())
 
         self.running = True
 
     # on_event check if Quit event happened if so sets _running to False wich will break game loop.
     def on_event(self, event):
+        self.gameController.on_key_press(event)
         if event.type == pygame.QUIT:
             self.running = False
 
+
     def on_loop(self):
-        dt = self.clock.tick(60) / 1000
-        self.gameController.play_music()
+
+        dt = self.clock.tick(120) / 1000
+        # self.gameController.levelModel.timer += dt
 
         # pygame.surface.Surface.blit(self.screen,)
 
     def on_render(self):
-        # self.screen.fill("purple")
-        self.spritesGroup.draw(self.screen)
-        #pygame.draw.circle(self.screen, "red", (0, 0), 40)
+        self.gameController.game_start(self.screen)
+
         pygame.display.flip()
 
     # on_cleanup call pygame.quit() that quits all PyGame modules. Anything else will be cleaned up by Python.
