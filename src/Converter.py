@@ -8,19 +8,23 @@ class MCConverter:
         pass
 
     def mc_converter(self, path: str) -> Song:
-        path = '../beatmaps/_song_9590/0/1582189649.mc'
+        _basepath = '../beatmaps/_song_9590/0/'
+        _filename = '1582189649.mc'
+
+        # _basepath = '../beatmaps/_song_16260/0/'
+        # _filename = 'zts - goldenslaughterer (hao123) [7K Another][key].mc'
 
         song = {}
         chart = {}
         
-        with open(path, 'r') as file:
+        with open(_basepath+_filename, 'r') as file:
             data = json.load(file)
             # 歌曲基本信息
             song['title'] = data['meta']['song']['title']
             song['artist'] = data['meta']['song']['artist']
-            if data['meta']['song']['titleorg']:
+            if 'titleorg' in data['meta']['song']:
                 song['titleOrg'] = data['meta']['song']['titleorg']
-            if data['meta']['song']['artistorg']:
+            if 'artistorg' in data['meta']['song']:
                 song['artistOrg'] = data['meta']['song']['artistorg']
 
             # 谱面数据
@@ -29,12 +33,12 @@ class MCConverter:
 
             # 谱面基本信息
             chart['creator'] = data['meta']['creator']
-            chart['backgroundPath'] = '../beatmaps/_song_9590/0/' + data['meta']['background']  # temp3
+            chart['backgroundPath'] = _basepath + data['meta']['background']  # temp3
             chart['version'] = data['meta']['version']
             if 'preview' in data['meta']:
                 chart['previewTime'] = data['meta']['preview']
             chart['filePath'] = path  # temp
-            chart['audioPath'] = '../beatmaps/_song_9590/0/' + _noteData[-1]['sound']  # temp2
+            chart['audioPath'] = _basepath + _noteData[-1]['sound']  # temp2
             if 'offset' in _noteData[-1]:
                 chart['offset'] = _noteData[-1]['offset']
             chart['noteNum'] = len(_noteData) - 1

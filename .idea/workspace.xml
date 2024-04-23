@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update">
-      <change afterPath="$PROJECT_DIR$/src/Model/GameModel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_16260/0/938476.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_16260/0/audio.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_16260/0/zts - goldenslaughterer (hao123) [7K Another][key].mc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/font/Silver.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Model/SettingModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Converter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Converter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/GameModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/GameModel.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,11 +58,13 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "G:/PythonProject/Pygame_Mania/beatmaps"
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "G:/PythonProject/Pygame_Mania/font"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="G:\PythonProject\Pygame_Mania\font" />
       <recent name="G:\PythonProject\Pygame_Mania\beatmaps" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -96,7 +103,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713693802346</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="update">
+      <option name="closed" value="true" />
+      <created>1713788852538</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1713788852538</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -120,8 +135,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
-          <line>98</line>
-          <option name="timeStamp" value="10" />
+          <line>219</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/Model/SettingModel.py</url>
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

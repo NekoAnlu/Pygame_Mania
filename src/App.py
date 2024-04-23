@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 from GameController import ManiaGame
 from Grahpic import ManiaSprite
-from src.Grahpic.ManiaSprite import *
 
 
 class ManiaPygame:
@@ -17,7 +16,7 @@ class ManiaPygame:
 
         # note = NoteSprite((200, 200))
         # hitPosition = HitPositionSprite((500, 500))
-        # self.spritesGroup = pygame.sprite.Group()
+        # self.spritesGroup = pygame.sprite.Group()d
         # self.spritesGroup.add(note)
         # self.spritesGroup.add(hitPosition)
 
@@ -31,11 +30,13 @@ class ManiaPygame:
 
         self.running = True
 
-    # on_event check if Quit event happened if so sets _running to False wich will break game loop.
-    def on_event(self, event):
-        self.gameController.on_key_press(event)
-        if event.type == pygame.QUIT:
-            self.running = False
+    def on_event(self):
+        # 坑1：检测键盘字母区按下事件只能在获取event循环里接收 不能传 会被TextInput事件覆盖
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+                self.gameController.on_key_press_event(event)
 
 
     def on_loop(self):
@@ -60,8 +61,8 @@ class ManiaPygame:
 
         while self.running:
             # event()
-            for event in pygame.event.get():
-                self.on_event(event)
+            # for event in pygame.event.get():
+            self.on_event()
             # loop()
             self.on_loop()
             # render()
