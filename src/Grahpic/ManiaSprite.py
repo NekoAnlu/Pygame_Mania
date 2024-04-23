@@ -92,6 +92,7 @@ class LNSprite(pygame.sprite.Sprite):
         # 按键的时值
         self.timing = timing
         self.endTiming = end_timing
+        self.timer = 0
         # 案件池用变量
         self.active = True
 
@@ -104,13 +105,21 @@ class LNSprite(pygame.sprite.Sprite):
             # 移动距离
             _moveY = (_currTime - self.timing) / _speedInUnit
             # LN拉长
-            _newSize = (self.drawSize[0], self.drawSize[1] + self.targetPosition[1] + _moveY - self.rect.centery)
-            # self.image = pygame.Surface(_newSize)
-            self.image = pygame.transform.scale(self.image, (_newSize[0]*5, _newSize[1]*5))
-            self.rect = self.image.get_rect(center=self.spawnPosition)
+            if _currTime <= self.endTiming:
+                _newSize = (self.drawSize[0], self.drawSize[1] + abs(self.targetPosition[1] + _moveY)/5)
+                self.image = pygame.Surface(_newSize)
+                self.image.fill((0, 0, 0))
+                self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
+                self.rect = self.image.get_rect(center=self.spawnPosition)
+                pygame.draw.circle(self.image, self.color, (10, 10), 10)
+                pygame.draw.rect(self.image, self.color, (0, 10, 20, _newSize[1]))
+                print(_newSize[1])
+                self.image = pygame.transform.scale(self.image, (100, _newSize[1]*5))
+                self.rect = self.image.get_rect(center=self.rect.center)
+
             # self.rect.height += _moveY
             # 移动
-            self.rect.centery = self.targetPosition[1] + _moveY
+            self.rect.y = self.targetPosition[1] + _moveY
 
 
 # 同上notepool

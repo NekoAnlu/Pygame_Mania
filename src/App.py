@@ -24,7 +24,8 @@ class ManiaPygame:
         pygame.init()
         # temp
         self.gameController.load_resource()
-        self.screen = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self.screen = pygame.display.set_mode(self.size, pygame.NOFRAME)
+        pygame.display.set_mode((1920, 1080))
 
         # self.screen.blit(self.gameController.levelModel.backgroundImage, self.gameController.levelModel.backgroundImage.get_rect())
 
