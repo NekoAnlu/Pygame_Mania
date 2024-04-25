@@ -99,7 +99,9 @@ class LNSprite(pygame.sprite.Sprite):
         # 按键池用变量
         self.active = True
         # sp判定用
+        self.isHeadMiss = False
         self.isHolding = False
+        # self.lnBodyRect = Rect()
 
     def update(self, speed, timer):
         self.check_miss(timer)
@@ -120,19 +122,26 @@ class LNSprite(pygame.sprite.Sprite):
                 self.image.fill((0, 0, 0))
                 self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
                 pygame.draw.circle(self.image, self.color, (10, 10), 10)
-                pygame.draw.rect(self.image, self.color, (0, 10, 20, _newSize[1] - 20))
+                self.lnBodyRect = pygame.draw.rect(self.image, self.color, (0, 10, 20, _newSize[1] - 20))
                 pygame.draw.circle(self.image, self.color, (10, _newSize[1] - 10), 10)
-                print(self.timing)
+                # print(self.timing)
                 self.image = pygame.transform.scale(self.image, (100, _newSize[1]*5))
                 self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
 
             if self.isHolding:
-                self.rect.bottom -= self.rect.bottom - self.targetPosition[1]
+                _newHeight = max(self.rect.height - (self.targetPosition[1] + _moveY + 100) + self.rect.bottom, 0)
+                print(self.rect.height - (self.targetPosition[1] + _moveY + 100) + self.rect.bottom)
+                #_newHeight = self.rect.height - (self.targetPosition[1] + _moveY + 100) - self.rect.bottom
+                self.image = self.image.subsurface((0, 0, self.rect.width, _newHeight))
+                self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
+            else:
+                # 移动
+                self.rect.bottom = self.targetPosition[1] + _moveY + 100
 
-            # 移动
-            self.rect.bottom = self.targetPosition[1] + _moveY + 100
 
     def check_miss(self, timer):
+        if not self.isHolding and timer - self.timing > GameSetting.timing_Miss:
+            self.isHeadMiss = True
         if timer - self.endTiming > GameSetting.timing_Miss and not self.isHolding:
             self.active = False
 

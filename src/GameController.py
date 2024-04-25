@@ -131,7 +131,7 @@ class ManiaGame:
         for i, lineIndex in enumerate(self.lineIndex):
             while self.lineIndex[i] < len(self.levelModel.noteList[i]) and self.levelModel.noteList[i][self.lineIndex[i]].startTiming <= _currTime + _dropTime:
                 _x = self.uiModel.lineStart + self.uiModel.lineWidth * i
-                print(self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0)
+                # print(self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0)
                 if self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0:
                     _noteObj = self.levelModel.noteSpritePool.get_note((_x, self.uiModel.noteSpawnPosition), (_x, self.uiModel.noteDestination),self.levelModel.noteList[i][self.lineIndex[i]].startTiming)
                     self.levelModel.noteQueue[i].append(_noteObj)
@@ -193,47 +193,26 @@ class ManiaGame:
     def hit_note_event(self, key_event):
         if key_event.type == pygame.KEYDOWN:
             if key_event.key == pygame.K_d:
-                self.note_judgement(0, self.levelModel.timer, False)
+                self.on_hit_note(0, self.levelModel.timer, False)
             elif key_event.key == pygame.K_f:
-                self.note_judgement(1, self.levelModel.timer, False)
+                self.on_hit_note(1, self.levelModel.timer, False)
             elif key_event.key == pygame.K_j:
-                self.note_judgement(2, self.levelModel.timer, False)
+                self.on_hit_note(2, self.levelModel.timer, False)
             elif key_event.key == pygame.K_k:
-                self.note_judgement(3, self.levelModel.timer, False)
+                self.on_hit_note(3, self.levelModel.timer, False)
         if key_event.type == pygame.KEYUP:
             if key_event.key == pygame.K_d:
-                self.note_judgement(0, self.levelModel.timer, True)
+                self.on_hit_note(0, self.levelModel.timer, True)
             elif key_event.key == pygame.K_f:
-                self.note_judgement(1, self.levelModel.timer, True)
+                self.on_hit_note(1, self.levelModel.timer, True)
             elif key_event.key == pygame.K_j:
-                self.note_judgement(2, self.levelModel.timer, True)
+                self.on_hit_note(2, self.levelModel.timer, True)
             elif key_event.key == pygame.K_k:
-                self.note_judgement(3, self.levelModel.timer, True)
+                self.on_hit_note(3, self.levelModel.timer, True)
 
-    def note_judgement(self, line_index, timing, is_key_up):
+    def on_hit_note(self, line_index, timing, is_key_up):
         if len(self.levelModel.noteQueue[line_index]) > 0:
             _note = self.levelModel.noteQueue[line_index][0]
-
-            # if _note.noteType == 1:
-            #     _offset = abs(_note.timing - timing)
-            #     if _offset <= self.gameSetting.timing_Miss:
-            #         if _offset <= self.gameSetting.timing_Bad:
-            #             if _offset <= self.gameSetting.timing_PPerfect:
-            #                 self.update_judgement_text('PPerfect')
-            #             elif _offset <= self.gameSetting.timing_Perfect:
-            #                 self.update_judgement_text('Perfect')
-            #             elif _offset <= self.gameSetting.timing_Great:
-            #                 self.update_judgement_text('Great')
-            #             elif _offset <= self.gameSetting.timing_Cool:
-            #                 self.update_judgement_text('Cool')
-            #             else:
-            #                 self.update_judgement_text('Bad')
-            #             self.playerModel.combo += 1
-            #         else:
-            #             self.update_judgement_text('Miss')
-            #             self.playerModel.combo = 0
-            #         _note.isHolding = True
-
 
             # 防止抬起判定
             if is_key_up and _note.noteType == 0:
@@ -241,41 +220,49 @@ class ManiaGame:
             if is_key_up and _note.noteType == 1 and not _note.isHolding:
                 return
 
-            # 如果当前判定是LN松开时间则根据其endtiming计算
-            if _note.noteType == 1 and _note.isHolding:
-                _offset = abs(_note.endTiming - timing)
+            # 计算时间差
+            if _note.noteType == 1:
+                if not _note.isHolding:
+                    _offset = abs(_note.timing - timing)
+                else:
+                    _offset = abs(_note.endTiming - timing)
             else:
                 _offset = abs(_note.timing - timing)
 
-            # 普通按键处理
+            # LN尾判定无保护
+            if is_key_up and _note.noteType == 1 and _note.isHolding:
+                self.note_judgement(_offset)
+                _note.isHolding = False
+                # _note.active = False
+                self.levelModel.noteQueue[line_index].pop(0)
+                return
+
+            # 是否在可判定区间内
             if _offset <= self.gameSetting.timing_Miss:
-                if _offset <= self.gameSetting.timing_Bad:
-                    if _offset <= self.gameSetting.timing_PPerfect:
-                        self.update_judgement_text('PPerfect')
-                    elif _offset <= self.gameSetting.timing_Perfect:
-                        self.update_judgement_text('Perfect')
-                    elif _offset <= self.gameSetting.timing_Great:
-                        self.update_judgement_text('Great')
-                    elif _offset <= self.gameSetting.timing_Cool:
-                        self.update_judgement_text('Cool')
-                    else:
-                        self.update_judgement_text('Bad')
-                    self.playerModel.combo += 1
+                self.note_judgement(_offset)
+                if _note.noteType == 1 and not _note.isHolding:
+                    _note.isHolding = True
                 else:
-                    self.update_judgement_text('Miss')
-                    self.playerModel.combo = 0
-                # 如果是普通按键直接回收并隐藏
-                if _note.noteType == 0:
+                    # 如果是普通按键直接回收并隐藏
                     _note.active = False
                     self.levelModel.noteQueue[line_index].pop(0)
-                # LN特殊处理
-                else:
-                    if _note.isHolding:
-                        _note.isHolding = False
-                        _note.active = False
-                        self.levelModel.noteQueue[line_index].pop(0)
-                    else:
-                        _note.isHolding = True
+
+    def note_judgement(self, _offset):
+        if _offset <= self.gameSetting.timing_Bad:
+            if _offset <= self.gameSetting.timing_PPerfect:
+                self.update_judgement_text('PPerfect')
+            elif _offset <= self.gameSetting.timing_Perfect:
+                self.update_judgement_text('Perfect')
+            elif _offset <= self.gameSetting.timing_Great:
+                self.update_judgement_text('Great')
+            elif _offset <= self.gameSetting.timing_Cool:
+                self.update_judgement_text('Cool')
+            else:
+                self.update_judgement_text('Bad')
+            self.playerModel.combo += 1
+        else:
+            self.update_judgement_text('Miss')
+            self.playerModel.combo = 0
 
     # 每次update更新队列里所有miss的note
     def update_note_queue(self):
@@ -284,6 +271,11 @@ class ManiaGame:
                 self.levelModel.noteQueue[i].pop(0)
                 self.update_judgement_text('Miss')
                 self.playerModel.combo = 0
+            # LN头判定
+            for j in range(len(self.levelModel.noteQueue[i])):
+                if len(self.levelModel.noteQueue[i]) > 0 and self.levelModel.noteQueue[i][j].noteType == 1 and self.levelModel.noteQueue[i][j].isHeadMiss:
+                    self.update_judgement_text('Miss')
+                    self.playerModel.combo = 0
 
     # ------------------- UI更新 ---------------------------
 
