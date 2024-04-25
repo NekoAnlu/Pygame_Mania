@@ -3,6 +3,7 @@ from src.Grahpic.ManiaSprite import *
 from pygame import *
 from typing import List, Tuple, Optional, Dict
 
+
 class LevelModel:
     # 按键基础数据
     noteSpeed: int = 2000
@@ -15,9 +16,8 @@ class LevelModel:
     # 谱面数据
     noteList: List[List[Note]] = []
     noteSpritePool: NoteSpritePool = NoteSpritePool()
-    noteQueue: List[List[NoteSprite]] = []  # 判定用
-
-    LNSpritePool: LNSpritePool = LNSpritePool()
+    lnSpritePool: LNSpritePool = LNSpritePool()
+    noteQueue: List[List[NoteSprite | LNSprite]] = []  # 判定用
 
     # 背景
     backgroundImage: Surface
@@ -33,6 +33,7 @@ class ManiaUIModel:
 
     judgementTextSpriteDict: Dict[str, JudgementTextSprite] = {}
     variableTextList: Dict[str, VariableTextSprite] = {}  # 用于监控数值变化后调用对应sprite的update更新view
+
 
 class PlayerModel:
     combo: int = 0

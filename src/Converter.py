@@ -8,8 +8,14 @@ class MCConverter:
         pass
 
     def mc_converter(self, path: str) -> Song:
-        _basepath = '../beatmaps/_song_9590/0/'
-        _filename = '1582189649.mc'
+        _basepath = '../beatmaps/_song_4900/0/'
+        _filename = 'Key4Normal.mc'
+
+        # _basepath = '../beatmaps/_song_978/0/'
+        # _filename = 'iowo-DREAM-KEY BEGINNER LV..mc'
+
+        # _basepath = '../beatmaps/_song_9590/0/'
+        # _filename = '1582189649.mc'
 
         # _basepath = '../beatmaps/_song_16260/0/'
         # _filename = 'zts - goldenslaughterer (hao123) [7K Another][key].mc'
@@ -82,9 +88,9 @@ class MCConverter:
                     if 'endbeat' in _note:
                         _endBeat = (_note['endbeat'][0], _note['endbeat'][1], _note['endbeat'][2])
                         note['endTiming'] = (_endBeat[0] * _spb + _spb / _endBeat[2] * _endBeat[1]) * 1000 - chart['offset']
-                        note['type'] = NoteType.LN
+                        note['noteType'] = 1
                     else:
-                        note['type'] = NoteType.Rice
+                        note['noteType'] = 0
 
                     note['line'] = _note["column"]
                     chart['noteList'].append(note)
@@ -100,9 +106,9 @@ class MCConverter:
                     if 'endbeat' in _note:
                         _endBeat = (_note['endbeat'][0], _note['endbeat'][1], _note['endbeat'][2])
                         note['endTiming'] = self._mc_calculate_svtiming(_bpmData, chart, _currBpmIndex, _endBeat)
-                        note['type'] = NoteType.LN
+                        note['noteType'] = 1
                     else:
-                        note['type'] = NoteType.Rice
+                        note['noteType'] = 0
 
                     note['line'] = _note["column"]
                     chart['noteList'].append(note)

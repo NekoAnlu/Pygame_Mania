@@ -3,16 +3,11 @@ from pydantic import BaseModel, Field
 from enum import Enum
 
 
-class NoteType(Enum):
-    Rice = 0
-    LN = 1
-
-
 class Note(BaseModel):
     line: int
     startTiming: float
     endTiming: Optional[float] = None
-    type: NoteType
+    noteType: int  # 0 rice 1 ln
 
 
 class Chart(BaseModel):

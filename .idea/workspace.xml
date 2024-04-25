@@ -5,11 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update">
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Beginner.mc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Hyper.mc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Normal.mc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_4900/0/Latitude.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_4900/0/bg.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_978/0/bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_978/0/iowo-DREAM-KEY BEGINNER LV..mc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_978/0/song-bg.ogg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Converter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Converter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/BeatmapModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/BeatmapModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/GameModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/GameModel.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,30 +49,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.App.executor&quot;: &quot;Run&quot;,
-    &quot;Python.BeatmapModel.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Converter.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Game.executor&quot;: &quot;Run&quot;,
-    &quot;Python.GameController.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.GameModel.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ManiaSprite.executor&quot;: &quot;Run&quot;,
-    &quot;Python.__init__.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;G:/PythonProject/Pygame_Mania/font&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.App.executor": "Run",
+    "Python.BeatmapModel.executor": "Run",
+    "Python.Converter.executor": "Run",
+    "Python.Game.executor": "Run",
+    "Python.GameController.executor": "Run",
+    "Python.GameModel.executor": "Run",
+    "Python.ManiaSprite.executor": "Debug",
+    "Python.__init__.executor": "Run",
+    "Python.test.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "G:/PythonProject/Pygame_Mania/beatmaps"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="G:\PythonProject\Pygame_Mania\font" />
       <recent name="G:\PythonProject\Pygame_Mania\beatmaps" />
+      <recent name="G:\PythonProject\Pygame_Mania\font" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\PythonProject\Pygame_Mania\beatmaps" />
       <recent name="G:\PythonProject\Pygame_Mania\src" />
     </key>
   </component>
@@ -127,11 +139,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
-          <line>228</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/Model/SettingModel.py</url>
           <option name="timeStamp" value="15" />
