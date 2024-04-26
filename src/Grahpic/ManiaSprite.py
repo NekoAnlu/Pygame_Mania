@@ -28,7 +28,9 @@ class NoteSprite(pygame.sprite.Sprite):
         self.targetPosition = target_position
         # 按键的时值
         self.timing = timing
-        # 案件池用变量
+        # 判定是否还能判定
+        self.canJudge = True
+        # 显示隐藏用（pool用）
         self.active = True
 
     def update(self, speed, timer):
@@ -45,7 +47,11 @@ class NoteSprite(pygame.sprite.Sprite):
         self.check_miss(timer)
 
     def check_miss(self, timer):
+        # 大于timing不允许再判定
         if timer - self.timing > GameSetting.timing_Miss:
+            self.canJudge = False
+        # 出屏幕就隐藏并回pool
+        if self.rect.centery > 1080:
             self.active = False
 
 
@@ -96,7 +102,9 @@ class LNSprite(pygame.sprite.Sprite):
         self.timing = timing
         self.endTiming = end_timing
         self.timer = 0
-        # 按键池用变量
+        # 判定是否还能判定
+        self.canJudge = True
+        # 显示隐藏用（pool用）
         self.active = True
         # sp判定用
         self.isHeadMiss = False
@@ -117,29 +125,34 @@ class LNSprite(pygame.sprite.Sprite):
             # 移动距离
             _moveY = (_currTime - self.timing) / _speedInUnit
             _tail_moveY = (_currTime - self.endTiming) / _speedInUnit
-            #print(_moveY)
+            # print(_moveY)
             # LN拉长 需要减去droptime！
             if _currTime <= self.endTiming - _dropTime:
                 self.length += (self.targetPosition[1] + _moveY) - self.rect.bottom
-                # _newSize = (self.drawSize[0], self.drawSize[1] + abs(self.rect.bottom)/5.0)
-                _newSize = (self.drawSize[0], self.drawSize[1] + self.length/5.0)
-                self.re_draw(_newSize)
+                _newSize = (self.drawSize[0], self.drawSize[1] + self.length / 5.0)
+                self.re_draw(_newSize, 'bottom')
 
-            if self.isHolding:
-                self.length -= (self.targetPosition[1] + _tail_moveY) - self.rect.top
+            # 移动控制(再次续长条的时候不会印象长条长度)
+            if not self.isHeadMiss and self.isHolding:
+                self.length -= (self.targetPosition[1] + _tail_moveY - 50) - self.rect.top
                 self.length = max(self.length, 0)
                 _newSize = (self.drawSize[0], self.drawSize[1] + self.length / 5.0)
-                self.re_draw(_newSize)
-                self.rect.top = self.targetPosition[1] + _tail_moveY
-
+                self.re_draw(_newSize, 'top')
+                # 移动（-50定位点修正）
+                self.rect.top = self.targetPosition[1] + _tail_moveY - 50
                 # test
                 self.rect.bottom = self.targetPosition[1] + 50
+
+            elif not self.isHolding and self.isHeadMiss:
+                self.rect.top = self.targetPosition[1] + _tail_moveY - 50
 
             else:
                 # 移动
                 self.rect.bottom = self.targetPosition[1] + _moveY
 
-    def re_draw(self, _newSize):
+            print(self.length)
+
+    def re_draw(self, _newSize, anchor):
         self.image = pygame.Surface(_newSize)
         self.image.fill((0, 0, 0))
         self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
@@ -148,13 +161,21 @@ class LNSprite(pygame.sprite.Sprite):
         pygame.draw.circle(self.image, self.color, (10, _newSize[1] - 10), 10)
         # print(self.timing)
         self.image = pygame.transform.scale(self.image, (100, _newSize[1] * 5))
-        self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
+        if anchor == 'bottom':
+            self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
+        else:
+            self.rect = self.image.get_rect(midtop=self.rect.midtop)
 
     def check_miss(self, timer):
         if not self.isHolding and timer - self.timing > GameSetting.timing_Miss:
             self.isHeadMiss = True
+        # 大于timing不允许再判定
         if timer - self.endTiming > GameSetting.timing_Miss:
+            self.canJudge = False
+        # 超出范围隐藏
+        if self.rect.top > 1080:
             self.active = False
+
 
 # 同上notepool
 class LNSpritePool:
@@ -262,16 +283,17 @@ class JudgementTextSprite(pygame.sprite.Sprite):
 
 
 class VariableTextSprite(pygame.sprite.Sprite):
-    def __init__(self, text, text_size, color, position):
+    def __init__(self, label, text_size, color, position):
         super().__init__()
         self.font = pygame.font.Font('../font/Silver.ttf', text_size)
         self.color = color
         self.position = position
-        self.draw_text(text)
+        self.label = label
+        self.draw_text(self.label)
         self.active = False
     
-    def update(self, new_text):
-        self.draw_text(new_text)
+    def update(self, value):
+        self.draw_text(self.label + value)
 
     def draw_text(self, text):
         if text is not str:

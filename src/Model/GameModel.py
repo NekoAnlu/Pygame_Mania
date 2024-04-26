@@ -6,7 +6,7 @@ from typing import List, Tuple, Optional, Dict
 
 class LevelModel:
     # 按键基础数据
-    noteSpeed: int = 2000
+    noteSpeed: int = 1500
 
     # 当前关卡数据
     currentSong: Song
@@ -36,4 +36,15 @@ class ManiaUIModel:
 
 
 class PlayerModel:
+    # 判定信息
+    pPerfectCount: int = 0
+    perfectCount: int = 0
+    greatCount: int = 0
+    coolCount: int = 0
+    badCount: int = 0
+    missCount: int = 0
     combo: int = 0
+    maxCombo: int = 0
+    score: int = 0
+    accuracy: float = 0.0
+

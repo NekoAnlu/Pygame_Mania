@@ -116,7 +116,8 @@ class ManiaGame:
         self.judgementTextGroup.add(_PPerfectText, _PerfectText, _GreatText, _CoolText, _BadText, _MissText)
 
         # 变化数值Text
-        _ComboText = VariableTextSprite('0', 70, (0, 255, 255), (_panelCenterX, self.uiModel.comboPosition))
+        _ComboText = VariableTextSprite('', 70, (0, 255, 255), (_panelCenterX, self.uiModel.comboPosition))
+
         self.variableTextGroup.add(_ComboText)
         self.uiModel.variableTextList['Combo'] = _ComboText
 
@@ -229,44 +230,85 @@ class ManiaGame:
             else:
                 _offset = abs(_note.timing - timing)
 
-            # LN尾判定无保护
-            if is_key_up and _note.noteType == 1 and _note.isHolding:
-                self.note_judgement(_offset)
-                _note.isHolding = False
-                # _note.active = False
-                self.levelModel.noteQueue[line_index].pop(0)
-                return
-
-            # 是否在可判定区间内
-            if _offset <= self.gameSetting.timing_Miss:
-                self.note_judgement(_offset)
-                if _note.noteType == 1 and not _note.isHolding:
+            # LN判定范围更小 且miss单独处理（可优化？）
+            if _note.noteType == 1:
+                # 如果松LN后再按下判定滑条尾
+                if not is_key_up and _note.isHeadMiss and not _note.isHolding:
                     _note.isHolding = True
+                # 正常按下判定
+                elif _offset <= self.gameSetting.timing_Bad:
+                    self.timing_judgement(_offset, _note)
+                    # LN正常按下
+                    if not _note.isHolding:
+                        _note.isHolding = True
+                    # LN尾巴判定且没有提前松手
+                    elif is_key_up and _note.isHolding:
+                        _note.isHolding = False
+                        _note.active = False
+                        self.levelModel.noteQueue[line_index].pop(0)
+                # 判定保护miss判定
+                elif _offset <= self.gameSetting.timing_Miss:
+                    # LN头直接miss
+                    if not _note.isHolding:
+                        _note.isHeadMiss = True
+                # 长条尾提前松手判定
                 else:
-                    # 如果是普通按键直接回收并隐藏
-                    _note.active = False
-                    self.levelModel.noteQueue[line_index].pop(0)
+                    # LN提前松手miss
+                    if is_key_up and _note.isHolding:
+                        _note.isHolding = False
+                        _note.isHeadMiss = True
+                        _note.canJudge = False
 
-    def note_judgement(self, _offset):
+            # 普通按键是否在可判定区间内
+            elif _note.noteType == 0 and _offset <= self.gameSetting.timing_Miss:
+                # 基础判定
+                self.timing_judgement(_offset, _note)
+                # 如果是普通按键直接回收并隐藏
+                _note.active = False
+                self.levelModel.noteQueue[line_index].pop(0)
+
+    # 判定信息显示 + 数据更新
+    def timing_judgement(self, _offset, _note):
         if _offset <= self.gameSetting.timing_Bad:
             if _offset <= self.gameSetting.timing_PPerfect:
-                self.update_judgement_text('PPerfect')
+                self.note_judgement('PPerfect')
             elif _offset <= self.gameSetting.timing_Perfect:
-                self.update_judgement_text('Perfect')
+                self.note_judgement('Perfect')
             elif _offset <= self.gameSetting.timing_Great:
-                self.update_judgement_text('Great')
+                self.note_judgement('Great')
             elif _offset <= self.gameSetting.timing_Cool:
-                self.update_judgement_text('Cool')
+                self.note_judgement('Cool')
             else:
-                self.update_judgement_text('Bad')
-            self.playerModel.combo += 1
+                self.note_judgement('Bad')
         else:
-            self.update_judgement_text('Miss')
+            self.note_judgement('Miss')
+
+    # 具体判定对view和model的更新
+    def note_judgement(self, judge_name):
+        self.update_judgement_text(judge_name)
+        if judge_name == 'PPerfect':
+            self.playerModel.pPerfectCount += 1
+            self.playerModel.combo += 1
+        elif judge_name == 'Perfect':
+            self.playerModel.perfectCount += 1
+            self.playerModel.combo += 1
+        elif judge_name == 'Great':
+            self.playerModel.greatCount += 1
+            self.playerModel.combo += 1
+        elif judge_name == 'Cool':
+            self.playerModel.coolCount += 1
+            self.playerModel.combo += 1
+        elif judge_name == 'Bad':
+            self.playerModel.badCount += 1
+            self.playerModel.combo = 0
+        elif judge_name == 'miss':
+            self.playerModel.missCount += 1
             self.playerModel.combo = 0
 
     # 每次update更新队列里所有miss的note
     def update_note_queue(self):
         for i in range(len(self.levelModel.noteQueue)):
+            # 按键回收隐藏
             while len(self.levelModel.noteQueue[i]) > 0 and not self.levelModel.noteQueue[i][0].active:
                 self.levelModel.noteQueue[i].pop(0)
                 self.update_judgement_text('Miss')
@@ -276,6 +318,9 @@ class ManiaGame:
                 if len(self.levelModel.noteQueue[i]) > 0 and self.levelModel.noteQueue[i][j].noteType == 1 and self.levelModel.noteQueue[i][j].isHeadMiss:
                     self.update_judgement_text('Miss')
                     self.playerModel.combo = 0
+                # # 是否还可以判定（更新判定队列）
+                # while not self.levelModel.noteQueue[i][0].canJudge:
+                #     self.levelModel.noteQueue[i].pop(0)
 
     # ------------------- UI更新 ---------------------------
 
