@@ -8,7 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -53,15 +52,16 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "G:/PythonProject/Pygame_Mania/font"
+    "last_opened_file_path": "G:/PythonProject/Pygame_Mania/beatmaps"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="G:\PythonProject\Pygame_Mania\font" />
       <recent name="G:\PythonProject\Pygame_Mania\beatmaps" />
+      <recent name="G:\PythonProject\Pygame_Mania\font" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\PythonProject\Pygame_Mania\beatmaps" />
       <recent name="G:\PythonProject\Pygame_Mania\src" />
     </key>
   </component>

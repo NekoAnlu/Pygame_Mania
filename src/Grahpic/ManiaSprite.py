@@ -102,6 +102,7 @@ class LNSprite(pygame.sprite.Sprite):
         self.isHeadMiss = False
         self.isHolding = False
         # self.lnBodyRect = Rect()
+        self.length = 0
 
     def update(self, speed, timer):
         self.check_miss(timer)
@@ -115,36 +116,45 @@ class LNSprite(pygame.sprite.Sprite):
             _currTime = timer
             # 移动距离
             _moveY = (_currTime - self.timing) / _speedInUnit
+            _tail_moveY = (_currTime - self.endTiming) / _speedInUnit
+            #print(_moveY)
             # LN拉长 需要减去droptime！
             if _currTime <= self.endTiming - _dropTime:
-                _newSize = (self.drawSize[0], self.drawSize[1] + abs(self.rect.bottom)/5.0)
-                self.image = pygame.Surface(_newSize)
-                self.image.fill((0, 0, 0))
-                self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
-                pygame.draw.circle(self.image, self.color, (10, 10), 10)
-                self.lnBodyRect = pygame.draw.rect(self.image, self.color, (0, 10, 20, _newSize[1] - 20))
-                pygame.draw.circle(self.image, self.color, (10, _newSize[1] - 10), 10)
-                # print(self.timing)
-                self.image = pygame.transform.scale(self.image, (100, _newSize[1]*5))
-                self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
+                self.length += (self.targetPosition[1] + _moveY) - self.rect.bottom
+                # _newSize = (self.drawSize[0], self.drawSize[1] + abs(self.rect.bottom)/5.0)
+                _newSize = (self.drawSize[0], self.drawSize[1] + self.length/5.0)
+                self.re_draw(_newSize)
 
             if self.isHolding:
-                _newHeight = max(self.rect.height - (self.targetPosition[1] + _moveY + 100) + self.rect.bottom, 0)
-                print(self.rect.height - (self.targetPosition[1] + _moveY + 100) + self.rect.bottom)
-                #_newHeight = self.rect.height - (self.targetPosition[1] + _moveY + 100) - self.rect.bottom
-                self.image = self.image.subsurface((0, 0, self.rect.width, _newHeight))
-                self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
+                self.length -= (self.targetPosition[1] + _tail_moveY) - self.rect.top
+                self.length = max(self.length, 0)
+                _newSize = (self.drawSize[0], self.drawSize[1] + self.length / 5.0)
+                self.re_draw(_newSize)
+                self.rect.top = self.targetPosition[1] + _tail_moveY
+
+                # test
+                self.rect.bottom = self.targetPosition[1] + 50
+
             else:
                 # 移动
-                self.rect.bottom = self.targetPosition[1] + _moveY + 100
+                self.rect.bottom = self.targetPosition[1] + _moveY
 
+    def re_draw(self, _newSize):
+        self.image = pygame.Surface(_newSize)
+        self.image.fill((0, 0, 0))
+        self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
+        pygame.draw.circle(self.image, self.color, (10, 10), 10)
+        self.lnBodyRect = pygame.draw.rect(self.image, self.color, (0, 10, 20, _newSize[1] - 20))
+        pygame.draw.circle(self.image, self.color, (10, _newSize[1] - 10), 10)
+        # print(self.timing)
+        self.image = pygame.transform.scale(self.image, (100, _newSize[1] * 5))
+        self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
 
     def check_miss(self, timer):
         if not self.isHolding and timer - self.timing > GameSetting.timing_Miss:
             self.isHeadMiss = True
-        if timer - self.endTiming > GameSetting.timing_Miss and not self.isHolding:
+        if timer - self.endTiming > GameSetting.timing_Miss:
             self.active = False
-
 
 # 同上notepool
 class LNSpritePool:
