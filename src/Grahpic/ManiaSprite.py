@@ -14,7 +14,7 @@ class NoteSprite(pygame.sprite.Sprite):
     def __init__(self, spawn_position, target_position, timing):
         super().__init__()
         self.noteType = 0
-        self.image = pygame.Surface(self.drawSize)
+        self.image = pygame.Surface(self.drawSize).convert()
         self.image.fill((0, 0, 0))
         self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
         self.color = (0, 0, 255)
@@ -33,7 +33,20 @@ class NoteSprite(pygame.sprite.Sprite):
         # 显示隐藏用（pool用）
         self.active = True
 
+    def reset(self, spawn_position, target_position, timing):
+        self.spawnPosition = spawn_position
+        self.targetPosition = target_position
+        self.timing = timing
+
+        self.rect = self.image.get_rect(center=spawn_position)
+
+        self.canJudge = True
+        self.active = True
+
     def update(self, speed, timer):
+        # 检查是否被击打或者移出屏幕外（miss）
+        self.check_miss(timer)
+
         if self.active:
             # 每毫秒移动的距离 in px
             _speedInUnit = 1000.0 / speed
@@ -43,15 +56,12 @@ class NoteSprite(pygame.sprite.Sprite):
             _moveY = (_currTime - self.timing) / _speedInUnit
             self.rect.centery = self.targetPosition[1] + _moveY
 
-        # 检查是否被击打或者移出屏幕外（miss）
-        self.check_miss(timer)
-
     def check_miss(self, timer):
         # 大于timing不允许再判定
         if timer - self.timing > GameSetting.timing_Miss:
             self.canJudge = False
         # 出屏幕就隐藏并回pool
-        if self.rect.centery > 1080:
+        if self.rect.centery > GameSetting.screenHeight:
             self.active = False
 
 
@@ -63,7 +73,7 @@ class NoteSpritePool:
     def get_note(self, spawn_position, target_position, timing) -> NoteSprite:
         for note in self.notePool:
             if not note.active:
-                note.__init__(spawn_position, target_position, timing)
+                note.reset(spawn_position, target_position, timing)
                 return note
 
         # 如果无则扩展池
@@ -86,7 +96,7 @@ class LNSprite(pygame.sprite.Sprite):
         super().__init__()
 
         self.noteType = 1
-        self.image = pygame.Surface(self.drawSize)
+        self.image = pygame.Surface(self.drawSize).convert()
         self.image.fill((0, 0, 0))
         self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
         self.color = (0, 0, 255)
@@ -150,10 +160,10 @@ class LNSprite(pygame.sprite.Sprite):
                 # 移动
                 self.rect.bottom = self.targetPosition[1] + _moveY
 
-            print(self.length)
+            #print(self.length)
 
     def re_draw(self, _newSize, anchor):
-        self.image = pygame.Surface(_newSize)
+        self.image = pygame.Surface(_newSize).convert()
         self.image.fill((0, 0, 0))
         self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
         pygame.draw.circle(self.image, self.color, (10, 10), 10)
@@ -173,7 +183,7 @@ class LNSprite(pygame.sprite.Sprite):
         if timer - self.endTiming > GameSetting.timing_Miss:
             self.canJudge = False
         # 超出范围隐藏
-        if self.rect.top > 1080:
+        if self.rect.top > GameSetting.screenHeight:
             self.active = False
 
 
@@ -235,13 +245,13 @@ class HitPositionSprite(pygame.sprite.Sprite):
                 self.draw_unfill()
 
     def draw_fill(self):
-        self.image = pygame.Surface(self.drawSize)
+        self.image = pygame.Surface(self.drawSize).convert()
         pygame.draw.circle(self.image, self.color, (10, 10), 10)
         self.image = pygame.transform.scale(self.image, self.realSize)
         self.rect = self.image.get_rect(center=self.position)
 
     def draw_unfill(self):
-        self.image = pygame.Surface(self.drawSize)
+        self.image = pygame.Surface(self.drawSize).convert()
         pygame.draw.circle(self.image, self.color, (10, 10), 10, 1)
         self.image = pygame.transform.scale(self.image, self.realSize)
         self.rect = self.image.get_rect(center=self.position)
@@ -250,8 +260,8 @@ class HitPositionSprite(pygame.sprite.Sprite):
 class ManiaPanelSprite(pygame.sprite.Sprite):
     def __init__(self, position, size_x):
         super().__init__()
-        self.drawSize = (size_x, 1080)
-        self.image = pygame.Surface(self.drawSize)
+        self.drawSize = (size_x, GameSetting.screenHeight)
+        self.image = pygame.Surface(self.drawSize).convert()
 
         # 更黑的叠层
         self.image.fill((0, 0, 0))
@@ -283,21 +293,28 @@ class JudgementTextSprite(pygame.sprite.Sprite):
 
 
 class VariableTextSprite(pygame.sprite.Sprite):
-    def __init__(self, label, text_size, color, position):
+    def __init__(self, label, text_size, color, position, anchor):
         super().__init__()
         self.font = pygame.font.Font('../font/Silver.ttf', text_size)
         self.color = color
         self.position = position
         self.label = label
+        self.anchor = anchor
         self.draw_text(self.label)
         self.active = False
     
     def update(self, value):
-        self.draw_text(self.label + value)
+        self.draw_text(self.label + str(value))
 
     def draw_text(self, text):
         if text is not str:
             text = str(text)
 
         self.image = self.font.render(text, True, self.color)
-        self.rect = self.image.get_rect(center=self.position)
+        if self.anchor == 'center':
+            self.rect = self.image.get_rect(center=self.position)
+        elif self.anchor == 'left':
+            self.rect = self.image.get_rect(midleft=self.position)
+        elif self.anchor == 'right':
+            self.rect = self.image.get_rect(midright=self.position)
+

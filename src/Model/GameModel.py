@@ -6,7 +6,7 @@ from typing import List, Tuple, Optional, Dict
 
 class LevelModel:
     # 按键基础数据
-    noteSpeed: int = 1500
+    noteSpeed: int = 2000
 
     # 当前关卡数据
     currentSong: Song
@@ -18,6 +18,7 @@ class LevelModel:
     noteSpritePool: NoteSpritePool = NoteSpritePool()
     lnSpritePool: LNSpritePool = LNSpritePool()
     noteQueue: List[List[NoteSprite | LNSprite]] = []  # 判定用
+    totalNotes: int = 0
 
     # 背景
     backgroundImage: Surface
@@ -25,7 +26,7 @@ class LevelModel:
 
 class ManiaUIModel:
     lineWidth: int = 120
-    lineStart: int = 800
+    lineStart: int = 0
     noteSpawnPosition: int = -50
     noteDestination: int = 900
     judgementPosition: int = 500
@@ -47,4 +48,4 @@ class PlayerModel:
     maxCombo: int = 0
     score: int = 0
     accuracy: float = 0.0
-
+    scoreBonus: int = 100

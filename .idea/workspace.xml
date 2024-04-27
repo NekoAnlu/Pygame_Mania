@@ -5,12 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update">
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_31603/0/6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_31603/0/6.mc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_31603/0/6.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_6044/0/MisoilePunch ~Takenoko Soe~ - Fin.ArcDeaR.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_6044/0/MisoilePunch ~Takenoko Soe~ - Fin.ArcDeaR.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_6044/0/Various Artists - Malody 4K Extra Dan v3-Stream (ex3).mc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Converter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Converter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/BeatmapModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/BeatmapModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/GameModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/GameModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/SettingModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/SettingModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,15 +65,16 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;G:/PythonProject/Pygame_Mania/font&quot;
+    &quot;last_opened_file_path&quot;: &quot;G:/PythonProject/Pygame_Mania/beatmaps&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="G:\PythonProject\Pygame_Mania\font" />
       <recent name="G:\PythonProject\Pygame_Mania\beatmaps" />
+      <recent name="G:\PythonProject\Pygame_Mania\font" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\PythonProject\Pygame_Mania\beatmaps" />
       <recent name="G:\PythonProject\Pygame_Mania\src" />
     </key>
   </component>

@@ -1,7 +1,9 @@
 import pygame
+import cProfile
 from pygame.locals import *
 from GameController import ManiaGame
 from Grahpic import ManiaSprite
+from src.Model.SettingModel import GameSetting
 
 
 class ManiaPygame:
@@ -10,8 +12,8 @@ class ManiaPygame:
     def __init__(self):
         self.running = True
         self.screen = None
-        self.clock = pygame.time.Clock()
-        self.size = self.weight, self.height = 1920, 1080
+        # self.clock = pygame.time.Clock()
+        self.size = self.weight, self.height = GameSetting.screenWidth, GameSetting.screenHeight
         self.gameController = ManiaGame()
 
         # note = NoteSprite((200, 200))
@@ -21,12 +23,11 @@ class ManiaPygame:
         # self.spritesGroup.add(hitPosition)
 
     def on_init(self):
+        pygame.mixer.pre_init(44100, 16, 2, 4096)
         pygame.init()
         # temp
+        self.screen = pygame.display.set_mode(self.size, pygame.DOUBLEBUF, 16)
         self.gameController.load_resource()
-        self.screen = pygame.display.set_mode(self.size, pygame.NOFRAME)
-        pygame.display.set_mode((1920, 1080))
-
         # self.screen.blit(self.gameController.levelModel.backgroundImage, self.gameController.levelModel.backgroundImage.get_rect())
 
         self.running = True
@@ -41,8 +42,8 @@ class ManiaPygame:
 
 
     def on_loop(self):
-
-        dt = self.clock.tick(120) / 1000
+        pass
+        # dt = self.clock.tick(1000) / 1000
         # self.gameController.levelModel.timer += dt
 
         # pygame.surface.Surface.blit(self.screen,)
@@ -72,6 +73,14 @@ class ManiaPygame:
         self.on_cleanup()
 
 
+profiler = cProfile.Profile()
+profiler.enable()
+
 theApp = ManiaPygame()
 theApp.on_init()
 theApp.on_execute()
+
+profiler.disable()
+
+
+profiler.print_stats(sort='time')

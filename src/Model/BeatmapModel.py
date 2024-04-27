@@ -19,7 +19,7 @@ class Chart(BaseModel):
     offset: int = 0
     backgroundPath: str
     filePath: str
-    bpmList: List[Tuple[float, int]]  # bpm timing
+    bpmList: List[Tuple[float, float]]  # bpm timing
     noteList: List[Note]
 
 

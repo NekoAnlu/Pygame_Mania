@@ -8,6 +8,12 @@ class MCConverter:
         pass
 
     def mc_converter(self, path: str) -> Song:
+        # _basepath = '../beatmaps/_song_6044/0/'
+        # _filename = 'Various Artists - Malody 4K Extra Dan v3-Stream (ex3).mc'
+
+        # _basepath = '../beatmaps/_song_31603/0/'
+        # _filename = '6.mc'
+
         _basepath = '../beatmaps/_song_4900/0/'
         _filename = 'Key4Normal.mc'
 
@@ -47,6 +53,8 @@ class MCConverter:
             chart['audioPath'] = _basepath + _noteData[-1]['sound']  # temp2
             if 'offset' in _noteData[-1]:
                 chart['offset'] = _noteData[-1]['offset']
+            else:
+                chart['offset'] = 0
             chart['noteNum'] = len(_noteData) - 1
             _noteData.pop()  # 删掉最后一个note
 
@@ -56,7 +64,7 @@ class MCConverter:
 
             # 多bpm处理
             if len(_bpmData) > 1:
-                _lastBpm = chart['bpmList'][0].value
+                _lastBpm = chart['bpmList'][0][0]
                 _lastBpmTiming = -1
                 for i, _bpm in enumerate(_bpmData):
                     if i == 0:
@@ -137,11 +145,11 @@ class MCConverter:
         if _currBpmIndex == 0:
             _timing = (_noteBeat[0] * _currSpb + _currSpb * _noteBeat[1] / _noteBeat[2]) * 1000 - chart['offset']
         else:
-            _timing = chart['bpm'][_currBpmIndex][1] + _currSpb * ((_noteBeat[0] - _currBpmBeat[0]) + (
+            _timing = chart['bpmList'][_currBpmIndex][1] + _currSpb * ((_noteBeat[0] - _currBpmBeat[0]) + (
                         (_noteBeat[1] / _noteBeat[2]) - (_currBpmBeat[1] / _currBpmBeat[2]))) * 1000
 
         while _currBpmIndex < len(chart['bpmList']) - 1 and _currBeatTime >= _nextBeatTime:
-            _currBeatTime += 1
+            _currBpmIndex += 1
             _currBpmBeat = _nextBpmBeat
             if _currBpmIndex < len(chart['bpmList']) - 1:
                 _nextBpmBeat = (_bpmData[_currBpmIndex + 1]['beat'][0], _bpmData[_currBpmIndex + 1]['beat'][1],
@@ -151,7 +159,7 @@ class MCConverter:
                 _nextBeatTime = sys.maxsize
             _currBpm = _bpmData[_currBpmIndex]["bpm"]
             _currSpb = float(60) / _currBpm
-            _timing = chart['bpm'][_currBpmIndex][1] + _currSpb * ((_noteBeat[0] - _currBpmBeat[0]) + (
+            _timing = chart['bpmList'][_currBpmIndex][1] + _currSpb * ((_noteBeat[0] - _currBpmBeat[0]) + (
                         (_noteBeat[1] / _noteBeat[2]) - (_currBpmBeat[1] / _currBpmBeat[2]))) * 1000
 
         return _timing
