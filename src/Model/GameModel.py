@@ -1,4 +1,4 @@
-from src.Model.BeatmapModel import *
+import src
 from src.Grahpic.ManiaSprite import *
 from pygame import *
 from typing import List, Tuple, Optional, Dict
@@ -6,7 +6,7 @@ from typing import List, Tuple, Optional, Dict
 
 class LevelModel:
     # 按键基础数据
-    noteSpeed: int = 2000
+    noteSpeed: int = 1900
 
     # 当前关卡数据
     currentSong: Song

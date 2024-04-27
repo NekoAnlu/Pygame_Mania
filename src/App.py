@@ -1,3 +1,6 @@
+import os
+os.environ['SDL_RENDER_DRIVER'] = 'direct3d'  # 对于 Windows
+
 import pygame
 import cProfile
 from pygame.locals import *
@@ -26,8 +29,10 @@ class ManiaPygame:
         pygame.mixer.pre_init(44100, 16, 2, 4096)
         pygame.init()
         # temp
-        self.screen = pygame.display.set_mode(self.size, pygame.DOUBLEBUF, 16)
+        self.screen = pygame.display.set_mode(self.size, pygame.DOUBLEBUF | pygame.HWSURFACE)
+        # self.screen.convert()
         self.gameController.load_resource()
+        print(pygame.display.Info())
         # self.screen.blit(self.gameController.levelModel.backgroundImage, self.gameController.levelModel.backgroundImage.get_rect())
 
         self.running = True
@@ -51,7 +56,7 @@ class ManiaPygame:
     def on_render(self):
         self.gameController.game_start(self.screen)
 
-        pygame.display.flip()
+        #pygame.display.flip()
 
     # on_cleanup call pygame.quit() that quits all PyGame modules. Anything else will be cleaned up by Python.
     def on_cleanup(self):

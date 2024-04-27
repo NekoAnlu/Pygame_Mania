@@ -126,28 +126,50 @@ class ManiaGame:
 
         # 变化数值Text
         _ComboText = VariableTextSprite('', 70, (0, 255, 255), (_panelCenterX, self.uiModel.comboPosition), 'center')
-        _AccuracyText = VariableTextSprite('', 70, (0, 255, 255), (20, 120), 'left')
-        _ScoreText = VariableTextSprite('', 70, (0, 255, 255), (20, 50), 'left')
+        _AccuracyText = VariableTextSprite('', 70, (0, 255, 255), (self.gameSetting.screenWidth, 120), 'right')
+        _ScoreText = VariableTextSprite('', 120, (0, 255, 255), (self.gameSetting.screenWidth, 60), 'right')
+
+        _PPerfectCountText = VariableTextSprite('Perfect: ', 30, (255, 255, 0), (30, 700), 'left')
+        _PerfectCountText = VariableTextSprite('Perfect: ', 30, (0, 255, 255), (30, 730), 'left')
+        _GreatCountText = VariableTextSprite('Great: ', 30, (0, 255, 255), (30, 760), 'left')
+        _CoolCountText = VariableTextSprite('Cool: ', 30, (0, 255, 255), (30, 790), 'left')
+        _BadCountText = VariableTextSprite('Bad: ', 30, (0, 255, 255), (30, 820), 'left')
+        _MissCountText = VariableTextSprite('Miss: ', 30, (0, 255, 255), (30, 850), 'left')
 
         _FpsText = VariableTextSprite('', 40, (0, 255, 255), (self.gameSetting.screenWidth - 10, self.gameSetting.screenHeight - 50), 'right')
 
         self.variableTextGroup.add(_ComboText, _AccuracyText, _ScoreText, _FpsText)
+        self.variableTextGroup.add(_PPerfectCountText, _PerfectCountText, _GreatCountText, _CoolCountText, _BadCountText, _MissCountText)
         self.uiModel.variableTextList['Combo'] = _ComboText
         self.uiModel.variableTextList['Accuracy'] = _AccuracyText
         self.uiModel.variableTextList['Score'] = _ScoreText
         self.uiModel.variableTextList['Fps'] = _FpsText
 
+        self.uiModel.variableTextList['PPerfectCount'] = _PPerfectCountText
+        self.uiModel.variableTextList['PerfectCount'] = _PerfectCountText
+        self.uiModel.variableTextList['GreatCount'] = _GreatCountText
+        self.uiModel.variableTextList['CoolCount'] = _CoolCountText
+        self.uiModel.variableTextList['BadCount'] = _BadCountText
+        self.uiModel.variableTextList['MissCount'] = _MissCountText
+
     def play_music(self):
         if not pygame.mixer.music.get_busy():
             pygame.mixer.music.play()
+        if self.is_game_end():
+            pygame.mixer.music.stop()
+
+    def is_game_end(self) -> bool:
+        for i in range(len(self.lineIndex)):
+            if self.lineIndex[i] < len(self.levelModel.noteList[i]):
+                return False
+        return True
 
     def spawn_notes(self):
         _currTime = self.levelModel.timer
         _dropTime = ((self.uiModel.noteDestination - self.uiModel.noteSpawnPosition) / self.levelModel.noteSpeed) * 1000
 
         for i, lineIndex in enumerate(self.lineIndex):
-            while self.lineIndex[i] < len(self.levelModel.noteList[i]) and self.levelModel.noteList[i][
-                self.lineIndex[i]].startTiming <= _currTime + _dropTime:
+            while self.lineIndex[i] < len(self.levelModel.noteList[i]) and self.levelModel.noteList[i][self.lineIndex[i]].startTiming <= _currTime + _dropTime:
                 _x = self.uiModel.lineStart + self.uiModel.lineWidth * i
                 # print(self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0)
                 if self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0:
@@ -393,6 +415,13 @@ class ManiaGame:
         self.uiModel.variableTextList['Accuracy'].update(str(self.playerModel.accuracy) + '%')
         self.uiModel.variableTextList['Score'].update(self.playerModel.score)
 
+        self.uiModel.variableTextList['PPerfectCount'].update(self.playerModel.pPerfectCount)
+        self.uiModel.variableTextList['PerfectCount'].update(self.playerModel.perfectCount)
+        self.uiModel.variableTextList['GreatCount'].update(self.playerModel.greatCount)
+        self.uiModel.variableTextList['CoolCount'].update(self.playerModel.coolCount)
+        self.uiModel.variableTextList['BadCount'].update(self.playerModel.badCount)
+        self.uiModel.variableTextList['MissCount'].update(self.playerModel.missCount)
+
         self.uiModel.variableTextList['Fps'].update(round(self.pygameClock.get_fps()))
 
     # ---------------------事件处理-----------------------------
@@ -428,6 +457,8 @@ class ManiaGame:
         if self.leadInTime <= 0:
             self.play_music()
             self.leadInTime = 0
+
+        pygame.display.update()
 
 # game = ManiaGame()
 # game.test()

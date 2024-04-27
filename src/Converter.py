@@ -8,14 +8,14 @@ class MCConverter:
         pass
 
     def mc_converter(self, path: str) -> Song:
-        # _basepath = '../beatmaps/_song_6044/0/'
-        # _filename = 'Various Artists - Malody 4K Extra Dan v3-Stream (ex3).mc'
+        _basepath = '../beatmaps/_song_6044/0/'
+        _filename = 'Various Artists - Malody 4K Extra Dan v3-Stream (ex3).mc'
 
         # _basepath = '../beatmaps/_song_31603/0/'
         # _filename = '6.mc'
 
-        _basepath = '../beatmaps/_song_4900/0/'
-        _filename = 'Key4Normal.mc'
+        # _basepath = '../beatmaps/_song_4900/0/'
+        # _filename = 'Key4Hyper.mc'
 
         # _basepath = '../beatmaps/_song_978/0/'
         # _filename = 'iowo-DREAM-KEY BEGINNER LV..mc'
