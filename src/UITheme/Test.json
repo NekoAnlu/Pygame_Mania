@@ -1,0 +1,133 @@
+{
+  "button":
+  {
+     "colours":
+     {
+         "normal_border": "White",
+         "normal_bg": "SlateGray",
+         "normal_text": "White"
+     },
+     "misc":
+     {
+         "shape": "rounded_rectangle",
+         "shape_corner_radius": "10",
+         "border_width": "2"
+     }
+  },
+  "#Judgement_Text":
+  {
+    "font":
+    {
+        "name": "Silver",
+        "size": 50
+    }
+  },
+  "##PPerfect_Text":
+   {
+     "prototype": "#Judgement_Text",
+     "colours":
+      {
+         "normal_text": "gold"
+      }
+   },
+  "##Perfect_Text":
+   {
+     "prototype": "#Judgement_Text",
+     "colours":
+      {
+         "normal_text": "yellow"
+      }
+   },
+  "##Great_Text":
+   {
+     "prototype": "#Judgement_Text",
+     "colours":
+      {
+         "normal_text": "green"
+      }
+   },
+  "##Cool_Text":
+   {
+     "prototype": "#Judgement_Text",
+     "colours":
+      {
+         "normal_text": "blue"
+      }
+   },
+  "##Bad_Text":
+   {
+     "prototype": "#Judgement_Text",
+     "colours":
+      {
+         "normal_text": "grey"
+      }
+   },
+  "##Miss_Text":
+   {
+     "prototype": "#Judgement_Text",
+     "colours":
+      {
+         "normal_text": "red"
+      }
+   },
+  "#Combo_Text":
+  {
+    "font":
+    {
+        "name": "Silver",
+        "size": 80
+    },
+    "colours":
+    {
+       "normal_text": "white"
+    }
+  },
+   "#Score_Text":
+  {
+    "font":
+    {
+        "name": "Silver",
+        "size": 120
+    },
+    "colours":
+    {
+       "normal_text": "white"
+    },
+     "misc":
+     {
+         "text_horiz_alignment": "right"
+     }
+  },
+  "#Accuracy_Text":
+  {
+    "font":
+    {
+        "name": "Silver",
+        "size": 70
+    },
+    "colours":
+    {
+       "normal_text": "white"
+    },
+    "misc":
+     {
+         "text_horiz_alignment": "right"
+     }
+  },
+  "#Fps_Text":
+  {
+    "font":
+    {
+        "name": "Silver",
+        "size": 30
+    },
+    "misc":
+     {
+         "text_horiz_alignment": "right"
+     },
+    "colours":
+    {
+       "normal_text": "white"
+    }
+  }
+}

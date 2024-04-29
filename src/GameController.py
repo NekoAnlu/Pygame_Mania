@@ -2,13 +2,12 @@ from math import sqrt
 
 import pygame
 from pygame import *
-from pygame.locals import *
 
+from src.Grahpic.ManiaSprite import *
 from Model.GameModel import *
 from Model.SettingModel import *
 from Converter import *
-from src.Grahpic.ManiaSprite import *
-
+from UIManager import *
 
 class ManiaGame:
     lineIndex: List[int] = []
@@ -21,6 +20,7 @@ class ManiaGame:
         self.gameSetting = GameSetting()
         self.playerModel = PlayerModel()
 
+
         # pygame相关
         pygame.mixer.init()
 
@@ -30,6 +30,9 @@ class ManiaGame:
         self.variableTextGroup = pygame.sprite.Group()
 
         self.pygameClock = pygame.time.Clock()
+
+        # 初始化管理器
+        self.uiManager = UIManager(self.levelModel, self.playerModel, self.pygameClock)
 
         # self.gameSetting.deltaTime = self.pygameClock.tick(120)
 
@@ -46,7 +49,8 @@ class ManiaGame:
         self.load_background_image()
 
         # 初始化UI
-        self.init_ui()
+        # self.init_ui()
+        self.uiManager.init_ui()
 
     def load_background_image(self):
         _image = pygame.image.load(self.levelModel.currentChart.backgroundPath).convert()
@@ -96,33 +100,33 @@ class ManiaGame:
 
 
         # ManiaPanel
-        _maniaPanel = ManiaPanelSprite(
-            (self.uiModel.lineStart + (self.uiModel.lineWidth * (len(self.levelModel.noteList) / 2 - 0.5)), 0),
-            self.uiModel.lineWidth * len(self.levelModel.noteList) * 1.1)
-        self.uiSpritesGroup.add(_maniaPanel)
+        # _maniaPanel = ManiaPanelSprite(
+        #     (self.uiModel.lineStart + (self.uiModel.lineWidth * (len(self.levelModel.noteList) / 2 - 0.5)), 0),
+        #     self.uiModel.lineWidth * len(self.levelModel.noteList) * 1.1)
+        # self.uiSpritesGroup.add(_maniaPanel)
 
         # HitPosition
-        for i in range(len(self.levelModel.noteList)):
-            _lineSprite = HitPositionSprite(
-                (self.uiModel.lineStart + self.uiModel.lineWidth * i, self.uiModel.noteDestination), i)
-            self.uiSpritesGroup.add(_lineSprite)
+        # for i in range(len(self.levelModel.noteList)):
+        #     _lineSprite = HitPositionSprite(
+        #         (self.uiModel.lineStart + self.uiModel.lineWidth * i, self.uiModel.noteDestination), i)
+        #     self.uiSpritesGroup.add(_lineSprite)
 
-        # Judgement Text (优化！！)
-        _PPerfectText = JudgementTextSprite('Perfect', 50, (255, 255, 0),
-                                            (_panelCenterX, self.uiModel.judgementPosition))
-        _PerfectText = JudgementTextSprite('Perfect', 50, (0, 255, 255),
-                                           (_panelCenterX, self.uiModel.judgementPosition))
-        _GreatText = JudgementTextSprite('Great', 50, (0, 255, 255), (_panelCenterX, self.uiModel.judgementPosition))
-        _CoolText = JudgementTextSprite('Cool', 50, (0, 255, 255), (_panelCenterX, self.uiModel.judgementPosition))
-        _BadText = JudgementTextSprite('Bad', 50, (0, 255, 255), (_panelCenterX, self.uiModel.judgementPosition))
-        _MissText = JudgementTextSprite('Miss', 50, (255, 0, 0), (_panelCenterX, self.uiModel.judgementPosition))
-        self.uiModel.judgementTextSpriteDict['PPerfect'] = _PPerfectText
-        self.uiModel.judgementTextSpriteDict['Perfect'] = _PerfectText
-        self.uiModel.judgementTextSpriteDict['Great'] = _GreatText
-        self.uiModel.judgementTextSpriteDict['Cool'] = _CoolText
-        self.uiModel.judgementTextSpriteDict['Bad'] = _BadText
-        self.uiModel.judgementTextSpriteDict['Miss'] = _MissText
-        self.judgementTextGroup.add(_PPerfectText, _PerfectText, _GreatText, _CoolText, _BadText, _MissText)
+        # # Judgement Text (优化！！)
+        # _PPerfectText = JudgementTextSprite('Perfect', 50, (255, 255, 0),
+        #                                     (_panelCenterX, self.uiModel.judgementPosition))
+        # _PerfectText = JudgementTextSprite('Perfect', 50, (0, 255, 255),
+        #                                    (_panelCenterX, self.uiModel.judgementPosition))
+        # _GreatText = JudgementTextSprite('Great', 50, (0, 255, 255), (_panelCenterX, self.uiModel.judgementPosition))
+        # _CoolText = JudgementTextSprite('Cool', 50, (0, 255, 255), (_panelCenterX, self.uiModel.judgementPosition))
+        # _BadText = JudgementTextSprite('Bad', 50, (0, 255, 255), (_panelCenterX, self.uiModel.judgementPosition))
+        # _MissText = JudgementTextSprite('Miss', 50, (255, 0, 0), (_panelCenterX, self.uiModel.judgementPosition))
+        # self.uiModel.judgementTextSpriteDict['PPerfect'] = _PPerfectText
+        # self.uiModel.judgementTextSpriteDict['Perfect'] = _PerfectText
+        # self.uiModel.judgementTextSpriteDict['Great'] = _GreatText
+        # self.uiModel.judgementTextSpriteDict['Cool'] = _CoolText
+        # self.uiModel.judgementTextSpriteDict['Bad'] = _BadText
+        # self.uiModel.judgementTextSpriteDict['Miss'] = _MissText
+        # self.judgementTextGroup.add(_PPerfectText, _PerfectText, _GreatText, _CoolText, _BadText, _MissText)
 
         # 变化数值Text
         _ComboText = VariableTextSprite('', 70, (0, 255, 255), (_panelCenterX, self.uiModel.comboPosition), 'center')
@@ -167,10 +171,11 @@ class ManiaGame:
     def spawn_notes(self):
         _currTime = self.levelModel.timer
         _dropTime = ((self.uiModel.noteDestination - self.uiModel.noteSpawnPosition) / self.levelModel.noteSpeed) * 1000
+        _lineStart = self.gameSetting.screenWidth / 2 - self.uiModel.lineWidth * len(self.levelModel.noteList) / 2.5
 
         for i, lineIndex in enumerate(self.lineIndex):
             while self.lineIndex[i] < len(self.levelModel.noteList[i]) and self.levelModel.noteList[i][self.lineIndex[i]].startTiming <= _currTime + _dropTime:
-                _x = self.uiModel.lineStart + self.uiModel.lineWidth * i
+                _x = _lineStart + self.uiModel.lineWidth * i
                 # print(self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0)
                 if self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0:
                     _noteObj = self.levelModel.noteSpritePool.get_note((_x, self.uiModel.noteSpawnPosition),
@@ -302,7 +307,8 @@ class ManiaGame:
 
     # 具体判定对view和model的更新
     def note_judgement(self, judge_name):
-        self.update_judgement_text(judge_name)
+        # self.update_judgement_text(judge_name)
+        self.uiManager.update_judgement_text(judge_name)
         if judge_name == 'PPerfect':
             self.playerModel.pPerfectCount += 1
             self.playerModel.combo += 1
@@ -401,13 +407,13 @@ class ManiaGame:
 
     # ------------------- UI更新 ---------------------------
 
-    def update_judgement_text(self, text):
-        for _sprite in self.uiModel.judgementTextSpriteDict.values():
-            _sprite.active = False
-            self.judgementTextGroup.remove(_sprite)
-        self.uiModel.judgementTextSpriteDict[text].active = True
-        self.uiModel.judgementTextSpriteDict[text].timer = 0  # 初始化timer
-        self.judgementTextGroup.add(self.uiModel.judgementTextSpriteDict[text])
+    # def update_judgement_text(self, text):
+    #     for _sprite in self.uiModel.judgementTextSpriteDict.values():
+    #         _sprite.active = False
+    #         self.judgementTextGroup.remove(_sprite)
+    #     self.uiModel.judgementTextSpriteDict[text].active = True
+    #     self.uiModel.judgementTextSpriteDict[text].timer = 0  # 初始化timer
+    #     self.judgementTextGroup.add(self.uiModel.judgementTextSpriteDict[text])
 
     # 可优化？
     def update_variable_text(self):
@@ -426,8 +432,13 @@ class ManiaGame:
 
     # ---------------------事件处理-----------------------------
     def on_key_press_event(self, key_event):
-        self.uiSpritesGroup.update(key_event)
+        # temp
+        self.uiManager.gameSpriteGroup.update(key_event)
         self.hit_note_event(key_event)
+
+    def process_user_event(self, user_event):
+        if user_event.type >= pygame.USEREVENT + 32:
+            self.uiManager.process_ui_event(user_event)
 
     # ------------------------------ 主循环 ------------------------
     def game_start(self, screen):
@@ -441,16 +452,19 @@ class ManiaGame:
         self.noteSpritesGroup.empty()
 
         # 一些数据更新
+        self.uiManager.update_ui(self.gameSetting.deltaTime)
         self.update_note_queue()
-        self.update_variable_text()
+        # self.update_variable_text()
 
         # 生成按键精灵
         self.spawn_notes()
 
         # 渲染 (注意图层)
         self.draw_background_ui(screen)
+        self.uiManager.draw_ui(screen)
         self.draw_notes(screen)
-        self.draw_front_ui(screen)
+        # self.draw_front_ui(screen)
+
 
         # Lead In
         self.leadInTime -= self.gameSetting.deltaTime

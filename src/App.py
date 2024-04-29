@@ -1,11 +1,6 @@
-import os
-os.environ['SDL_RENDER_DRIVER'] = 'direct3d'  # 对于 Windows
-
 import pygame
 import cProfile
-from pygame.locals import *
 from GameController import ManiaGame
-from Grahpic import ManiaSprite
 from src.Model.SettingModel import GameSetting
 
 
@@ -17,7 +12,7 @@ class ManiaPygame:
         self.screen = None
         # self.clock = pygame.time.Clock()
         self.size = self.weight, self.height = GameSetting.screenWidth, GameSetting.screenHeight
-        self.gameController = ManiaGame()
+        self.gameController: ManiaGame
 
         # note = NoteSprite((200, 200))
         # hitPosition = HitPositionSprite((500, 500))
@@ -30,6 +25,8 @@ class ManiaPygame:
         pygame.init()
         # temp
         self.screen = pygame.display.set_mode(self.size, pygame.DOUBLEBUF | pygame.HWSURFACE)
+        # 要在pygame初始化后初始化
+        self.gameController = ManiaGame()
         # self.screen.convert()
         self.gameController.load_resource()
         print(pygame.display.Info())
@@ -42,6 +39,8 @@ class ManiaPygame:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            elif event.type >= pygame.USEREVENT:
+                self.gameController.process_user_event(event)
             elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
                 self.gameController.on_key_press_event(event)
 

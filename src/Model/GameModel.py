@@ -1,7 +1,9 @@
-import src
+
 from src.Grahpic.ManiaSprite import *
 from pygame import *
 from typing import List, Tuple, Optional, Dict
+
+from .BeatmapModel import *
 
 
 class LevelModel:

@@ -4,7 +4,7 @@ import pygame
 from pygame.locals import *
 
 from src.Model.SettingModel import *
-from src.Model.BeatmapModel import *
+#from src.Model.BeatmapModel import *
 
 
 class NoteSprite(pygame.sprite.Sprite):
