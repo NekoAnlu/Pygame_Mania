@@ -118,9 +118,12 @@ class LNSprite(pygame.sprite.Sprite):
         self.active = True
         # sp判定用
         self.isHeadMiss = False
+        self.isTailMiss = False
         self.isHolding = False
-        # self.lnBodyRect = Rect()
         self.length = 0
+        # new标记head miss被抛出
+        self.isHeadMissCount = False
+        self.isTailMissCount = False
 
     def update(self, speed, timer):
         self.check_miss(timer)
@@ -182,6 +185,7 @@ class LNSprite(pygame.sprite.Sprite):
         # 大于timing不允许再判定
         if timer - self.endTiming > GameSetting.timing_Miss:
             self.canJudge = False
+            self.isTailMiss = True
         # 超出范围隐藏
         if self.rect.top > GameSetting.screenHeight:
             self.active = False
@@ -270,6 +274,7 @@ class ManiaPanelSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midtop=position)
 
 
+# --------------------------deprecated（帧率低的罪魁祸首）-----------------
 class JudgementTextSprite(pygame.sprite.Sprite):
     def __init__(self, text, text_size, color, position):
         super().__init__()

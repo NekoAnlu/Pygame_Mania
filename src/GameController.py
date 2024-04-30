@@ -1,3 +1,4 @@
+import os
 from math import sqrt
 
 import pygame
@@ -10,33 +11,57 @@ from Converter import *
 from UIManager import *
 
 class ManiaGame:
-    lineIndex: List[int] = []
-    leadInTime: int = 2000
-
-    def __init__(self):
-        # 初始化数据模型
+    def __init__(self, screen):
+        # 初始化各种数据模型
         self.levelModel = LevelModel()
         self.uiModel = ManiaUIModel()
         self.gameSetting = GameSetting()
         self.playerModel = PlayerModel()
 
-
         # pygame相关
-        pygame.mixer.init()
-
-        self.noteSpritesGroup = pygame.sprite.Group()
-        self.judgementTextGroup = pygame.sprite.Group()
-        self.uiSpritesGroup = pygame.sprite.Group()
-        self.variableTextGroup = pygame.sprite.Group()
-
         self.pygameClock = pygame.time.Clock()
+        pygame.mixer.init()
+        self.screen = screen
 
-        # 初始化管理器
+        # 管理器
         self.uiManager = UIManager(self.levelModel, self.playerModel, self.pygameClock)
 
-        # self.gameSetting.deltaTime = self.pygameClock.tick(120)
+        # 控制器
+        #self.gameController = GameController(self.levelModel, self.uiModel, self.gameSetting, self.playerModel, self.pygameClock, self.uiManager)
+        self.titlePageController = TitlePageController(self.uiManager, self.pygameClock)
 
-    def load_resource(self):
+    def game_page_loop(self):
+        # self.gameController.load_game_resource()
+        self.gameController.game_start(self.screen)
+
+    def title_page_loop(self):
+        self.titlePageController.draw_title_page(self.screen)
+
+
+class GameController:
+    lineIndex: List[int] = []
+    leadInTime: int = 2000
+
+    def __init__(self, level_model: LevelModel, ui_model: ManiaUIModel
+                 , game_setting: GameSetting, player_model: PlayerModel, pygame_clock: Clock, ui_manager: UIManager):
+        # 初始化数据模型
+        self.levelModel = level_model
+        self.uiModel = ui_model
+        self.gameSetting = game_setting
+        self.playerModel = player_model
+
+        # 精灵组
+        self.noteSpritesGroup = pygame.sprite.Group()
+        self.uiSpritesGroup = pygame.sprite.Group()
+
+        self.pygameClock = pygame_clock
+
+        # 初始化管理器
+        self.uiManager = ui_manager
+
+        self.load_game_resource()
+
+    def load_game_resource(self):
         # 读谱面
         converter = MCConverter()
         self.levelModel.currentSong = converter.mc_converter('1')
@@ -50,7 +75,7 @@ class ManiaGame:
 
         # 初始化UI
         # self.init_ui()
-        self.uiManager.init_ui()
+        self.uiManager.init_game_ui()
 
     def load_background_image(self):
         _image = pygame.image.load(self.levelModel.currentChart.backgroundPath).convert()
@@ -90,72 +115,6 @@ class ManiaGame:
             # new 计算按键总数 LN算2note
             self.levelModel.totalNotes += 1 if _note.noteType == 0 else 2
 
-        # print(self.levelModel.totalNotes)
-
-    def init_ui(self):
-        # data
-        self.uiModel.lineStart = self.gameSetting.screenWidth / 2 - self.uiModel.lineWidth * len(self.levelModel.noteList) / 2.5
-
-        _panelCenterX = self.uiModel.lineStart + (self.uiModel.lineWidth * (len(self.levelModel.noteList) / 2 - 0.5))
-
-
-        # ManiaPanel
-        # _maniaPanel = ManiaPanelSprite(
-        #     (self.uiModel.lineStart + (self.uiModel.lineWidth * (len(self.levelModel.noteList) / 2 - 0.5)), 0),
-        #     self.uiModel.lineWidth * len(self.levelModel.noteList) * 1.1)
-        # self.uiSpritesGroup.add(_maniaPanel)
-
-        # HitPosition
-        # for i in range(len(self.levelModel.noteList)):
-        #     _lineSprite = HitPositionSprite(
-        #         (self.uiModel.lineStart + self.uiModel.lineWidth * i, self.uiModel.noteDestination), i)
-        #     self.uiSpritesGroup.add(_lineSprite)
-
-        # # Judgement Text (优化！！)
-        # _PPerfectText = JudgementTextSprite('Perfect', 50, (255, 255, 0),
-        #                                     (_panelCenterX, self.uiModel.judgementPosition))
-        # _PerfectText = JudgementTextSprite('Perfect', 50, (0, 255, 255),
-        #                                    (_panelCenterX, self.uiModel.judgementPosition))
-        # _GreatText = JudgementTextSprite('Great', 50, (0, 255, 255), (_panelCenterX, self.uiModel.judgementPosition))
-        # _CoolText = JudgementTextSprite('Cool', 50, (0, 255, 255), (_panelCenterX, self.uiModel.judgementPosition))
-        # _BadText = JudgementTextSprite('Bad', 50, (0, 255, 255), (_panelCenterX, self.uiModel.judgementPosition))
-        # _MissText = JudgementTextSprite('Miss', 50, (255, 0, 0), (_panelCenterX, self.uiModel.judgementPosition))
-        # self.uiModel.judgementTextSpriteDict['PPerfect'] = _PPerfectText
-        # self.uiModel.judgementTextSpriteDict['Perfect'] = _PerfectText
-        # self.uiModel.judgementTextSpriteDict['Great'] = _GreatText
-        # self.uiModel.judgementTextSpriteDict['Cool'] = _CoolText
-        # self.uiModel.judgementTextSpriteDict['Bad'] = _BadText
-        # self.uiModel.judgementTextSpriteDict['Miss'] = _MissText
-        # self.judgementTextGroup.add(_PPerfectText, _PerfectText, _GreatText, _CoolText, _BadText, _MissText)
-
-        # 变化数值Text
-        _ComboText = VariableTextSprite('', 70, (0, 255, 255), (_panelCenterX, self.uiModel.comboPosition), 'center')
-        _AccuracyText = VariableTextSprite('', 70, (0, 255, 255), (self.gameSetting.screenWidth, 120), 'right')
-        _ScoreText = VariableTextSprite('', 120, (0, 255, 255), (self.gameSetting.screenWidth, 60), 'right')
-
-        _PPerfectCountText = VariableTextSprite('Perfect: ', 30, (255, 255, 0), (30, 700), 'left')
-        _PerfectCountText = VariableTextSprite('Perfect: ', 30, (0, 255, 255), (30, 730), 'left')
-        _GreatCountText = VariableTextSprite('Great: ', 30, (0, 255, 255), (30, 760), 'left')
-        _CoolCountText = VariableTextSprite('Cool: ', 30, (0, 255, 255), (30, 790), 'left')
-        _BadCountText = VariableTextSprite('Bad: ', 30, (0, 255, 255), (30, 820), 'left')
-        _MissCountText = VariableTextSprite('Miss: ', 30, (0, 255, 255), (30, 850), 'left')
-
-        _FpsText = VariableTextSprite('', 40, (0, 255, 255), (self.gameSetting.screenWidth - 10, self.gameSetting.screenHeight - 50), 'right')
-
-        self.variableTextGroup.add(_ComboText, _AccuracyText, _ScoreText, _FpsText)
-        self.variableTextGroup.add(_PPerfectCountText, _PerfectCountText, _GreatCountText, _CoolCountText, _BadCountText, _MissCountText)
-        self.uiModel.variableTextList['Combo'] = _ComboText
-        self.uiModel.variableTextList['Accuracy'] = _AccuracyText
-        self.uiModel.variableTextList['Score'] = _ScoreText
-        self.uiModel.variableTextList['Fps'] = _FpsText
-
-        self.uiModel.variableTextList['PPerfectCount'] = _PPerfectCountText
-        self.uiModel.variableTextList['PerfectCount'] = _PerfectCountText
-        self.uiModel.variableTextList['GreatCount'] = _GreatCountText
-        self.uiModel.variableTextList['CoolCount'] = _CoolCountText
-        self.uiModel.variableTextList['BadCount'] = _BadCountText
-        self.uiModel.variableTextList['MissCount'] = _MissCountText
-
     def play_music(self):
         if not pygame.mixer.music.get_busy():
             pygame.mixer.music.play()
@@ -174,7 +133,8 @@ class ManiaGame:
         _lineStart = self.gameSetting.screenWidth / 2 - self.uiModel.lineWidth * len(self.levelModel.noteList) / 2.5
 
         for i, lineIndex in enumerate(self.lineIndex):
-            while self.lineIndex[i] < len(self.levelModel.noteList[i]) and self.levelModel.noteList[i][self.lineIndex[i]].startTiming <= _currTime + _dropTime:
+            while self.lineIndex[i] < len(self.levelModel.noteList[i]) and self.levelModel.noteList[i][
+                self.lineIndex[i]].startTiming <= _currTime + _dropTime:
                 _x = _lineStart + self.uiModel.lineWidth * i
                 # print(self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0)
                 if self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0:
@@ -204,13 +164,6 @@ class ManiaGame:
     def draw_background_ui(self, screen):
         screen.blit(self.levelModel.backgroundImage, self.levelModel.backgroundImage.get_rect())
         self.uiSpritesGroup.draw(screen)
-
-    # note图层之上的UI
-    def draw_front_ui(self, screen):
-        self.judgementTextGroup.update()
-        self.judgementTextGroup.draw(screen)
-
-        self.variableTextGroup.draw(screen)
 
     # --------------------判定相关 UI 逻辑-------------------------
     def hit_note_event(self, key_event):
@@ -259,12 +212,13 @@ class ManiaGame:
                     _note.isHolding = True
                 # 正常按下判定
                 elif _offset <= self.gameSetting.timing_Bad:
-                    self.timing_judgement(_offset, _note)
                     # LN正常按下
                     if not _note.isHolding:
+                        self.timing_judgement(_offset, _note)
                         _note.isHolding = True
                     # LN尾巴判定且没有提前松手
                     elif is_key_up and _note.isHolding:
+                        self.timing_judgement(_offset, _note)
                         _note.isHolding = False
                         _note.active = False
                         self.levelModel.noteQueue[line_index].pop(0)
@@ -341,12 +295,15 @@ class ManiaGame:
                 self.note_judgement('Miss')
             # LN头判定
             for j in range(len(self.levelModel.noteQueue[i])):
-                if len(self.levelModel.noteQueue[i]) > 0 and self.levelModel.noteQueue[i][j].noteType == 1 and \
-                        self.levelModel.noteQueue[i][j].isHeadMiss:
-                    self.note_judgement('Miss')
-                # # 是否还可以判定（更新判定队列）
-                # while not self.levelModel.noteQueue[i][0].canJudge:
-                #     self.levelModel.noteQueue[i].pop(0)
+                if len(self.levelModel.noteQueue[i]) > 0 and self.levelModel.noteQueue[i][j].noteType == 1:
+                    if self.levelModel.noteQueue[i][j].isHeadMiss and not self.levelModel.noteQueue[i][
+                        j].isHeadMissCount:
+                        self.levelModel.noteQueue[i][j].isHeadMissCount = True
+                        self.note_judgement('Miss')
+                    if self.levelModel.noteQueue[i][j].isTailMiss and not self.levelModel.noteQueue[i][
+                        j].isTailMissCount:
+                        self.levelModel.noteQueue[i][j].isTailMissCount = True
+                        self.note_judgement('Miss')
 
     # Acc (osu mania scorev1)
     def cal_acc(self):
@@ -405,31 +362,6 @@ class ManiaGame:
 
         self.playerModel.score += int(_BaseScore + _BonusScore)
 
-    # ------------------- UI更新 ---------------------------
-
-    # def update_judgement_text(self, text):
-    #     for _sprite in self.uiModel.judgementTextSpriteDict.values():
-    #         _sprite.active = False
-    #         self.judgementTextGroup.remove(_sprite)
-    #     self.uiModel.judgementTextSpriteDict[text].active = True
-    #     self.uiModel.judgementTextSpriteDict[text].timer = 0  # 初始化timer
-    #     self.judgementTextGroup.add(self.uiModel.judgementTextSpriteDict[text])
-
-    # 可优化？
-    def update_variable_text(self):
-        self.uiModel.variableTextList['Combo'].update(self.playerModel.combo)
-        self.uiModel.variableTextList['Accuracy'].update(str(self.playerModel.accuracy) + '%')
-        self.uiModel.variableTextList['Score'].update(self.playerModel.score)
-
-        self.uiModel.variableTextList['PPerfectCount'].update(self.playerModel.pPerfectCount)
-        self.uiModel.variableTextList['PerfectCount'].update(self.playerModel.perfectCount)
-        self.uiModel.variableTextList['GreatCount'].update(self.playerModel.greatCount)
-        self.uiModel.variableTextList['CoolCount'].update(self.playerModel.coolCount)
-        self.uiModel.variableTextList['BadCount'].update(self.playerModel.badCount)
-        self.uiModel.variableTextList['MissCount'].update(self.playerModel.missCount)
-
-        self.uiModel.variableTextList['Fps'].update(round(self.pygameClock.get_fps()))
-
     # ---------------------事件处理-----------------------------
     def on_key_press_event(self, key_event):
         # temp
@@ -441,6 +373,7 @@ class ManiaGame:
             self.uiManager.process_ui_event(user_event)
 
     # ------------------------------ 主循环 ------------------------
+
     def game_start(self, screen):
         # 每帧调用设置fps
         self.gameSetting.deltaTime = self.pygameClock.tick(1000)
@@ -452,6 +385,7 @@ class ManiaGame:
         self.noteSpritesGroup.empty()
 
         # 一些数据更新
+        self.uiManager.update_variable_text()
         self.uiManager.update_ui(self.gameSetting.deltaTime)
         self.update_note_queue()
         # self.update_variable_text()
@@ -461,10 +395,10 @@ class ManiaGame:
 
         # 渲染 (注意图层)
         self.draw_background_ui(screen)
-        self.uiManager.draw_ui(screen)
+        self.uiManager.draw_back_ui(screen)
         self.draw_notes(screen)
+        self.uiManager.draw_front_ui(screen)
         # self.draw_front_ui(screen)
-
 
         # Lead In
         self.leadInTime -= self.gameSetting.deltaTime
@@ -474,5 +408,30 @@ class ManiaGame:
 
         pygame.display.update()
 
-# game = ManiaGame()
-# game.test()
+
+class TitlePageController:
+    def __init__(self, ui_manager, pygame_clock):
+        self.uiManager = ui_manager
+        self.pygameClock = pygame_clock
+
+        self.preload_beatmap()
+        self.uiManager.init_title_ui()
+
+    def draw_title_page(self, screen: Surface):
+        # 每帧调用设置fps
+        self.pygameClock.tick(1000)
+        screen.fill((59, 79, 110))
+        self.uiManager.update_ui(self.pygameClock.tick(1000)/1000)
+        self.uiManager.draw_front_ui(screen)
+        pygame.display.update()
+
+    def preload_beatmap(self):
+        mc_files = []
+        for root, dirs, files in os.walk("../beatmaps"):
+            for file in files:
+                if file.endswith('.mc'):
+                    mc_files.append(os.path.join(root, file))
+        return mc_files
+
+    def fill_song_menu(self):
+        pass

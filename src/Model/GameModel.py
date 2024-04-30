@@ -1,10 +1,12 @@
-
 from src.Grahpic.ManiaSprite import *
 from pygame import *
 from typing import List, Tuple, Optional, Dict
 
 from .BeatmapModel import *
 
+
+class GameModel:
+    songList: List[Song]
 
 class LevelModel:
     # 按键基础数据

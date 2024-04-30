@@ -2,6 +2,10 @@
 from typing import Dict
 
 
+class PlayerSetting:
+    noteSpeed: int
+    OD: int
+
 class GameSetting:
     deltaTime: int
 

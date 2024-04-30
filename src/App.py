@@ -1,24 +1,17 @@
 import pygame
-import cProfile
 from GameController import ManiaGame
 from src.Model.SettingModel import GameSetting
 
 
 class ManiaPygame:
-    gameController: ManiaGame
+    maniaGame: ManiaGame
 
     def __init__(self):
         self.running = True
         self.screen = None
         # self.clock = pygame.time.Clock()
         self.size = self.weight, self.height = GameSetting.screenWidth, GameSetting.screenHeight
-        self.gameController: ManiaGame
-
-        # note = NoteSprite((200, 200))
-        # hitPosition = HitPositionSprite((500, 500))
-        # self.spritesGroup = pygame.sprite.Group()d
-        # self.spritesGroup.add(note)
-        # self.spritesGroup.add(hitPosition)
+        self.maniaGame: ManiaGame
 
     def on_init(self):
         pygame.mixer.pre_init(44100, 16, 2, 4096)
@@ -26,11 +19,7 @@ class ManiaPygame:
         # temp
         self.screen = pygame.display.set_mode(self.size, pygame.DOUBLEBUF | pygame.HWSURFACE)
         # 要在pygame初始化后初始化
-        self.gameController = ManiaGame()
-        # self.screen.convert()
-        self.gameController.load_resource()
-        print(pygame.display.Info())
-        # self.screen.blit(self.gameController.levelModel.backgroundImage, self.gameController.levelModel.backgroundImage.get_rect())
+        self.maniaGame = ManiaGame(self.screen)
 
         self.running = True
 
@@ -39,23 +28,23 @@ class ManiaPygame:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type >= pygame.USEREVENT:
-                self.gameController.process_user_event(event)
-            elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
-                self.gameController.on_key_press_event(event)
+            self.maniaGame.uiManager.process_ui_event(event)
+            # elif event.type >= pygame.USEREVENT:
+            #     self.maniaGame.gameController.process_user_event(event)
+            # elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+            #     self.maniaGame.gameController.on_key_press_event(event)
 
 
     def on_loop(self):
         pass
         # dt = self.clock.tick(1000) / 1000
-        # self.gameController.levelModel.timer += dt
+        # self.maniaGame.levelModel.timer += dt
 
         # pygame.surface.Surface.blit(self.screen,)
 
     def on_render(self):
-        self.gameController.game_start(self.screen)
-
-        #pygame.display.flip()
+        self.maniaGame.title_page_loop()
+        # self.maniaGame.game_page_loop()
 
     # on_cleanup call pygame.quit() that quits all PyGame modules. Anything else will be cleaned up by Python.
     def on_cleanup(self):
@@ -77,14 +66,8 @@ class ManiaPygame:
         self.on_cleanup()
 
 
-profiler = cProfile.Profile()
-profiler.enable()
-
 theApp = ManiaPygame()
 theApp.on_init()
 theApp.on_execute()
 
-profiler.disable()
 
-
-profiler.print_stats(sort='time')
