@@ -43,9 +43,9 @@ class NoteSprite(pygame.sprite.Sprite):
         self.canJudge = True
         self.active = True
 
-    def update(self, speed, timer):
+    def update(self, speed, timer, game_setting):
         # 检查是否被击打或者移出屏幕外（miss）
-        self.check_miss(timer)
+        self.check_miss(timer, game_setting)
 
         if self.active:
             # 每毫秒移动的距离 in px
@@ -56,12 +56,12 @@ class NoteSprite(pygame.sprite.Sprite):
             _moveY = (_currTime - self.timing) / _speedInUnit
             self.rect.centery = self.targetPosition[1] + _moveY
 
-    def check_miss(self, timer):
+    def check_miss(self, timer, game_setting):
         # 大于timing不允许再判定
-        if timer - self.timing > GameSetting.timing_Miss:
+        if timer - self.timing > game_setting.timing_Miss:
             self.canJudge = False
         # 出屏幕就隐藏并回pool
-        if self.rect.centery > GameSetting.screenHeight:
+        if self.rect.centery > game_setting.screenHeight:
             self.active = False
 
 
@@ -125,8 +125,8 @@ class LNSprite(pygame.sprite.Sprite):
         self.isHeadMissCount = False
         self.isTailMissCount = False
 
-    def update(self, speed, timer):
-        self.check_miss(timer)
+    def update(self, speed, timer, game_setting):
+        self.check_miss(timer, game_setting)
 
         if self.active:
             # sp 可优化？
@@ -179,15 +179,15 @@ class LNSprite(pygame.sprite.Sprite):
         else:
             self.rect = self.image.get_rect(midtop=self.rect.midtop)
 
-    def check_miss(self, timer):
-        if not self.isHolding and timer - self.timing > GameSetting.timing_Miss:
+    def check_miss(self, timer, game_setting):
+        if not self.isHolding and timer - self.timing > game_setting.timing_Miss:
             self.isHeadMiss = True
         # 大于timing不允许再判定
-        if timer - self.endTiming > GameSetting.timing_Miss:
+        if timer - self.endTiming > game_setting.timing_Miss:
             self.canJudge = False
             self.isTailMiss = True
         # 超出范围隐藏
-        if self.rect.top > GameSetting.screenHeight:
+        if self.rect.top > game_setting.screenHeight:
             self.active = False
 
 

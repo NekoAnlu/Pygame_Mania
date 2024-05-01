@@ -10,13 +10,26 @@ class GameSetting:
     screenWidth: float = 1920.0
     screenHeight: float = 1080.0
 
-    # 判定设置 OD8
-    timing_PPerfect = 16.5
-    timing_Perfect = 40.5
-    timing_Great = 73.5
-    timing_Cool = 103.5
-    timing_Bad = 127.5
-    timing_Miss = 164
+    # 判定设置 ScoreV1
+    # https://osu.ppy.sh/wiki/zh/Gameplay/Judgement/osu%21mania
+    timing_PPerfect = 16
+    timing_Perfect = 64
+    timing_Great = 97
+    timing_Cool = 127
+    timing_Bad = 151
+    timing_Miss = 188
+
+    def __init__(self):
+        self.cal_judgement_timing()
+
+    def cal_judgement_timing(self):
+        self.timing_PPerfect = 16
+        self.timing_Perfect = 64 - 3 * self.OD
+        self.timing_Great = 97 - 3 * self.OD
+        self.timing_Cool = 127 - 3 * self.OD
+        self.timing_Bad = 151 - 3 * self.OD
+        self.timing_Miss = 188 - 3 * self.OD
+
 
 
 class ManiaUIModel:

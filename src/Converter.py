@@ -31,7 +31,7 @@ class MCConverter:
             chart = Chart()
             with open(filepath, 'r') as file:
                 data = json.load(file)
-
+                _basepath = filepath[0:filepath.rfind('\\') + 1]
                 # 跳过非mania的chart
                 if data['meta']['mode'] != 0:
                     continue
@@ -41,13 +41,13 @@ class MCConverter:
                 _noteData = data['note']
 
                 chart.creator = data['meta']['creator']
-                chart.backgroundPath = root_path + data['meta']['background']  # temp3
+                chart.backgroundPath = _basepath + data['meta']['background']  # temp3
                 chart.version = data['meta']['version']
                 chart.columnNum = data['meta']['mode_ext']['column']
                 if 'preview' in data['meta']:
                     chart.previewTime = data['meta']['preview']
                 chart.filePath = filepath  # temp
-                chart.audioPath = root_path + _noteData[-1]['sound']  # temp2
+                chart.audioPath = _basepath + _noteData[-1]['sound']  # temp2
                 if 'offset' in _noteData[-1]:
                     chart.offset = _noteData[-1]['offset']
                 else:

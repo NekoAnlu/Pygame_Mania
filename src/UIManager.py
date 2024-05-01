@@ -1,5 +1,6 @@
 import pygame
 import pygame_gui
+from pygame import Surface
 from pygame_gui.elements import *
 
 from src.Model.GameModel import GameModel
@@ -44,6 +45,40 @@ class UIManager:
         # self.init_ui()
         self.init_ui_event()
 
+    def load_cover(self) -> Surface:
+        _image: Surface
+        _size = (640, 360)
+        if self.gameModel.selectedChart is not None:
+            _image = pygame.image.load(self.gameModel.selectedChart.backgroundPath).convert()
+
+            # 保持长宽比放大图片 长宽自适应
+            if _image.get_width() > _image.get_height():
+                _scaleFactor = _size[1] / _image.get_height()
+            else:
+                _scaleFactor = _size[0] / _image.get_width()
+
+            _image = pygame.transform.smoothscale(_image,
+                                                  ((_image.get_width() * _scaleFactor), _image.get_height() * _scaleFactor))
+
+            _image = _image.subsurface((0, 0), _size)
+
+            # 居中
+            #_image.get_rect(center=(self.gameSetting.screenWidth / 2, self.gameSetting.screenHeight / 2))
+
+            # 叠暗化
+            _darkImage = pygame.Surface(_size)
+            _darkImage.fill((0, 0, 0))
+            _darkImage.set_alpha(50)  # 调整暗化程度位置
+
+            # 直接预处理叠上
+            pygame.surface.Surface.blit(_image, _darkImage, (0, 0))
+
+        else:
+            _image = pygame.Surface(_size).convert()
+            pygame.draw.rect(_image, (0, 0, 0), ((0, 0), _size), 10, 30)
+
+        return _image
+
     # ------------------------- 标题UI -----------------------------
     def init_title_ui(self):
         # self.uiManager.clear_and_reset()
@@ -53,8 +88,13 @@ class UIManager:
             manager=self.uiManager,
             object_id='#Title_Text')
 
+        _SongCoverImage = pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect((1060, 100), (640, 360)),
+            image_surface=self.load_cover(),
+            manager=self.uiManager)
+
         _SongSelectDropDownMenu = pygame_gui.elements.UIDropDownMenu(
-            relative_rect=pygame.Rect((1200, 500), (500, 50)),
+            relative_rect=pygame.Rect((1200, 600), (500, 50)),
             options_list=['Select Music......'],
             starting_option='Select Music......',
             manager=self.uiManager,
@@ -68,35 +108,65 @@ class UIManager:
                      'centery': 'centery', 'centery_target': _SongSelectDropDownMenu})
 
         _ChartSelectDropDownMenu = pygame_gui.elements.UIDropDownMenu(
-            relative_rect=pygame.Rect((1200, 600), (500, 50)),
-            options_list=["1", "2", "3", "4", "4", "4"],
-            starting_option="1",
+            relative_rect=pygame.Rect((1200, 680), (500, 50)),
+            options_list=['......'],
+            starting_option=".......",
             manager=self.uiManager,
             object_id='#SongSelectDropDownMenu')
+        _ChartSelectDropDownMenuLabel = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((-300, 10), (300, 80)),
+            text='Select Chart : ',
+            manager=self.uiManager,
+            object_id='#Label_Text',
+            anchors={'right': 'right', 'right_target': _ChartSelectDropDownMenu,
+                     'centery': 'centery', 'centery_target': _ChartSelectDropDownMenu})
+
         _DropSpeedSlider = pygame_gui.elements.UIHorizontalSlider(
-            relative_rect=pygame.Rect((1200, 700), (500, 50)),
+            relative_rect=pygame.Rect((1200, 760), (500, 50)),
             start_value=20,
             value_range=(10, 40),
             manager=self.uiManager,
             object_id='#DropSpeedSlider')
+        _DropSpeedSliderLabel = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((-300, 10), (300, 80)),
+            text='Drop Speed : ',
+            manager=self.uiManager,
+            object_id='#Label_Text',
+            anchors={'right': 'right', 'right_target': _DropSpeedSlider,
+                     'centery': 'centery', 'centery_target': _DropSpeedSlider})
+
         _ODSlider = pygame_gui.elements.UIHorizontalSlider(
-            relative_rect=pygame.Rect((1200, 800), (500, 50)),
+            relative_rect=pygame.Rect((1200, 840), (500, 50)),
             start_value=8,
             value_range=(0, 10),
             manager=self.uiManager,
             object_id='#DropSpeedSlider')
+        _ODSliderLabel = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((-300, 10), (300, 80)),
+            text='OD : ',
+            manager=self.uiManager,
+            object_id='#Label_Text',
+            anchors={'right': 'right', 'right_target': _ODSlider,
+                     'centery': 'centery', 'centery_target': _ODSlider})
+
         _GameStartButton = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((1500, 900), (200, 50)),
+            relative_rect=pygame.Rect((1500, 920), (200, 100)),
             text='Start',
             manager=self.uiManager,
             object_id='#GameStartButton')
 
+        _ChartSelectDropDownMenu.disable()
+
         self.titleUIDict["TitleText"] = _TitleText
+        self.titleUIDict["SongCoverImage"] = _SongCoverImage
         self.titleUIDict["SongSelectDropDownMenu"] = _SongSelectDropDownMenu
         self.titleUIDict["SongSelectDropDownMenuLabel"] = _SongSelectDropDownMenuLabel
         self.titleUIDict["ChartSelectDropDownMenu"] = _ChartSelectDropDownMenu
+        self.titleUIDict["ChartSelectDropDownMenuLabel"] = _ChartSelectDropDownMenu
         self.titleUIDict["DropSpeedSlider"] = _DropSpeedSlider
+        self.titleUIDict["DropSpeedSliderLabel"] = _DropSpeedSlider
         self.titleUIDict["ODSlider"] = _ODSlider
+        self.titleUIDict["ODSliderLabel"] = _ODSlider
         self.titleUIDict["GameStartButton"] = _GameStartButton
 
     def fill_title_dropdown_menu(self):
@@ -260,8 +330,10 @@ class UIManager:
                 # 切换选曲触发 更新谱面列表
                 if event.ui_element == self.titleUIDict['SongSelectDropDownMenu']:
                     self.update_title_chart_dropdown(event.text)
+                    self.titleUIDict['ChartSelectDropDownMenu'].enable()
+                    self.titleUIDict["SongCoverImage"].image = self.load_cover()
+                # 更新当前所选chart
                 elif event.ui_element == self.titleUIDict['ChartSelectDropDownMenu']:
-                    # 更新当前所选chart
                     self.gameModel.selectedChart = self.chartDropDownMenuDict[event.text]
             # UI按钮按下事件
             elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
@@ -276,6 +348,7 @@ class UIManager:
                     self.gameSetting.noteSpeed = event.value
                 elif event.ui_element == self.titleUIDict['ODSlider']:
                     self.gameSetting.OD = event.value
+                    self.gameSetting.cal_judgement_timing()
         self.uiManager.process_events(event)
 
     # 定时隐藏判定信息事件

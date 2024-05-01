@@ -178,7 +178,7 @@ class GameController:
     def draw_notes(self, screen):
         self.levelModel.noteSpritePool.add_to_group(self.noteSpritesGroup)
         self.levelModel.lnSpritePool.add_to_group(self.noteSpritesGroup)
-        self.noteSpritesGroup.update(self.levelModel.noteSpeed, self.levelModel.timer)
+        self.noteSpritesGroup.update(self.levelModel.noteSpeed, self.levelModel.timer, self.gameSetting)
         self.noteSpritesGroup.draw(screen)
 
     def draw_background_ui(self, screen):
