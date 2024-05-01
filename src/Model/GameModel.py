@@ -6,11 +6,14 @@ from .BeatmapModel import *
 
 
 class GameModel:
-    songList: List[Song]
+    songDict: Dict[str, Song] = {}
+    selectedChart: Chart = None
+    gameLoop: str = 'Title'
+
 
 class LevelModel:
     # 按键基础数据
-    noteSpeed: int = 1900
+    noteSpeed: int = 2000
 
     # 当前关卡数据
     currentSong: Song

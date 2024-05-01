@@ -5,17 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Converter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Converter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/BeatmapModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/BeatmapModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/GameModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/GameModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/SettingModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/SettingModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UIManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UITheme/Test.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/UITheme/Test.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,14 +44,14 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Python.App.executor": "Debug",
+    "Python.App.executor": "Run",
     "Python.BeatmapModel.executor": "Run",
-    "Python.Converter.executor": "Run",
+    "Python.Converter.executor": "Debug",
     "Python.Game.executor": "Run",
-    "Python.GameController.executor": "Debug",
-    "Python.GameModel.executor": "Run",
+    "Python.GameController.executor": "Run",
+    "Python.GameModel.executor": "Debug",
     "Python.ManiaSprite.executor": "Run",
-    "Python.UIManager.executor": "Run",
+    "Python.UIManager.executor": "Debug",
     "Python.__init__.executor": "Run",
     "Python.test.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -113,7 +110,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713788852538</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="update">
+      <option name="closed" value="true" />
+      <created>1714477917157</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1714477917157</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -138,15 +143,6 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/Model/SettingModel.py</url>
           <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/GameController.py</url>
-          <line>433</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/Model/GameModel.py</url>
-          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,10 +1,14 @@
 import pygame
 import pygame_gui
+from pygame_gui.elements import *
+
+from src.Model.GameModel import GameModel
 from src.Model.SettingModel import *
 from src.Grahpic.ManiaSprite import *
 
+
 class UIManager:
-    def __init__(self, level_model, player_model, pygame_clock):
+    def __init__(self, game_model: GameModel, level_model, player_model, game_setting, pygame_clock):
         self.uiManager = pygame_gui.UIManager((1920, 1080))
 
         # 字体
@@ -15,18 +19,23 @@ class UIManager:
         # 主题(要在读字体后)
         self.uiManager.get_theme().load_theme('UITheme/Test.json')
 
+        # 数据模型
+        self.uiModel = ManiaUIModel()
         self.levelModel = level_model
         self.playerModel = player_model
-
-        # 静态
-        self.uiModel = ManiaUIModel()
-        self.gameSetting = GameSetting()
+        self.gameModel = game_model
+        self.gameSetting = game_setting
         self.pygameClock = pygame_clock
+        self.deltaTime = self.pygameClock.tick(1000) / 1000
 
         # GUI对象列表
         self.titleUIDict = {}
         self.judgementLabelDict = {}
         self.variableLabelDict = {}
+
+        # 标题song下拉菜单选项字典
+        self.songDropDownMenuDict = {}
+        self.chartDropDownMenuDict = {}
 
         # 个别用draw画的美术资源仍然需要精灵组
         self.gameSpriteGroup = pygame.sprite.Group()
@@ -46,8 +55,8 @@ class UIManager:
 
         _SongSelectDropDownMenu = pygame_gui.elements.UIDropDownMenu(
             relative_rect=pygame.Rect((1200, 500), (500, 50)),
-            options_list=["1", "2", "3", "4", "4", "4"],
-            starting_option="1",
+            options_list=['Select Music......'],
+            starting_option='Select Music......',
             manager=self.uiManager,
             object_id='#SongSelectDropDownMenu')
         _SongSelectDropDownMenuLabel = pygame_gui.elements.UILabel(
@@ -66,13 +75,13 @@ class UIManager:
             object_id='#SongSelectDropDownMenu')
         _DropSpeedSlider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=pygame.Rect((1200, 700), (500, 50)),
-            start_value=10,
-            value_range=(1, 30),
+            start_value=20,
+            value_range=(10, 40),
             manager=self.uiManager,
             object_id='#DropSpeedSlider')
         _ODSlider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=pygame.Rect((1200, 800), (500, 50)),
-            start_value=5,
+            start_value=8,
             value_range=(0, 10),
             manager=self.uiManager,
             object_id='#DropSpeedSlider')
@@ -82,16 +91,29 @@ class UIManager:
             manager=self.uiManager,
             object_id='#GameStartButton')
 
+        self.titleUIDict["TitleText"] = _TitleText
         self.titleUIDict["SongSelectDropDownMenu"] = _SongSelectDropDownMenu
+        self.titleUIDict["SongSelectDropDownMenuLabel"] = _SongSelectDropDownMenuLabel
         self.titleUIDict["ChartSelectDropDownMenu"] = _ChartSelectDropDownMenu
         self.titleUIDict["DropSpeedSlider"] = _DropSpeedSlider
         self.titleUIDict["ODSlider"] = _ODSlider
         self.titleUIDict["GameStartButton"] = _GameStartButton
 
+    def fill_title_dropdown_menu(self):
+        _songSelectDropDownMenu = self.titleUIDict['SongSelectDropDownMenu']
+
+        _songOptions = []
+        for song in self.gameModel.songDict.values():
+            if len(song.charts) > 0:
+                _songOptions.append(song.artist + ' - ' + song.title)
+                self.songDropDownMenuDict[song.artist + ' - ' + song.title] = song
+
+        _songSelectDropDownMenu.add_options(_songOptions)
 
     # 游戏UI
     def init_game_ui(self):
-        self.uiModel.lineStart = self.gameSetting.screenWidth / 2 - self.uiModel.lineWidth * len(self.levelModel.noteList) / 2.5
+        self.uiModel.lineStart = self.gameSetting.screenWidth / 2 - self.uiModel.lineWidth * len(
+            self.levelModel.noteList) / 2.5
         _panelCenterX = self.uiModel.lineStart + (self.uiModel.lineWidth * (len(self.levelModel.noteList) / 2.0 - 0.5))
 
         # ManiaPanel
@@ -223,16 +245,38 @@ class UIManager:
         self.variableLabelDict['BadCount'] = _BadCountText
         self.variableLabelDict['MissCount'] = _MissCountText
 
-    #------------------------- UI Event -------------------------------
+    # ------------------------- UI Event -------------------------------
     def init_ui_event(self):
         _uiEventIndex = pygame.USEREVENT + 32
 
         self.JUDGEMENT_HIDE_EVENT = _uiEventIndex + 1
 
     def process_ui_event(self, event):
+        if event.type == pygame.USEREVENT:
+            if event.type == self.JUDGEMENT_HIDE_EVENT:
+                self.hide_judgement_text()
+            # 下拉菜单变更事件
+            elif event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+                # 切换选曲触发 更新谱面列表
+                if event.ui_element == self.titleUIDict['SongSelectDropDownMenu']:
+                    self.update_title_chart_dropdown(event.text)
+                elif event.ui_element == self.titleUIDict['ChartSelectDropDownMenu']:
+                    # 更新当前所选chart
+                    self.gameModel.selectedChart = self.chartDropDownMenuDict[event.text]
+            # UI按钮按下事件
+            elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.titleUIDict['GameStartButton']:
+                    if self.gameModel.selectedChart is not None:
+                        # 触发切换loop
+                        self.gameModel.gameLoop = 'Game'
+                        self.kill_title_ui()
+            # 滑条滑动事件
+            elif event.user_type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
+                if event.ui_element == self.titleUIDict['DropSpeedSlider']:
+                    self.gameSetting.noteSpeed = event.value
+                elif event.ui_element == self.titleUIDict['ODSlider']:
+                    self.gameSetting.OD = event.value
         self.uiManager.process_events(event)
-        if event.type == self.JUDGEMENT_HIDE_EVENT:
-            self.hide_judgement_text()
 
     # 定时隐藏判定信息事件
     def hide_judgement_text(self):
@@ -240,12 +284,40 @@ class UIManager:
             _label.hide()
 
     # --------------------- update view ---------------------------------
-    def update_ui(self, delta_time):
+    def update_ui(self):
         # self.update_variable_text()
         # self.gameSpriteGroup.update()
-        self.uiManager.update(delta_time)
+        self.uiManager.update(self.deltaTime)
 
-    # # 判定信息UI更新 在控制器调用
+    # 选曲后更新选谱下拉框
+    def update_title_chart_dropdown(self, item_str):
+        _chartSelectDropDownMenu = self.titleUIDict['ChartSelectDropDownMenu']
+        _currSong = self.songDropDownMenuDict[item_str]
+
+        # 清空原有字典
+        self.chartDropDownMenuDict.clear()
+
+        _chartOptions = []
+        for chart in _currSong.charts:
+            _chartOptions.append(chart.version)
+            self.chartDropDownMenuDict[chart.version] = chart
+
+        # 创建一个新的下拉框
+        _new_chartSelectDropDownMenu = pygame_gui.elements.UIDropDownMenu(
+            relative_rect=_chartSelectDropDownMenu.get_rect(),
+            options_list=_chartOptions,
+            starting_option=_chartOptions[0],
+            manager=self.uiManager,
+            object_id='#SongSelectDropDownMenu')
+
+        # 杀掉老的下拉框
+        _chartSelectDropDownMenu.kill()
+
+        # 更新所选chart
+        self.gameModel.selectedChart = _currSong.charts[0]
+        self.titleUIDict['ChartSelectDropDownMenu'] = _new_chartSelectDropDownMenu
+
+    # 判定信息UI更新 在控制器调用
     def update_judgement_text(self, text):
         for _label in self.judgementLabelDict.values():
             _label.hide()
@@ -266,6 +338,11 @@ class UIManager:
         self.variableLabelDict['MissCount'].set_text(f"{'Miss: '} {self.playerModel.missCount:>{5}}")
 
         self.variableLabelDict['Fps'].set_text(str(round(self.pygameClock.get_fps())))
+
+    # 用于清理UI
+    def kill_title_ui(self):
+        for ui in self.titleUIDict.values():
+            ui.kill()
 
     # ----------------------- draw -------------------------------
     def draw_front_ui(self, screen):

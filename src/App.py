@@ -1,4 +1,6 @@
 import pygame
+import pygame_gui
+
 from GameController import ManiaGame
 from src.Model.SettingModel import GameSetting
 
@@ -14,7 +16,7 @@ class ManiaPygame:
         self.maniaGame: ManiaGame
 
     def on_init(self):
-        pygame.mixer.pre_init(44100, 16, 2, 4096)
+        pygame.mixer.pre_init(44100, 16, 2, 1024)
         pygame.init()
         # temp
         self.screen = pygame.display.set_mode(self.size, pygame.DOUBLEBUF | pygame.HWSURFACE)
@@ -28,23 +30,15 @@ class ManiaPygame:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+                self.maniaGame.gameController.on_key_press_event(event)
             self.maniaGame.uiManager.process_ui_event(event)
+            #     if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+            #
+            # self.maniaGame.uiManager.process_ui_event(event)
             # elif event.type >= pygame.USEREVENT:
             #     self.maniaGame.gameController.process_user_event(event)
-            # elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
-            #     self.maniaGame.gameController.on_key_press_event(event)
 
-
-    def on_loop(self):
-        pass
-        # dt = self.clock.tick(1000) / 1000
-        # self.maniaGame.levelModel.timer += dt
-
-        # pygame.surface.Surface.blit(self.screen,)
-
-    def on_render(self):
-        self.maniaGame.title_page_loop()
-        # self.maniaGame.game_page_loop()
 
     # on_cleanup call pygame.quit() that quits all PyGame modules. Anything else will be cleaned up by Python.
     def on_cleanup(self):
@@ -56,12 +50,11 @@ class ManiaPygame:
 
         while self.running:
             # event()
-            # for event in pygame.event.get():
             self.on_event()
-            # loop()
-            self.on_loop()
-            # render()
-            self.on_render()
+
+            self.maniaGame.on_switch_loop()
+            self.maniaGame.game_loop()
+
 
         self.on_cleanup()
 

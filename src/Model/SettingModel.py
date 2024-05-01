@@ -1,13 +1,10 @@
 # 游戏相关设置
-from typing import Dict
-
-
-class PlayerSetting:
-    noteSpeed: int
-    OD: int
 
 class GameSetting:
     deltaTime: int
+
+    noteSpeed: int = 20
+    OD: int = 8
 
     # 屏幕大小 浮点方便计算
     screenWidth: float = 1920.0
