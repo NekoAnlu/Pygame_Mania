@@ -20,6 +20,18 @@
             "text_horiz_alignment": "right"
         }
     },
+    "#Value_Text": {
+        "font": {
+            "name": "Silver",
+            "size": 50
+        },
+        "colours": {
+            "normal_text": "white"
+        },
+        "misc": {
+            "text_horiz_alignment": "left"
+        }
+    },
     "#GameStartButton": {
         "font": {
             "name": "Silver",
@@ -261,5 +273,146 @@
               "colours": {
                   "normal_text": "red"
               }
+          },
+    "#IngameInfo_Text": {
+          "font": {
+                "name": "Silver",
+                "size": 35
+            },
+            "misc": {
+                "text_horiz_alignment": "left"
+            },
+          "colours": {
+              "normal_text": "white"
           }
+    },
+    "#PageLabel_Text": {
+            "font": {
+                "name": "Silver",
+                "size": 130
+            },
+          "colours": {
+              "normal_text": "white"
+          }
+    },
+    "#ScoreLabel_Text": {
+            "font": {
+                "name": "Silver",
+                "size": 700
+            },
+          "colours": {
+              "normal_text": "white"
+          }
+    },
+    "#Score_Text_In_Score": {
+            "font": {
+                "name": "Silver",
+                "size": 150
+            },
+          "colours": {
+              "normal_text": "white"
+          }
+    },
+    "#ScoreSongInfo_Text": {
+            "font": {
+                "name": "Silver",
+                "size": 100
+            },
+          "colours": {
+              "normal_text": "white"
+          }
+    },
+    "#SubScoreSongInfo_Text": {
+            "font": {
+                "name": "Silver",
+                "size": 60
+            },
+          "colours": {
+              "normal_text": "white"
+          }
+    },
+    "###PPerfectCount_Text": {
+        "prototype": "##PPerfectCount_Text",
+        "font": {
+            "size": 70
+        },
+        "misc": {
+            "text_horiz_alignment": "left"
+        }
+    },
+    "###PerfectCount_Text": {
+          "prototype": "##PerfectCount_Text",
+        "font": {
+            "size": 70
+        },
+        "misc": {
+            "text_horiz_alignment": "left"
+        }
+      },
+    "###GreatCount_Text": {
+          "prototype": "##GreatCount_Text",
+        "font": {
+            "size": 70
+        },
+        "misc": {
+            "text_horiz_alignment": "left"
+        }
+      },
+    "###CoolCount_Text": {
+          "prototype": "##CoolCount_Text",
+            "font": {
+                "size": 70
+            },
+        "misc": {
+            "text_horiz_alignment": "left"
+        }
+      },
+    "###BadCount_Text": {
+            "prototype": "##BadCount_Text",
+            "font": {
+                "size": 70
+            },
+            "misc": {
+                "text_horiz_alignment": "left"
+            }
+        },
+    "###MissCount_Text": {
+              "prototype": "##MissCount_Text",
+            "font": {
+                "size": 70
+            },
+            "misc": {
+                "text_horiz_alignment": "left"
+            }
+          },
+    "###ComboCount_Text": {
+            "font": {
+                "name": "Silver",
+                "size": 70
+            },
+          "colours": {
+              "normal_text": "white"
+          },
+        "misc": {
+            "text_horiz_alignment": "left"
+        }
+      },
+    "#BackButton": {
+        "font": {
+            "name": "Silver",
+            "size": 50
+        },
+        "colours": {
+            "normal_border": "White",
+            "normal_bg": "SlateGray",
+            "normal_text": "White"
+        },
+        "misc": {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "10",
+            "border_width": "2",
+            "text_vert_alignment": "top",
+            "text_vert_alignment_padding": "70"
+        }
+    }
 }

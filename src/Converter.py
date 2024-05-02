@@ -63,24 +63,6 @@ class MCConverter:
 
     @staticmethod
     def mc_converter(path: str) -> Song:
-        # _basepath = '../beatmaps/_song_6044/0/'
-        # _filename = 'Various Artists - Malody 4K Extra Dan v3-Stream (ex3).mc'
-
-        # _basepath = '../beatmaps/_song_31603/0/'
-        # _filename = '6.mc'
-
-        # _basepath = '../beatmaps/_song_4900/0/'
-        # _filename = 'Key4Hyper.mc'
-
-        # _basepath = '../beatmaps/_song_978/0/'
-        # _filename = 'iowo-DREAM-KEY BEGINNER LV..mc'
-
-        # _basepath = '../beatmaps/_song_9590/0/'
-        # _filename = '1582189649.mc'
-
-        # _basepath = '../beatmaps/_song_16260/0/'
-        # _filename = 'zts - goldenslaughterer (hao123) [7K Another][key].mc'
-
         song = Song()
         chart = Chart()
         

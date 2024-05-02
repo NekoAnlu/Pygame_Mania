@@ -33,6 +33,7 @@ class UIManager:
         self.titleUIDict = {}
         self.judgementLabelDict = {}
         self.variableLabelDict = {}
+        self.scoreUIDict = {}
 
         # 标题song下拉菜单选项字典
         self.songDropDownMenuDict = {}
@@ -134,6 +135,13 @@ class UIManager:
             object_id='#Label_Text',
             anchors={'right': 'right', 'right_target': _DropSpeedSlider,
                      'centery': 'centery', 'centery_target': _DropSpeedSlider})
+        _DropSpeedSliderValue = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((30, 10), (100, 80)),
+            text='20',
+            manager=self.uiManager,
+            object_id='#Value_Text',
+            anchors={'left': 'left', 'left_target': _DropSpeedSlider,
+                     'centery': 'centery', 'centery_target': _DropSpeedSlider})
 
         _ODSlider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=pygame.Rect((1200, 840), (500, 50)),
@@ -147,6 +155,13 @@ class UIManager:
             manager=self.uiManager,
             object_id='#Label_Text',
             anchors={'right': 'right', 'right_target': _ODSlider,
+                     'centery': 'centery', 'centery_target': _ODSlider})
+        _ODSliderValue = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((30, 10), (100, 80)),
+            text='8',
+            manager=self.uiManager,
+            object_id='#Value_Text',
+            anchors={'left': 'left', 'left_target': _ODSlider,
                      'centery': 'centery', 'centery_target': _ODSlider})
 
         _GameStartButton = pygame_gui.elements.UIButton(
@@ -162,11 +177,13 @@ class UIManager:
         self.titleUIDict["SongSelectDropDownMenu"] = _SongSelectDropDownMenu
         self.titleUIDict["SongSelectDropDownMenuLabel"] = _SongSelectDropDownMenuLabel
         self.titleUIDict["ChartSelectDropDownMenu"] = _ChartSelectDropDownMenu
-        self.titleUIDict["ChartSelectDropDownMenuLabel"] = _ChartSelectDropDownMenu
+        self.titleUIDict["ChartSelectDropDownMenuLabel"] = _ChartSelectDropDownMenuLabel
         self.titleUIDict["DropSpeedSlider"] = _DropSpeedSlider
-        self.titleUIDict["DropSpeedSliderLabel"] = _DropSpeedSlider
+        self.titleUIDict["DropSpeedSliderLabel"] = _DropSpeedSliderLabel
+        self.titleUIDict["DropSpeedSliderValue"] = _DropSpeedSliderValue
         self.titleUIDict["ODSlider"] = _ODSlider
-        self.titleUIDict["ODSliderLabel"] = _ODSlider
+        self.titleUIDict["ODSliderLabel"] = _ODSliderLabel
+        self.titleUIDict["ODSliderValue"] = _ODSliderValue
         self.titleUIDict["GameStartButton"] = _GameStartButton
 
     def fill_title_dropdown_menu(self):
@@ -180,7 +197,7 @@ class UIManager:
 
         _songSelectDropDownMenu.add_options(_songOptions)
 
-    # 游戏UI
+    # ---------------------------- 游戏UI -----------------------------
     def init_game_ui(self):
         self.uiModel.lineStart = self.gameSetting.screenWidth / 2 - self.uiModel.lineWidth * len(
             self.levelModel.noteList) / 2.5
@@ -235,6 +252,7 @@ class UIManager:
             manager=self.uiManager,
             object_id='##Miss_Text',
             anchors={'centerx': 'centerx'})
+
         self.judgementLabelDict['PPerfect'] = _PPerfectText
         self.judgementLabelDict['Perfect'] = _PerfectText
         self.judgementLabelDict['Great'] = _GreatText
@@ -263,6 +281,18 @@ class UIManager:
             manager=self.uiManager,
             object_id='#Accuracy_Text',
             anchors={'right': 'right', 'top': 'top'})
+
+        # 歌曲信息
+        _SongTitleText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((40, 620), (500, 100)),
+            text='3333-3333',
+            manager=self.uiManager,
+            object_id='#IngameInfo_Text')
+        _VersionText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((40, 660), (500, 100)),
+            text='3333-3333',
+            manager=self.uiManager,
+            object_id='#IngameInfo_Text')
 
         # 计数信息
         _PPerfectCountText = pygame_gui.elements.UILabel(
@@ -308,12 +338,126 @@ class UIManager:
         self.variableLabelDict['Score'] = _ScoreText
         self.variableLabelDict['Fps'] = _FpsText
 
+        self.variableLabelDict['SongTitleText'] = _SongTitleText
+        self.variableLabelDict['VersionText'] = _VersionText
+
         self.variableLabelDict['PPerfectCount'] = _PPerfectCountText
         self.variableLabelDict['PerfectCount'] = _PerfectCountText
         self.variableLabelDict['GreatCount'] = _GreatCountText
         self.variableLabelDict['CoolCount'] = _CoolCountText
         self.variableLabelDict['BadCount'] = _BadCountText
         self.variableLabelDict['MissCount'] = _MissCountText
+
+    # -------------------------- 结算UI ------------------------------
+    def init_score_ui(self):
+        # _PageLabelText = pygame_gui.elements.UILabel(
+        #     relative_rect=pygame.Rect((0, -430), (300, 300)),
+        #     text='Result',
+        #     manager=self.uiManager,
+        #     object_id='#PageLabel_Text',
+        #     anchors={'center': 'center'})
+        _ScoreLabelText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((600, 50), (600, 800)),
+            text='S',
+            manager=self.uiManager,
+            object_id='#ScoreLabel_Text',
+            anchors={'center': 'center'})
+        _BackButton = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((600, 280), (500, 200)),
+            text='Back',
+            manager=self.uiManager,
+            object_id='#BackButton',
+            anchors={'center': 'center'})
+
+        _SongInfoText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, 80), (1000, 100)),
+            text='Artist - Title',
+            manager=self.uiManager,
+            object_id='#ScoreSongInfo_Text',
+            anchors={'centerx': 'centerx'})
+        _SongVersionText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, 150), (1000, 100)),
+            text='Artist - Lv 31',
+            manager=self.uiManager,
+            object_id='#SubScoreSongInfo_Text',
+            anchors={'centerx': 'centerx'})
+
+        # 具体score
+        _ScoreText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((150, 250), (850, 200)),
+            text='876543',
+            manager=self.uiManager,
+            object_id='#Score_Text_In_Score')
+
+        _PPerfectCountText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((150, 400), (500, 200)),
+            text='Perfect: 111',
+            manager=self.uiManager,
+            object_id='###PPerfectCount_Text')
+        _PerfectCountText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((700, 400), (500, 200)),
+            text='Perfect: 222',
+            manager=self.uiManager,
+            object_id='###PerfectCount_Text')
+        _GreatCountText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((150, 520), (500, 200)),
+            text='Great: 333',
+            manager=self.uiManager,
+            object_id='###GreatCount_Text')
+        _CoolCountText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((700, 520), (500, 200)),
+            text='Cool: 44',
+            manager=self.uiManager,
+            object_id='###CoolCount_Text')
+        _BadCountText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((150, 640), (500, 200)),
+            text='Bad: 5',
+            manager=self.uiManager,
+            object_id='###BadCount_Text')
+        _MissCountText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((700, 640), (500, 200)),
+            text='Miss: 6',
+            manager=self.uiManager,
+            object_id='###MissCount_Text')
+        _ComboCountText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((150, 760), (500, 200)),
+            text='Combo: 999x',
+            manager=self.uiManager,
+            object_id='###ComboCount_Text')
+        _AccText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((700, 760), (500, 200)),
+            text='Acc: 100.00%',
+            manager=self.uiManager,
+            object_id='###ComboCount_Text')
+
+        # self.scoreUIDict['PageLabelText'] = _PageLabelText
+        self.scoreUIDict['ScoreLabelText'] = _ScoreLabelText
+        self.scoreUIDict['BackButton'] = _BackButton
+
+        self.scoreUIDict['ScoreText'] = _ScoreText
+        self.scoreUIDict['SongInfoText'] = _SongInfoText
+        self.scoreUIDict['SongVersionText'] = _SongVersionText
+        self.scoreUIDict['PPerfectCount'] = _PPerfectCountText
+        self.scoreUIDict['PerfectCount'] = _PerfectCountText
+        self.scoreUIDict['GreatCount'] = _GreatCountText
+        self.scoreUIDict['CoolCount'] = _CoolCountText
+        self.scoreUIDict['BadCount'] = _BadCountText
+        self.scoreUIDict['MissCount'] = _MissCountText
+        self.scoreUIDict['ComboCount'] = _ComboCountText
+        self.scoreUIDict['Acc'] = _AccText
+
+    def fill_score_page_value(self):
+        self.scoreUIDict['ScoreText'].set_text(f"{self.playerModel.score}")
+        self.scoreUIDict['SongInfoText'].set_text(self.levelModel.currentSong.artist + " - " + self.levelModel.currentSong.title)
+        self.scoreUIDict['SongVersionText'].set_text(self.levelModel.currentChart.version)
+        self.scoreUIDict['PPerfectCount'].set_text(f'Perfect: {self.playerModel.pPerfectCount}' )
+        self.scoreUIDict['PerfectCount'].set_text(f'Perfect: {self.playerModel.perfectCount}')
+        self.scoreUIDict['GreatCount'].set_text(f'Great: {self.playerModel.greatCount}')
+        self.scoreUIDict['CoolCount'].set_text(f'Cool: {self.playerModel.coolCount}')
+        self.scoreUIDict['BadCount'].set_text(f'Bad: {self.playerModel.badCount}')
+        self.scoreUIDict['MissCount'].set_text(f'Miss: {self.playerModel.missCount}')
+        self.scoreUIDict['ComboCount'].set_text(f'Combo: {self.playerModel.maxCombo}')
+        self.scoreUIDict['Acc'].set_text(f'Acc: {self.playerModel.accuracy}%')
 
     # ------------------------- UI Event -------------------------------
     def init_ui_event(self):
@@ -345,10 +489,14 @@ class UIManager:
             # 滑条滑动事件
             elif event.user_type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                 if event.ui_element == self.titleUIDict['DropSpeedSlider']:
+                    # 更新值和UI
                     self.gameSetting.noteSpeed = event.value
+                    self.titleUIDict["DropSpeedSliderValue"].set_text(str(event.value))
                 elif event.ui_element == self.titleUIDict['ODSlider']:
+                    # 更新值和UI
                     self.gameSetting.OD = event.value
                     self.gameSetting.cal_judgement_timing()
+                    self.titleUIDict["ODSliderValue"].set_text(str(event.value))
         self.uiManager.process_events(event)
 
     # 定时隐藏判定信息事件
@@ -403,6 +551,10 @@ class UIManager:
         self.variableLabelDict['Accuracy'].set_text(str(self.playerModel.accuracy) + '%')
         self.variableLabelDict['Score'].set_text(str(self.playerModel.score))
 
+        # 静态字 可优化
+        self.variableLabelDict['SongTitleText'].set_text(str(self.levelModel.currentSong.artist + " - " + self.levelModel.currentSong.title))
+        self.variableLabelDict['VersionText'].set_text(self.levelModel.currentChart.version)
+
         self.variableLabelDict['PPerfectCount'].set_text(f"{'Perfect: '} {self.playerModel.pPerfectCount:>{5}}")
         self.variableLabelDict['PerfectCount'].set_text(f"{'Perfect: '} {self.playerModel.perfectCount:>{5}}")
         self.variableLabelDict['GreatCount'].set_text(f"{'Great: '} {self.playerModel.greatCount:>{5}}")
@@ -415,6 +567,17 @@ class UIManager:
     # 用于清理UI
     def kill_title_ui(self):
         for ui in self.titleUIDict.values():
+            ui.kill()
+
+    def kill_game_ui(self):
+        for ui in self.judgementLabelDict.values():
+            ui.kill()
+        for ui in self.variableLabelDict.values():
+            ui.kill()
+        self.gameSpriteGroup.empty()
+
+    def kill_score_ui(self):
+        for ui in self.scoreUIDict.values():
             ui.kill()
 
     # ----------------------- draw -------------------------------

@@ -31,6 +31,7 @@ class ManiaGame:
         # 控制器
         self.gameController = GameController(self.levelModel, self.uiModel, self.gameSetting, self.playerModel, self.pygameClock, self.uiManager)
         self.titlePageController = TitlePageController(self.gameModel, self.uiManager, self.pygameClock)
+        self.scorePageController = ScorePageController(self.gameSetting, self.uiManager, self.playerModel, self.levelModel, self.pygameClock)
 
         # 值
         self.currLoop = 'Title'  # Title Game Result
@@ -43,6 +44,9 @@ class ManiaGame:
     def title_page_loop(self):
         self.titlePageController.draw_title_page(self.screen)
 
+    def score_page_loop(self):
+        self.scorePageController.draw_score_page(self.screen)
+
     # 监控loop变化
     def on_switch_loop(self):
         if self.gameModel.gameLoop != self.currLoop:
@@ -52,10 +56,14 @@ class ManiaGame:
 
     # 页面管理
     def game_loop(self):
-        if self.currLoop == 'Title':
-            self.title_page_loop()
-        elif self.currLoop == 'Game':
-            self.game_page_loop()
+        # if self.currLoop == 'Title':
+        #     self.title_page_loop()
+        # elif self.currLoop == 'Game':
+        #     self.game_page_loop()
+        # elif self.currLoop == 'Score':
+        #     self.score_page_loop()
+        self.score_page_loop()
+
 
 class GameController:
     lineIndex: List[int] = []
@@ -437,8 +445,8 @@ class TitlePageController:
         self.pygameClock = pygame_clock
 
         self.preload_beatmap()
-        self.uiManager.init_title_ui()
-        self.uiManager.fill_title_dropdown_menu()
+        # self.uiManager.init_title_ui()
+        # self.uiManager.fill_title_dropdown_menu()
 
     def draw_title_page(self, screen: Surface):
         # 每帧调用设置fps
@@ -454,3 +462,25 @@ class TitlePageController:
                 if file.endswith('.mc'):
                     if root not in self.beatmapsModel.songDict:
                         self.beatmapsModel.songDict[root] = MCConverter.mc_pre_converter(root)
+
+
+class ScorePageController:
+    def __init__(self, game_setting: GameSetting, ui_manager: UIManager,
+                 player_model: PlayerModel, level_model: LevelModel, pygame_clock):
+        self.gameSetting = game_setting
+        self.levelModel = level_model
+        self.gameSetting = game_setting
+        self.playerModel = player_model
+
+        self.uiManager = ui_manager
+        self.pygameClock = pygame_clock
+
+        self.uiManager.init_score_ui()
+
+    def draw_score_page(self, screen: Surface):
+        # 每帧调用设置fps
+        self.pygameClock.tick(1000)
+        screen.fill((59, 79, 110))
+        self.uiManager.update_ui()
+        self.uiManager.draw_front_ui(screen)
+        pygame.display.update()

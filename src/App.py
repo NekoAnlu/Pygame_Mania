@@ -39,7 +39,6 @@ class ManiaPygame:
             # elif event.type >= pygame.USEREVENT:
             #     self.maniaGame.gameController.process_user_event(event)
 
-
     # on_cleanup call pygame.quit() that quits all PyGame modules. Anything else will be cleaned up by Python.
     def on_cleanup(self):
         pygame.quit()
@@ -52,7 +51,7 @@ class ManiaPygame:
             # event()
             self.on_event()
 
-            self.maniaGame.on_switch_loop()
+            #self.maniaGame.on_switch_loop()
             self.maniaGame.game_loop()
 
 
