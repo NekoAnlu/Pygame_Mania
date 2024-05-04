@@ -58,7 +58,7 @@ class NoteSprite(pygame.sprite.Sprite):
 
     def check_miss(self, timer, game_setting):
         # 大于timing不允许再判定
-        if timer - self.timing > game_setting.timing_Miss:
+        if timer - self.timing > game_setting.timing_Bad:
             self.canJudge = False
         # 出屏幕就隐藏并回pool
         if self.rect.centery > game_setting.screenHeight:
@@ -183,7 +183,7 @@ class LNSprite(pygame.sprite.Sprite):
         if not self.isHolding and timer - self.timing > game_setting.timing_Miss:
             self.isHeadMiss = True
         # 大于timing不允许再判定
-        if timer - self.endTiming > game_setting.timing_Miss:
+        if timer - self.endTiming > game_setting.timing_Bad:
             self.canJudge = False
             self.isTailMiss = True
         # 超出范围隐藏

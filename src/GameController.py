@@ -29,12 +29,12 @@ class ManiaGame:
         self.uiManager = UIManager(self.gameModel, self.levelModel, self.playerModel, self.gameSetting, self.pygameClock)
 
         # 控制器
-        self.gameController = GameController(self.levelModel, self.uiModel, self.gameSetting, self.playerModel, self.pygameClock, self.uiManager)
+        self.gameController = GameController(self.levelModel, self.uiModel, self.gameModel, self.gameSetting, self.playerModel, self.pygameClock, self.uiManager)
         self.titlePageController = TitlePageController(self.gameModel, self.uiManager, self.pygameClock)
         self.scorePageController = ScorePageController(self.gameSetting, self.uiManager, self.playerModel, self.levelModel, self.pygameClock)
 
         # 值
-        self.currLoop = 'Title'  # Title Game Result
+        self.currLoop = ''  # Title Game Result
         self.gameSetting.deltaTime = self.pygameClock.tick(1000) / 1000
 
     def game_page_loop(self):
@@ -51,31 +51,54 @@ class ManiaGame:
     def on_switch_loop(self):
         if self.gameModel.gameLoop != self.currLoop:
             if self.gameModel.gameLoop == 'Game':
-                self.gameController.load_game_resource(self.gameModel.selectedChart.filePath)
-                self.currLoop = 'Game'
+                # 如果是从title跳转来的
+                if self.currLoop == 'Title':
+                    self.reset_game_play_model()
+                    self.gameController.load_game_resource(self.gameModel.selectedChart.filePath)
+                    self.uiManager.kill_title_ui()
+                    self.currLoop = 'Game'
+                # 如果是retry
+                elif self.currLoop == 'Score':
+                    self.reset_game_play_model()
+                    print(self.gameModel.selectedChart.filePath)
+                    self.gameController.load_game_resource(self.gameModel.selectedChart.filePath)
+                    self.uiManager.kill_score_ui()
+                    self.currLoop = 'Game'
+            elif self.gameModel.gameLoop == 'Score':
+                self.uiManager.kill_game_ui()
+                self.scorePageController.init_score_page()
+                self.currLoop = 'Score'
+            elif self.gameModel.gameLoop == 'Title':
+                self.uiManager.kill_score_ui()
+                self.titlePageController.init_title_page()
+                self.currLoop = 'Title'
+                # self.titlePageController.
 
     # 页面管理
     def game_loop(self):
-        # if self.currLoop == 'Title':
-        #     self.title_page_loop()
-        # elif self.currLoop == 'Game':
-        #     self.game_page_loop()
-        # elif self.currLoop == 'Score':
-        #     self.score_page_loop()
-        self.score_page_loop()
+        if self.currLoop == 'Title':
+            self.title_page_loop()
+        elif self.currLoop == 'Game':
+            self.game_page_loop()
+        elif self.currLoop == 'Score':
+            self.score_page_loop()
+
+    def reset_game_play_model(self):
+        self.levelModel.__init__()
+        self.playerModel.__init__()
 
 
 class GameController:
-    lineIndex: List[int] = []
-    leadInTime: int = 2000
 
-    def __init__(self, level_model: LevelModel, ui_model: ManiaUIModel
+    def __init__(self, level_model: LevelModel, ui_model: ManiaUIModel, game_model: GameModel
                  , game_setting: GameSetting, player_model: PlayerModel, pygame_clock: Clock, ui_manager: UIManager):
+
         # 初始化数据模型
         self.levelModel = level_model
         self.uiModel = ui_model
         self.gameSetting = game_setting
         self.playerModel = player_model
+        self.gameModel = game_model
 
         # 精灵组
         self.noteSpritesGroup = pygame.sprite.Group()
@@ -86,24 +109,41 @@ class GameController:
         # 初始化管理器
         self.uiManager = ui_manager
 
+        # 音乐结束事件
+        pygame.mixer.music.set_endevent(pygame.USEREVENT + 8)
+
+        self.isMusicPlayed = False
+
     def load_game_resource(self, chart_path):
+        # UI重置
+        self.noteSpritesGroup.empty()
+        self.uiSpritesGroup.empty()
+
+        self.isMusicPlayed = False
+
         # 读谱面
         self.levelModel.currentSong = MCConverter.mc_converter(chart_path)
         self.levelModel.currentChart = self.levelModel.currentSong.charts[0]
         # 读默认设置
         self.levelModel.noteSpeed = self.gameSetting.noteSpeed * 100
-        # 读和处理各种资源
+        # 处理按键
         self.preprocess_notes()
 
-        # 可能对延时有用的预读？
+        # 读歌曲前清空之前的歌曲
+        # pygame.mixer.music.unload()
+        # pygame.mixer.pre_init(44100, 16, 2, 1024)
+        pygame.mixer.music.stop()
+        # pygame.mixer.music.pause()
+        # pygame.mixer.music.set_pos(0)
+        # pygame.mixer.music.unload()
         pygame.mixer.music.load(self.levelModel.currentChart.audioPath)
         pygame.mixer.music.play()
         pygame.mixer.music.pause()
 
+        # 背景
         self.load_background_image()
 
         # 初始化UI
-        # self.init_ui()
         self.uiManager.init_game_ui()
 
     def load_background_image(self):
@@ -139,21 +179,27 @@ class GameController:
             while len(self.levelModel.noteList) <= _lineIndex:
                 self.levelModel.noteList.append([])
                 self.levelModel.noteQueue.append([])
-                self.lineIndex.append(0)
+                self.levelModel.lineIndex.append(0)
             self.levelModel.noteList[_lineIndex].append(_note)
             # new 计算按键总数 LN算2note
             self.levelModel.totalNotes += 1 if _note.noteType == 0 else 2
 
     def play_music(self):
-        pygame.mixer.music.unpause()
-        if self.is_game_end():
-            pygame.mixer.music.stop()
+        if self.levelModel.leadInTime > 0:
+            self.levelModel.leadInTime -= self.gameSetting.deltaTime
+            if self.levelModel.leadInTime <= 0:
+                pygame.mixer.music.unpause()
+                self.isMusicPlayed = True
+                self.levelModel.leadInTime = 0
+        # if self.is_game_end():
+        #     pygame.mixer.music.stop()
 
     def is_game_end(self) -> bool:
-        for i in range(len(self.lineIndex)):
-            if self.lineIndex[i] < len(self.levelModel.noteList[i]):
+        for i in range(len(self.levelModel.lineIndex)):
+            if self.levelModel.lineIndex[i] < len(self.levelModel.noteList[i]) or len(self.levelModel.noteQueue) != 0:
                 return False
         return True
+        # if self.levelModel.timer
 
     def spawn_notes(self):
         self.levelModel.noteSpeed = self.gameSetting.noteSpeed * 100
@@ -161,26 +207,26 @@ class GameController:
         _dropTime = ((self.uiModel.noteDestination - self.uiModel.noteSpawnPosition) / self.levelModel.noteSpeed) * 1000
         _lineStart = self.gameSetting.screenWidth / 2 - self.uiModel.lineWidth * len(self.levelModel.noteList) / 2.5
 
-        for i, lineIndex in enumerate(self.lineIndex):
-            while self.lineIndex[i] < len(self.levelModel.noteList[i]) and self.levelModel.noteList[i][self.lineIndex[i]].startTiming <= _currTime + _dropTime:
+        for i, lineIndex in enumerate(self.levelModel.lineIndex):
+            while self.levelModel.lineIndex[i] < len(self.levelModel.noteList[i]) and self.levelModel.noteList[i][self.levelModel.lineIndex[i]].startTiming <= _currTime + _dropTime:
                 _x = _lineStart + self.uiModel.lineWidth * i
                 # print(self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0)
-                if self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0:
+                if self.levelModel.noteList[i][self.levelModel.lineIndex[i]].noteType == 0:
                     _noteObj = self.levelModel.noteSpritePool.get_note((_x, self.uiModel.noteSpawnPosition),
                                                                        (_x, self.uiModel.noteDestination),
                                                                        self.levelModel.noteList[i][
-                                                                           self.lineIndex[i]].startTiming)
+                                                                           self.levelModel.lineIndex[i]].startTiming)
                     self.levelModel.noteQueue[i].append(_noteObj)
                 else:
                     _noteObj = self.levelModel.lnSpritePool.get_note((_x, self.uiModel.noteSpawnPosition),
                                                                      (_x, self.uiModel.noteDestination),
                                                                      self.levelModel.noteList[i][
-                                                                         self.lineIndex[i]].startTiming,
+                                                                         self.levelModel.lineIndex[i]].startTiming,
                                                                      self.levelModel.noteList[i][
-                                                                         self.lineIndex[i]].endTiming)
+                                                                         self.levelModel.lineIndex[i]].endTiming)
                     self.levelModel.noteQueue[i].append(_noteObj)
 
-                self.lineIndex[i] += 1
+                self.levelModel.lineIndex[i] += 1
 
     # 画按键的更新方法
     def draw_notes(self, screen):
@@ -308,6 +354,7 @@ class GameController:
             self.playerModel.combo = 0
         elif judge_name == 'Miss':
             self.playerModel.missCount += 1
+            self.playerModel.maxCombo = max(self.playerModel.combo, self.playerModel.maxCombo)
             self.playerModel.combo = 0
 
         # 每次判定时计算一次分数
@@ -398,6 +445,11 @@ class GameController:
     def process_user_event(self, user_event):
         if user_event.type >= pygame.USEREVENT + 32:
             self.uiManager.process_ui_event(user_event)
+        # 音乐结束事件
+        elif user_event.type == pygame.USEREVENT + 8:
+            # 切换page
+            pygame.mixer.music.stop()
+            self.gameModel.gameLoop = 'Score'
 
     # ------------------------------ 主循环 ------------------------
 
@@ -406,14 +458,13 @@ class GameController:
         self.gameSetting.deltaTime = self.pygameClock.tick(1000)
 
         # 更新Timer
-        self.levelModel.timer = pygame.mixer.music.get_pos() - self.leadInTime
+        self.levelModel.timer = pygame.mixer.music.get_pos() - self.levelModel.leadInTime
+
+        print(pygame.mixer.music.get_pos())
 
         # Lead In
-        if self.leadInTime > 0:
-            self.leadInTime -= self.gameSetting.deltaTime
-            if self.leadInTime < 0:
-                self.play_music()
-                self.leadInTime = 0
+        if not self.isMusicPlayed:
+            self.play_music()
 
         # 清空之前的group(在修改group内变量前清空避免报错
         self.noteSpritesGroup.empty()
@@ -445,8 +496,10 @@ class TitlePageController:
         self.pygameClock = pygame_clock
 
         self.preload_beatmap()
-        # self.uiManager.init_title_ui()
-        # self.uiManager.fill_title_dropdown_menu()
+
+    def init_title_page(self):
+        self.uiManager.init_title_ui()
+        self.uiManager.fill_title_dropdown_menu()
 
     def draw_title_page(self, screen: Surface):
         # 每帧调用设置fps
@@ -475,7 +528,10 @@ class ScorePageController:
         self.uiManager = ui_manager
         self.pygameClock = pygame_clock
 
+    def init_score_page(self):
         self.uiManager.init_score_ui()
+        self.uiManager.fill_score_page_value()
+
 
     def draw_score_page(self, screen: Surface):
         # 每帧调用设置fps

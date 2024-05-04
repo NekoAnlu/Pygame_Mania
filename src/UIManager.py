@@ -350,20 +350,20 @@ class UIManager:
 
     # -------------------------- 结算UI ------------------------------
     def init_score_ui(self):
-        # _PageLabelText = pygame_gui.elements.UILabel(
-        #     relative_rect=pygame.Rect((0, -430), (300, 300)),
-        #     text='Result',
-        #     manager=self.uiManager,
-        #     object_id='#PageLabel_Text',
-        #     anchors={'center': 'center'})
         _ScoreLabelText = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((600, 50), (600, 800)),
             text='S',
             manager=self.uiManager,
             object_id='#ScoreLabel_Text',
             anchors={'center': 'center'})
+        _RetryButton = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((600, 280), (500, 100)),
+            text='Retry',
+            manager=self.uiManager,
+            object_id='#BackButton',
+            anchors={'center': 'center'})
         _BackButton = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((600, 280), (500, 200)),
+            relative_rect=pygame.Rect((600, 400), (500, 100)),
             text='Back',
             manager=self.uiManager,
             object_id='#BackButton',
@@ -433,6 +433,7 @@ class UIManager:
         # self.scoreUIDict['PageLabelText'] = _PageLabelText
         self.scoreUIDict['ScoreLabelText'] = _ScoreLabelText
         self.scoreUIDict['BackButton'] = _BackButton
+        self.scoreUIDict['RetryButton'] = _RetryButton
 
         self.scoreUIDict['ScoreText'] = _ScoreText
         self.scoreUIDict['SongInfoText'] = _SongInfoText
@@ -459,6 +460,20 @@ class UIManager:
         self.scoreUIDict['ComboCount'].set_text(f'Combo: {self.playerModel.maxCombo}')
         self.scoreUIDict['Acc'].set_text(f'Acc: {self.playerModel.accuracy}%')
 
+        # 参考osu评分
+        if self.playerModel.accuracy >= 100:
+            self.scoreUIDict['ScoreLabelText'].set_text('SS')
+        elif self.playerModel.accuracy >= 95:
+            self.scoreUIDict['ScoreLabelText'].set_text('S')
+        elif self.playerModel.accuracy >= 90:
+            self.scoreUIDict['ScoreLabelText'].set_text('A')
+        elif self.playerModel.accuracy >= 80:
+            self.scoreUIDict['ScoreLabelText'].set_text('B')
+        elif self.playerModel.accuracy >= 70:
+            self.scoreUIDict['ScoreLabelText'].set_text('C')
+        else:
+            self.scoreUIDict['ScoreLabelText'].set_text('D')
+
     # ------------------------- UI Event -------------------------------
     def init_ui_event(self):
         _uiEventIndex = pygame.USEREVENT + 32
@@ -481,11 +496,17 @@ class UIManager:
                     self.gameModel.selectedChart = self.chartDropDownMenuDict[event.text]
             # UI按钮按下事件
             elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-                if event.ui_element == self.titleUIDict['GameStartButton']:
-                    if self.gameModel.selectedChart is not None:
-                        # 触发切换loop
+                # 标题点击切换loop开始游戏
+                if self.gameModel.gameLoop == 'Title':
+                    if event.ui_element == self.titleUIDict['GameStartButton']:
+                        if self.gameModel.selectedChart is not None:
+                            self.gameModel.gameLoop = 'Game'
+                # 结算页面
+                elif self.gameModel.gameLoop == 'Score':
+                    if event.ui_element == self.scoreUIDict['BackButton']:
+                        self.gameModel.gameLoop = 'Title'
+                    elif event.ui_element == self.scoreUIDict['RetryButton']:
                         self.gameModel.gameLoop = 'Game'
-                        self.kill_title_ui()
             # 滑条滑动事件
             elif event.user_type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                 if event.ui_element == self.titleUIDict['DropSpeedSlider']:
@@ -543,7 +564,7 @@ class UIManager:
         for _label in self.judgementLabelDict.values():
             _label.hide()
         self.judgementLabelDict[text].show()
-        pygame.time.set_timer(self.JUDGEMENT_HIDE_EVENT, 2000)
+        pygame.time.set_timer(self.JUDGEMENT_HIDE_EVENT, 500)
 
     # # 更新变化信息 在这里调用
     def update_variable_text(self):
@@ -564,7 +585,7 @@ class UIManager:
 
         self.variableLabelDict['Fps'].set_text(str(round(self.pygameClock.get_fps())))
 
-    # 用于清理UI
+    # ------------------------------ UI 显示控制 ----------------------------------
     def kill_title_ui(self):
         for ui in self.titleUIDict.values():
             ui.kill()

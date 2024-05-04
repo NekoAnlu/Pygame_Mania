@@ -12,23 +12,28 @@ class GameModel:
 
 
 class LevelModel:
-    # 按键基础数据
-    noteSpeed: int = 2000
+    def __init__(self):
+        # 按键基础数据
+        self.backgroundImage = None
+        self.noteSpeed: int = 2000
 
-    # 当前关卡数据
-    currentSong: Song
-    currentChart: Chart
-    timer: int = 0
+        # 当前关卡数据
+        self.currentSong: Song
+        self.currentChart: Chart
+        self.timer: int = 0
 
-    # 谱面数据
-    noteList: List[List[Note]] = []
-    noteSpritePool: NoteSpritePool = NoteSpritePool()
-    lnSpritePool: LNSpritePool = LNSpritePool()
-    noteQueue: List[List[NoteSprite | LNSprite]] = []  # 判定用
-    totalNotes: int = 0
+        # 谱面数据
+        self.noteList: List[List[Note]] = []
+        self.noteSpritePool: NoteSpritePool = NoteSpritePool()
+        self.lnSpritePool: LNSpritePool = LNSpritePool()
+        self.noteQueue: List[List[NoteSprite | LNSprite]] = []  # 判定用
+        self.totalNotes: int = 0
+        self.lineIndex: List[int] = []
+        self.leadInTime: int = 2000
 
-    # 背景
-    backgroundImage: Surface
+        # 背景
+        self.backgroundImage: Surface
+
 
 
 class ManiaUIModel:
@@ -44,15 +49,16 @@ class ManiaUIModel:
 
 
 class PlayerModel:
-    # 判定信息
-    pPerfectCount: int = 0
-    perfectCount: int = 0
-    greatCount: int = 0
-    coolCount: int = 0
-    badCount: int = 0
-    missCount: int = 0
-    combo: int = 0
-    maxCombo: int = 0
-    score: int = 0
-    accuracy: float = 0.0
-    scoreBonus: int = 100
+    def __init__(self):
+        # 判定信息
+        self.pPerfectCount: int = 0
+        self.perfectCount: int = 0
+        self.greatCount: int = 0
+        self.coolCount: int = 0
+        self.badCount: int = 0
+        self.missCount: int = 0
+        self.combo: int = 0
+        self.maxCombo: int = 0
+        self.score: int = 0
+        self.accuracy: float = 0.0
+        self.scoreBonus: int = 100
