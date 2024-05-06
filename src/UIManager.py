@@ -9,7 +9,7 @@ from src.Grahpic.ManiaSprite import *
 
 
 class UIManager:
-    def __init__(self, game_model: GameModel, level_model, player_model, game_setting, pygame_clock):
+    def __init__(self, game_model: GameModel, level_model, player_model, game_setting, mania_setting,  pygame_clock):
         self.uiManager = pygame_gui.UIManager((1920, 1080))
 
         # 字体
@@ -21,12 +21,12 @@ class UIManager:
         self.uiManager.get_theme().load_theme('UITheme/Test.json')
 
         # 数据模型
-        self.uiModel = ManiaUIModel()
         self.levelModel = level_model
         self.playerModel = player_model
         self.gameModel = game_model
         self.gameSetting = game_setting
         self.pygameClock = pygame_clock
+        self.maniaSetting = mania_setting
         self.deltaTime = self.pygameClock.tick(1000) / 1000
 
         # GUI对象列表
@@ -46,37 +46,40 @@ class UIManager:
         # self.init_ui()
         self.init_ui_event()
 
-    def load_cover(self) -> Surface:
+    # 开局和结算都用的上
+    def load_cover(self, size, alpha) -> Surface:
         _image: Surface
-        _size = (640, 360)
-        if self.gameModel.selectedChart is not None:
+        if self.gameModel.selectedChart is not None and self.gameModel.selectedChart.backgroundPath != '':
             _image = pygame.image.load(self.gameModel.selectedChart.backgroundPath).convert()
 
+            _resizeRatio = float(size[0]) / size[1]
+            _imageRatio = float(_image.get_width()) / _image.get_height()
+
             # 保持长宽比放大图片 长宽自适应
-            if _image.get_width() > _image.get_height():
-                _scaleFactor = _size[1] / _image.get_height()
+            if _imageRatio > _resizeRatio:
+                _scaleFactor = float(size[1]) / _image.get_height()
             else:
-                _scaleFactor = _size[0] / _image.get_width()
+                _scaleFactor = float(size[0]) / _image.get_width()
 
             _image = pygame.transform.smoothscale(_image,
                                                   ((_image.get_width() * _scaleFactor), _image.get_height() * _scaleFactor))
 
-            _image = _image.subsurface((0, 0), _size)
+            _image = _image.subsurface((0, 0), size)
 
             # 居中
             #_image.get_rect(center=(self.gameSetting.screenWidth / 2, self.gameSetting.screenHeight / 2))
 
             # 叠暗化
-            _darkImage = pygame.Surface(_size)
+            _darkImage = pygame.Surface(size)
             _darkImage.fill((0, 0, 0))
-            _darkImage.set_alpha(50)  # 调整暗化程度位置
+            _darkImage.set_alpha(alpha)  # 调整暗化程度位置
 
             # 直接预处理叠上
             pygame.surface.Surface.blit(_image, _darkImage, (0, 0))
 
         else:
-            _image = pygame.Surface(_size).convert()
-            pygame.draw.rect(_image, (0, 0, 0), ((0, 0), _size), 10, 30)
+            _image = pygame.Surface(size).convert()
+            pygame.draw.rect(_image, (0, 0, 0), ((0, 0), size), 10, 30)
 
         return _image
 
@@ -91,7 +94,7 @@ class UIManager:
 
         _SongCoverImage = pygame_gui.elements.UIImage(
             relative_rect=pygame.Rect((1060, 100), (640, 360)),
-            image_surface=self.load_cover(),
+            image_surface=self.load_cover((640, 360), 20),
             manager=self.uiManager)
 
         _SongSelectDropDownMenu = pygame_gui.elements.UIDropDownMenu(
@@ -199,55 +202,92 @@ class UIManager:
 
     # ---------------------------- 游戏UI -----------------------------
     def init_game_ui(self):
-        self.uiModel.lineStart = self.gameSetting.screenWidth / 2 - self.uiModel.lineWidth * len(
-            self.levelModel.noteList) / 2.5
-        _panelCenterX = self.uiModel.lineStart + (self.uiModel.lineWidth * (len(self.levelModel.noteList) / 2.0 - 0.5))
+        # 背景图
+        # _BackgroundImage = pygame_gui.elements.UIImage(
+        #     relative_rect=pygame.Rect((0, 0), (1920, 1080)),
+        #     image_surface=self.load_cover((1920, 1080), 220),
+        #     manager=self.uiManager,
+        #     anchors={'center': 'center'})
+        # 改为load完直接blit 避免图层问题
+        self.levelModel.backgroundImage = self.load_cover((1920, 1080), 210)
+
+        _columnNum = self.levelModel.currentChart.columnNum
+        self.maniaSetting.lineStart = self.gameSetting.screenWidth / 2 - self.maniaSetting.lineWidth * (_columnNum / 2.0 - 0.5)
+        _panelCenterX = self.maniaSetting.lineStart + (self.maniaSetting.lineWidth * (_columnNum / 2.0 - 0.5))
 
         # ManiaPanel
         _maniaPanel = ManiaPanelSprite(
-            (self.uiModel.lineStart + (self.uiModel.lineWidth * (len(self.levelModel.noteList) / 2.0 - 0.5)), 0),
-            self.uiModel.lineWidth * len(self.levelModel.noteList) * 1.1)
+            (self.maniaSetting.lineStart + (self.maniaSetting.lineWidth * (_columnNum / 2.0 - 0.5)), 0), self.maniaSetting.lineWidth * _columnNum * 1.05)
         self.gameSpriteGroup.add(_maniaPanel)
 
         # HitPosition
         for i in range(len(self.levelModel.noteList)):
-            _lineSprite = HitPositionSprite(
-                (self.uiModel.lineStart + self.uiModel.lineWidth * i, self.uiModel.noteDestination), i)
+            _lineSprite = HitPositionSprite(self.maniaSetting.noteSize, self.maniaSetting.noteColor, (self.maniaSetting.lineStart + self.maniaSetting.lineWidth * i, self.maniaSetting.noteDestination), i, self.maniaSetting.keyBindDict)
             self.gameSpriteGroup.add(_lineSprite)
+
+        # PausePanel
+        # _PausePanel = pygame_gui.elements.UIPanel(
+        #     relative_rect=pygame.Rect((0, 0), (270, 420)),
+        #     starting_height=0,
+        #     manager=self.uiManager,
+        #     object_id='#PausePanel',
+        #     anchors={'center': 'center'})
+        #
+        # _ResumeButton = pygame_gui.elements.UIButton(
+        #     relative_rect=pygame.Rect((0, 20), (200, 100)),
+        #     text='Resume',
+        #     manager=self.uiManager,
+        #     object_id='#BackButton',
+        #     container=_PausePanel,
+        #     anchors={'centerx': 'centerx'})
+        # _RetryButton = pygame_gui.elements.UIButton(
+        #     relative_rect=pygame.Rect((0, 140), (200, 100)),
+        #     text='Retry',
+        #     manager=self.uiManager,
+        #     object_id='#BackButton',
+        #     container=_PausePanel,
+        #     anchors={'centerx': 'centerx'})
+        # _ExitButton = pygame_gui.elements.UIButton(
+        #     relative_rect=pygame.Rect((0, 260), (200, 100)),
+        #     text='Exit',
+        #     manager=self.uiManager,
+        #     object_id='#BackButton',
+        #     container=_PausePanel,
+        #     anchors={'centerx': 'centerx'})
 
         # 判定信息
         _PPerfectText = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, self.uiModel.judgementPosition), (110, 300)),
+            relative_rect=pygame.Rect((0, self.maniaSetting.judgementPosition), (110, 300)),
             text='Perfect',
             manager=self.uiManager,
             object_id='##PPerfect_Text',
             anchors={'centerx': 'centerx'})
         _PerfectText = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, self.uiModel.judgementPosition), (110, 300)),
+            relative_rect=pygame.Rect((0, self.maniaSetting.judgementPosition), (110, 300)),
             text='Perfect',
             manager=self.uiManager,
             object_id='##Perfect_Text',
             anchors={'centerx': 'centerx'})
         _GreatText = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, self.uiModel.judgementPosition), (100, 300)),
+            relative_rect=pygame.Rect((0, self.maniaSetting.judgementPosition), (100, 300)),
             text='Great',
             manager=self.uiManager,
             object_id='##Great_Text',
             anchors={'centerx': 'centerx'})
         _CoolText = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, self.uiModel.judgementPosition), (100, 300)),
+            relative_rect=pygame.Rect((0, self.maniaSetting.judgementPosition), (100, 300)),
             text='Cool',
             manager=self.uiManager,
             object_id='##Cool_Text',
             anchors={'centerx': 'centerx'})
         _BadText = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, self.uiModel.judgementPosition), (100, 300)),
+            relative_rect=pygame.Rect((0, self.maniaSetting.judgementPosition), (100, 300)),
             text='Bad',
             manager=self.uiManager,
             object_id='##Bad_Text',
             anchors={'centerx': 'centerx'})
         _MissText = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, self.uiModel.judgementPosition), (100, 300)),
+            relative_rect=pygame.Rect((0, self.maniaSetting.judgementPosition), (100, 300)),
             text='Miss',
             manager=self.uiManager,
             object_id='##Miss_Text',
@@ -264,7 +304,7 @@ class UIManager:
 
         # 变化数值Text
         _ComboText = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((0, self.uiModel.comboPosition), (100, 100)),
+            relative_rect=pygame.Rect((0, self.maniaSetting.comboPosition), (100, 100)),
             text='0',
             manager=self.uiManager,
             object_id='#Combo_Text',
@@ -333,6 +373,9 @@ class UIManager:
             object_id='#Fps_Text',
             anchors={'right': 'right', 'bottom': 'bottom'})
 
+        # 借助这个dict显隐
+        # self.variableLabelDict['BackgroundImage'] = _BackgroundImage
+
         self.variableLabelDict['Combo'] = _ComboText
         self.variableLabelDict['Accuracy'] = _AccuracyText
         self.variableLabelDict['Score'] = _ScoreText
@@ -350,6 +393,12 @@ class UIManager:
 
     # -------------------------- 结算UI ------------------------------
     def init_score_ui(self):
+        _BackgroundImage = pygame_gui.elements.UIImage(
+            relative_rect=pygame.Rect((0, 0), (1920, 1080)),
+            image_surface=self.load_cover((1920, 1080), 200),
+            manager=self.uiManager,
+            anchors={'center': 'center'})
+
         _ScoreLabelText = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((600, 50), (600, 800)),
             text='S',
@@ -430,7 +479,8 @@ class UIManager:
             manager=self.uiManager,
             object_id='###ComboCount_Text')
 
-        # self.scoreUIDict['PageLabelText'] = _PageLabelText
+        self.scoreUIDict['BackgroundImage'] = _BackgroundImage
+
         self.scoreUIDict['ScoreLabelText'] = _ScoreLabelText
         self.scoreUIDict['BackButton'] = _BackButton
         self.scoreUIDict['RetryButton'] = _RetryButton
@@ -490,7 +540,7 @@ class UIManager:
                 if event.ui_element == self.titleUIDict['SongSelectDropDownMenu']:
                     self.update_title_chart_dropdown(event.text)
                     self.titleUIDict['ChartSelectDropDownMenu'].enable()
-                    self.titleUIDict["SongCoverImage"].image = self.load_cover()
+                    self.titleUIDict["SongCoverImage"].image = self.load_cover((640, 360), 20)
                 # 更新当前所选chart
                 elif event.ui_element == self.titleUIDict['ChartSelectDropDownMenu']:
                     self.gameModel.selectedChart = self.chartDropDownMenuDict[event.text]
@@ -504,6 +554,8 @@ class UIManager:
                 # 结算页面
                 elif self.gameModel.gameLoop == 'Score':
                     if event.ui_element == self.scoreUIDict['BackButton']:
+                        # 避免title cover重复显示
+                        self.gameModel.selectedChart = None
                         self.gameModel.gameLoop = 'Title'
                     elif event.ui_element == self.scoreUIDict['RetryButton']:
                         self.gameModel.gameLoop = 'Game'
@@ -541,8 +593,9 @@ class UIManager:
 
         _chartOptions = []
         for chart in _currSong.charts:
-            _chartOptions.append(chart.version)
-            self.chartDropDownMenuDict[chart.version] = chart
+            _str = f"{chart.version} by {chart.creator}"
+            _chartOptions.append(_str)
+            self.chartDropDownMenuDict[_str] = chart
 
         # 创建一个新的下拉框
         _new_chartSelectDropDownMenu = pygame_gui.elements.UIDropDownMenu(
@@ -574,7 +627,7 @@ class UIManager:
 
         # 静态字 可优化
         self.variableLabelDict['SongTitleText'].set_text(str(self.levelModel.currentSong.artist + " - " + self.levelModel.currentSong.title))
-        self.variableLabelDict['VersionText'].set_text(self.levelModel.currentChart.version)
+        self.variableLabelDict['VersionText'].set_text(f"{self.levelModel.currentChart.version} by {self.levelModel.currentChart.creator}")
 
         self.variableLabelDict['PPerfectCount'].set_text(f"{'Perfect: '} {self.playerModel.pPerfectCount:>{5}}")
         self.variableLabelDict['PerfectCount'].set_text(f"{'Perfect: '} {self.playerModel.perfectCount:>{5}}")
@@ -606,4 +659,5 @@ class UIManager:
         self.uiManager.draw_ui(screen)
 
     def draw_back_ui(self, screen):
+        screen.blit(self.levelModel.backgroundImage, self.levelModel.backgroundImage.get_rect())
         self.gameSpriteGroup.draw(screen)

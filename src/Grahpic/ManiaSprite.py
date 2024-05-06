@@ -9,15 +9,15 @@ from src.Model.SettingModel import *
 
 class NoteSprite(pygame.sprite.Sprite):
     drawSize = (20, 20)
-    realSize = (100, 100)
 
-    def __init__(self, spawn_position, target_position, timing):
+    def __init__(self, size, color, spawn_position, target_position, timing):
         super().__init__()
         self.noteType = 0
+        self.realSize = (size, size)
         self.image = pygame.Surface(self.drawSize).convert()
         self.image.fill((0, 0, 0))
         self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
-        self.color = (0, 0, 255)
+        self.color = color
         pygame.draw.circle(self.image, self.color, (10, 10), 10)
         # 小图放大做出像素效果
         self.image = pygame.transform.scale(self.image, self.realSize)
@@ -70,14 +70,14 @@ class NoteSpritePool:
     def __init__(self):
         self.notePool: List[NoteSprite] = []
 
-    def get_note(self, spawn_position, target_position, timing) -> NoteSprite:
+    def get_note(self, size, color, spawn_position, target_position, timing) -> NoteSprite:
         for note in self.notePool:
             if not note.active:
                 note.reset(spawn_position, target_position, timing)
                 return note
 
         # 如果无则扩展池
-        new_note = NoteSprite(spawn_position, target_position, timing)
+        new_note = NoteSprite(size, color, spawn_position, target_position, timing)
         self.notePool.append(new_note)
         return new_note
 
@@ -90,16 +90,15 @@ class NoteSpritePool:
 
 class LNSprite(pygame.sprite.Sprite):
     drawSize = (20, 20)
-    realSize = (100, 100)
 
-    def __init__(self, spawn_position, target_position, timing, end_timing):
+    def __init__(self, size, color, spawn_position, target_position, timing, end_timing):
         super().__init__()
-
+        self.realSize = (size, size)
         self.noteType = 1
         self.image = pygame.Surface(self.drawSize).convert()
         self.image.fill((0, 0, 0))
         self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
-        self.color = (0, 0, 255)
+        self.color = color
         pygame.draw.circle(self.image, self.color, (10, 10), 10)
         # 小图放大做出像素效果
         self.image = pygame.transform.scale(self.image, self.realSize)
@@ -173,7 +172,7 @@ class LNSprite(pygame.sprite.Sprite):
         self.lnBodyRect = pygame.draw.rect(self.image, self.color, (0, 10, 20, _newSize[1] - 20))
         pygame.draw.circle(self.image, self.color, (10, _newSize[1] - 10), 10)
         # print(self.timing)
-        self.image = pygame.transform.scale(self.image, (100, _newSize[1] * 5))
+        self.image = pygame.transform.scale(self.image, (self.realSize[0], _newSize[1] * 5))
         if anchor == 'bottom':
             self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
         else:
@@ -196,14 +195,14 @@ class LNSpritePool:
     def __init__(self):
         self.notePool: List[LNSprite] = []
 
-    def get_note(self, spawn_position, target_position, timing, end_timing) -> LNSprite:
+    def get_note(self, size, color, spawn_position, target_position, timing, end_timing) -> LNSprite:
         for note in self.notePool:
             if not note.active:
-                note.__init__(spawn_position, target_position, timing, end_timing)
+                note.__init__(size, color, spawn_position, target_position, timing, end_timing)
                 return note
 
         # 如果无则扩展池
-        new_note = LNSprite(spawn_position, target_position, timing, end_timing)
+        new_note = LNSprite(size, color, spawn_position, target_position, timing, end_timing)
         self.notePool.append(new_note)
         return new_note
 
@@ -216,36 +215,26 @@ class LNSpritePool:
 
 class HitPositionSprite(pygame.sprite.Sprite):
     drawSize = (20, 20)
-    realSize = (100, 100)
 
-    def __init__(self, position, index):
+    def __init__(self, size, color, position, index, key_bind_dict):
         super().__init__()
-
-        self.color = (0, 0, 255)
+        self.realSize = (size, size)
+        self.color = color
         self.position = position
         self.draw_unfill()
 
         # 对象变量
         self.index = index
 
-    def update(self, event):
+        # hc 检测按下用
+        self.keyBindDict = key_bind_dict
+
+    def update(self, event, _columnNum):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_d and self.index == 0:
+            if event.key == self.keyBindDict[_columnNum][self.index]:
                 self.draw_fill()
-            elif event.key == pygame.K_f and self.index == 1:
-                self.draw_fill()
-            elif event.key == pygame.K_j and self.index == 2:
-                self.draw_fill()
-            elif event.key == pygame.K_k and self.index == 3:
-                self.draw_fill()
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_d and self.index == 0:
-                self.draw_unfill()
-            elif event.key == pygame.K_f and self.index == 1:
-                self.draw_unfill()
-            elif event.key == pygame.K_j and self.index == 2:
-                self.draw_unfill()
-            elif event.key == pygame.K_k and self.index == 3:
+        if event.type == pygame.KEYUP:
+            if event.key == self.keyBindDict[_columnNum][self.index]:
                 self.draw_unfill()
 
     def draw_fill(self):

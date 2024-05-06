@@ -5,18 +5,20 @@ import pygame
 import pygame_gui
 from pygame_gui.elements import *
 
+from src.ConfigParser import ConfigParser
 from src.Grahpic.ManiaSprite import *
 from Model.GameModel import *
 from Model.SettingModel import *
 from Converter import *
 from UIManager import *
 
+
 class ManiaGame:
     def __init__(self, screen):
         # 初始化各种数据模型
         self.gameModel = GameModel()
         self.levelModel = LevelModel()
-        self.uiModel = ManiaUIModel()
+        self.maniaSetting = ManiaSetting()
         self.gameSetting = GameSetting()
         self.playerModel = PlayerModel()
 
@@ -25,14 +27,18 @@ class ManiaGame:
         pygame.mixer.init()
         self.screen = screen
 
-        # 管理器
-        self.uiManager = UIManager(self.gameModel, self.levelModel, self.playerModel, self.gameSetting, self.pygameClock)
+        # config设置
+        self.config = ConfigParser()
+        self.config.init_mania_setting(self.maniaSetting)
+
+        # ui管理器
+        self.uiManager = UIManager(self.gameModel, self.levelModel, self.playerModel, self.gameSetting, self.maniaSetting, self.pygameClock)
 
         # 控制器
-        self.gameController = GameController(self.levelModel, self.uiModel, self.gameModel, self.gameSetting, self.playerModel, self.pygameClock, self.uiManager)
+        self.gameController = GameController(self.levelModel, self.maniaSetting, self.gameModel, self.gameSetting, self.playerModel, self.pygameClock, self.uiManager)
         self.titlePageController = TitlePageController(self.gameModel, self.uiManager, self.pygameClock)
         self.scorePageController = ScorePageController(self.gameSetting, self.uiManager, self.playerModel, self.levelModel, self.pygameClock)
-
+    
         # 值
         self.currLoop = ''  # Title Game Result
         self.gameSetting.deltaTime = self.pygameClock.tick(1000) / 1000
@@ -89,13 +95,12 @@ class ManiaGame:
 
 
 class GameController:
-
-    def __init__(self, level_model: LevelModel, ui_model: ManiaUIModel, game_model: GameModel
+    def __init__(self, level_model: LevelModel, mania_setting: ManiaSetting, game_model: GameModel
                  , game_setting: GameSetting, player_model: PlayerModel, pygame_clock: Clock, ui_manager: UIManager):
 
         # 初始化数据模型
         self.levelModel = level_model
-        self.uiModel = ui_model
+        self.maniaSetting = mania_setting
         self.gameSetting = game_setting
         self.playerModel = player_model
         self.gameModel = game_model
@@ -130,46 +135,16 @@ class GameController:
         self.preprocess_notes()
 
         # 读歌曲前清空之前的歌曲
-        # pygame.mixer.music.unload()
-        # pygame.mixer.pre_init(44100, 16, 2, 1024)
         pygame.mixer.music.stop()
-        # pygame.mixer.music.pause()
-        # pygame.mixer.music.set_pos(0)
-        # pygame.mixer.music.unload()
         pygame.mixer.music.load(self.levelModel.currentChart.audioPath)
         pygame.mixer.music.play()
         pygame.mixer.music.pause()
 
         # 背景
-        self.load_background_image()
+        # self.load_background_image()
 
         # 初始化UI
         self.uiManager.init_game_ui()
-
-    def load_background_image(self):
-        _image = pygame.image.load(self.levelModel.currentChart.backgroundPath).convert()
-
-        # 保持长宽比放大图片 长宽自适应
-        if _image.get_width() > _image.get_height():
-            _scaleFactor = self.gameSetting.screenHeight / _image.get_height()
-        else:
-            _scaleFactor = self.gameSetting.screenWidth / _image.get_width()
-
-        _image = pygame.transform.smoothscale(_image,
-                                              ((_image.get_width() * _scaleFactor), _image.get_height() * _scaleFactor))
-
-        # 居中
-        _image.get_rect(center=(self.gameSetting.screenWidth / 2, self.gameSetting.screenHeight / 2))
-
-        # 叠暗化
-        _darkImage = pygame.Surface(_image.get_size())
-        _darkImage.fill((0, 0, 0))
-        _darkImage.set_alpha(230)  # 调整暗化程度位置
-
-        # 直接预处理叠上
-        pygame.surface.Surface.blit(_image, _darkImage, (0, 0))
-
-        self.levelModel.backgroundImage = _image
 
     # 把note按轨道位置分为4个队列
     def preprocess_notes(self):
@@ -204,22 +179,23 @@ class GameController:
     def spawn_notes(self):
         self.levelModel.noteSpeed = self.gameSetting.noteSpeed * 100
         _currTime = self.levelModel.timer
-        _dropTime = ((self.uiModel.noteDestination - self.uiModel.noteSpawnPosition) / self.levelModel.noteSpeed) * 1000
-        _lineStart = self.gameSetting.screenWidth / 2 - self.uiModel.lineWidth * len(self.levelModel.noteList) / 2.5
-
+        _dropTime = ((self.maniaSetting.noteDestination - self.maniaSetting.noteSpawnPosition) / self.levelModel.noteSpeed) * 1000
+        _lineStart = self.gameSetting.screenWidth / 2 - self.maniaSetting.lineWidth * (self.levelModel.currentChart.columnNum / 2.0 - 0.5)
         for i, lineIndex in enumerate(self.levelModel.lineIndex):
             while self.levelModel.lineIndex[i] < len(self.levelModel.noteList[i]) and self.levelModel.noteList[i][self.levelModel.lineIndex[i]].startTiming <= _currTime + _dropTime:
-                _x = _lineStart + self.uiModel.lineWidth * i
+                _x = _lineStart + self.maniaSetting.lineWidth * i
                 # print(self.levelModel.noteList[i][self.lineIndex[i]].noteType == 0)
                 if self.levelModel.noteList[i][self.levelModel.lineIndex[i]].noteType == 0:
-                    _noteObj = self.levelModel.noteSpritePool.get_note((_x, self.uiModel.noteSpawnPosition),
-                                                                       (_x, self.uiModel.noteDestination),
+                    _noteObj = self.levelModel.noteSpritePool.get_note(self.maniaSetting.noteSize, self.maniaSetting.noteColor,
+                                                                       (_x, self.maniaSetting.noteSpawnPosition),
+                                                                       (_x, self.maniaSetting.noteDestination),
                                                                        self.levelModel.noteList[i][
                                                                            self.levelModel.lineIndex[i]].startTiming)
                     self.levelModel.noteQueue[i].append(_noteObj)
                 else:
-                    _noteObj = self.levelModel.lnSpritePool.get_note((_x, self.uiModel.noteSpawnPosition),
-                                                                     (_x, self.uiModel.noteDestination),
+                    _noteObj = self.levelModel.lnSpritePool.get_note(self.maniaSetting.noteSize, self.maniaSetting.noteColor,
+                                                                     (_x, self.maniaSetting.noteSpawnPosition),
+                                                                     (_x, self.maniaSetting.noteDestination),
                                                                      self.levelModel.noteList[i][
                                                                          self.levelModel.lineIndex[i]].startTiming,
                                                                      self.levelModel.noteList[i][
@@ -235,30 +211,17 @@ class GameController:
         self.noteSpritesGroup.update(self.levelModel.noteSpeed, self.levelModel.timer, self.gameSetting)
         self.noteSpritesGroup.draw(screen)
 
-    def draw_background_ui(self, screen):
-        screen.blit(self.levelModel.backgroundImage, self.levelModel.backgroundImage.get_rect())
-        self.uiSpritesGroup.draw(screen)
-
     # --------------------判定相关 UI 逻辑-------------------------
     def hit_note_event(self, key_event):
+        _columnNum = self.levelModel.currentChart.columnNum
         if key_event.type == pygame.KEYDOWN:
-            if key_event.key == pygame.K_d:
-                self.on_hit_note(0, self.levelModel.timer, False)
-            elif key_event.key == pygame.K_f:
-                self.on_hit_note(1, self.levelModel.timer, False)
-            elif key_event.key == pygame.K_j:
-                self.on_hit_note(2, self.levelModel.timer, False)
-            elif key_event.key == pygame.K_k:
-                self.on_hit_note(3, self.levelModel.timer, False)
+            for i in range(0, _columnNum):
+                if key_event.key == self.maniaSetting.keyBindDict[_columnNum][i]:
+                    self.on_hit_note(i, self.levelModel.timer, False)
         if key_event.type == pygame.KEYUP:
-            if key_event.key == pygame.K_d:
-                self.on_hit_note(0, self.levelModel.timer, True)
-            elif key_event.key == pygame.K_f:
-                self.on_hit_note(1, self.levelModel.timer, True)
-            elif key_event.key == pygame.K_j:
-                self.on_hit_note(2, self.levelModel.timer, True)
-            elif key_event.key == pygame.K_k:
-                self.on_hit_note(3, self.levelModel.timer, True)
+            for i in range(0, _columnNum):
+                if key_event.key == self.maniaSetting.keyBindDict[_columnNum][i]:
+                    self.on_hit_note(i, self.levelModel.timer, True)
 
     def on_hit_note(self, line_index, timing, is_key_up):
         if len(self.levelModel.noteQueue[line_index]) > 0:
@@ -438,9 +401,10 @@ class GameController:
 
     # ---------------------事件处理-----------------------------
     def on_key_press_event(self, key_event):
-        # temp
-        self.uiManager.gameSpriteGroup.update(key_event)
-        self.hit_note_event(key_event)
+        if self.gameModel.gameLoop == 'Game':
+            # 按键提示
+            self.uiManager.gameSpriteGroup.update(key_event, self.levelModel.currentChart.columnNum)
+            self.hit_note_event(key_event)
 
     def process_user_event(self, user_event):
         if user_event.type >= pygame.USEREVENT + 32:
@@ -460,8 +424,6 @@ class GameController:
         # 更新Timer
         self.levelModel.timer = pygame.mixer.music.get_pos() - self.levelModel.leadInTime
 
-        print(pygame.mixer.music.get_pos())
-
         # Lead In
         if not self.isMusicPlayed:
             self.play_music()
@@ -479,7 +441,6 @@ class GameController:
         self.spawn_notes()
 
         # 渲染 (注意图层)
-        self.draw_background_ui(screen)
         self.uiManager.draw_back_ui(screen)
         self.draw_notes(screen)
         self.uiManager.draw_front_ui(screen)

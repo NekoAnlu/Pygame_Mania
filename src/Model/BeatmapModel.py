@@ -17,7 +17,7 @@ class Chart:
     previewTime: int = 0
     audioPath: str
     offset: int = 0
-    backgroundPath: str
+    backgroundPath: str = ''
     filePath: str
     bpmList: List[Tuple[float, float]]  # bpm timing
     noteList: List[Note]

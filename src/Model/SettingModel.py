@@ -1,4 +1,6 @@
 # 游戏相关设置
+from typing import List, Dict, Tuple, Sequence
+
 
 class GameSetting:
     deltaTime: int
@@ -31,14 +33,17 @@ class GameSetting:
         self.timing_Miss = 188 - 3 * self.OD
 
 
-
-class ManiaUIModel:
+class ManiaSetting:
+    # UI
+    noteSize: int = 100
     lineWidth: int = 120
     lineStart: int = 0
     noteSpawnPosition: int = -50
     noteDestination: int = 900
     judgementPosition: int = 500
     comboPosition: int = 300
-
+    noteColor: Sequence[int]
+    # Key Bind
+    keyBindDict: Dict[int, List[int]] = {}
     # judgementTextSpriteDict: Dict[str, JudgementTextSprite] = {}
     # variableTextList: Dict[str, VariableTextSprite] = {}  # 用于监控数值变化后调用对应sprite的update更新view
