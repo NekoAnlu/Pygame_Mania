@@ -39,7 +39,7 @@ class ManiaSetting:
     lineWidth: int = 120
     lineStart: int = 0
     noteSpawnPosition: int = -50
-    noteDestination: int = 900
+    hitPosition: int = 900
     judgementPosition: int = 500
     comboPosition: int = 300
     noteColor: Sequence[int]

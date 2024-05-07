@@ -222,38 +222,8 @@ class UIManager:
 
         # HitPosition
         for i in range(len(self.levelModel.noteList)):
-            _lineSprite = HitPositionSprite(self.maniaSetting.noteSize, self.maniaSetting.noteColor, (self.maniaSetting.lineStart + self.maniaSetting.lineWidth * i, self.maniaSetting.noteDestination), i, self.maniaSetting.keyBindDict)
+            _lineSprite = HitPositionSprite(self.maniaSetting.noteSize, self.maniaSetting.noteColor, (self.maniaSetting.lineStart + self.maniaSetting.lineWidth * i, self.maniaSetting.hitPosition), i, self.maniaSetting.keyBindDict)
             self.gameSpriteGroup.add(_lineSprite)
-
-        # PausePanel
-        # _PausePanel = pygame_gui.elements.UIPanel(
-        #     relative_rect=pygame.Rect((0, 0), (270, 420)),
-        #     starting_height=0,
-        #     manager=self.uiManager,
-        #     object_id='#PausePanel',
-        #     anchors={'center': 'center'})
-        #
-        # _ResumeButton = pygame_gui.elements.UIButton(
-        #     relative_rect=pygame.Rect((0, 20), (200, 100)),
-        #     text='Resume',
-        #     manager=self.uiManager,
-        #     object_id='#BackButton',
-        #     container=_PausePanel,
-        #     anchors={'centerx': 'centerx'})
-        # _RetryButton = pygame_gui.elements.UIButton(
-        #     relative_rect=pygame.Rect((0, 140), (200, 100)),
-        #     text='Retry',
-        #     manager=self.uiManager,
-        #     object_id='#BackButton',
-        #     container=_PausePanel,
-        #     anchors={'centerx': 'centerx'})
-        # _ExitButton = pygame_gui.elements.UIButton(
-        #     relative_rect=pygame.Rect((0, 260), (200, 100)),
-        #     text='Exit',
-        #     manager=self.uiManager,
-        #     object_id='#BackButton',
-        #     container=_PausePanel,
-        #     anchors={'centerx': 'centerx'})
 
         # 判定信息
         _PPerfectText = pygame_gui.elements.UILabel(
@@ -301,6 +271,45 @@ class UIManager:
         self.judgementLabelDict['Miss'] = _MissText
         # 默认隐藏所有判定信息
         self.hide_judgement_text()
+
+        # PausePanel
+        _PausePanel = pygame_gui.elements.UIPanel(
+            relative_rect=pygame.Rect((0, 0), (270, 400)),
+            starting_height=0,
+            manager=self.uiManager,
+            object_id='#PausePanel',
+            anchors={'center': 'center'})
+        _PauseLabel = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((0, 20), (200, 100)),
+            text='Pause',
+            manager=self.uiManager,
+            object_id='#Combo_Text',
+            container=_PausePanel,
+            anchors={'centerx': 'centerx'})
+
+        # _ResumeButton = pygame_gui.elements.UIButton(
+        #     relative_rect=pygame.Rect((0, 20), (200, 100)),
+        #     text='Resume',
+        #     manager=self.uiManager,
+        #     object_id='#BackButton',
+        #     container=_PausePanel,
+        #     anchors={'centerx': 'centerx'})
+        _RetryButton = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((0, 120), (200, 100)),
+            text='Retry',
+            manager=self.uiManager,
+            object_id='#BackButton',
+            container=_PausePanel,
+            anchors={'centerx': 'centerx'})
+        _ExitButton = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((0, 240), (200, 100)),
+            text='Exit',
+            manager=self.uiManager,
+            object_id='#BackButton',
+            container=_PausePanel,
+            anchors={'centerx': 'centerx'})
+
+        _PausePanel.hide()
 
         # 变化数值Text
         _ComboText = pygame_gui.elements.UILabel(
@@ -375,6 +384,10 @@ class UIManager:
 
         # 借助这个dict显隐
         # self.variableLabelDict['BackgroundImage'] = _BackgroundImage
+        self.variableLabelDict['PausePanel'] = _PausePanel
+        # self.variableLabelDict['ResumeButton'] = _ResumeButton
+        self.variableLabelDict['RetryButton'] = _RetryButton
+        self.variableLabelDict['ExitButton'] = _ExitButton
 
         self.variableLabelDict['Combo'] = _ComboText
         self.variableLabelDict['Accuracy'] = _AccuracyText
@@ -559,6 +572,19 @@ class UIManager:
                         self.gameModel.gameLoop = 'Title'
                     elif event.ui_element == self.scoreUIDict['RetryButton']:
                         self.gameModel.gameLoop = 'Game'
+                # 游戏页面暂停
+                elif self.gameModel.gameLoop == 'Game':
+                    # if event.ui_element == self.variableLabelDict['ResumeButton']:
+                    #     self.gameModel.isGamePause = False
+                    if event.ui_element == self.variableLabelDict['RetryButton']:
+                        # 偷懒用重开方法
+                        self.gameModel.isGamePause = False
+                        self.gameModel.gameLoop = 'GameRetry'
+                    elif event.ui_element == self.variableLabelDict['ExitButton']:
+                        self.gameModel.isGamePause = False
+                        # 避免title cover重复显示
+                        self.gameModel.selectedChart = None
+                        self.gameModel.gameLoop = 'Title'
             # 滑条滑动事件
             elif event.user_type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                 if event.ui_element == self.titleUIDict['DropSpeedSlider']:
@@ -648,16 +674,25 @@ class UIManager:
             ui.kill()
         for ui in self.variableLabelDict.values():
             ui.kill()
+
         self.gameSpriteGroup.empty()
 
     def kill_score_ui(self):
         for ui in self.scoreUIDict.values():
             ui.kill()
 
+    def show_pause_panel(self, value: bool):
+        if value:
+            self.variableLabelDict['PausePanel'].show()
+        else:
+            self.variableLabelDict['PausePanel'].hide()
+
     # ----------------------- draw -------------------------------
     def draw_front_ui(self, screen):
         self.uiManager.draw_ui(screen)
 
-    def draw_back_ui(self, screen):
+    def draw_background(self, screen):
         screen.blit(self.levelModel.backgroundImage, self.levelModel.backgroundImage.get_rect())
+
+    def draw_game_sprite(self, screen):
         self.gameSpriteGroup.draw(screen)

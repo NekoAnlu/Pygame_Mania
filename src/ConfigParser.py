@@ -35,9 +35,25 @@ class ConfigParser:
             mania_setting.keyBindDict[9].append(pygame.key.key_code(keycode))
 
         # ui
-        mania_setting.noteSize = ast.literal_eval(self.config.get('Skin', 'noteSize'))
-        mania_setting.lineWidth = ast.literal_eval(self.config.get('Skin', 'lineWidth'))
+        mania_setting.noteSize = max(1, ast.literal_eval(self.config.get('Skin', 'noteSize')))
+        mania_setting.lineWidth = max(1, ast.literal_eval(self.config.get('Skin', 'lineWidth')))
+        mania_setting.hitPosition = ast.literal_eval(self.config.get('Skin', 'hitPosition'))
         mania_setting.judgementPosition = ast.literal_eval(self.config.get('Skin', 'judgementPosition'))
         mania_setting.comboPosition = ast.literal_eval(self.config.get('Skin', 'comboPosition'))
         mania_setting.noteColor = ast.literal_eval(self.config.get('Skin', 'noteColor'))
-        print(mania_setting.noteColor)
+
+        # 预防bug
+        if mania_setting.noteSize > mania_setting.lineWidth:
+            mania_setting.lineWidth = mania_setting.noteSize + 20
+        if not self.is_valid_color(mania_setting.noteColor):
+            mania_setting.noteColor = (255, 121, 174)
+
+    def is_valid_color(self, color):
+        if not isinstance(color, tuple):
+            return False
+        if len(color) != 3:
+            return False
+        for value in color:
+            if not isinstance(value, int) or not (0 <= value <= 255):
+                return False
+        return True

@@ -56,25 +56,21 @@ class ManiaGame:
     # 监控loop变化
     def on_switch_loop(self):
         if self.gameModel.gameLoop != self.currLoop:
-            if self.gameModel.gameLoop == 'Game':
-                # 如果是从title跳转来的
-                if self.currLoop == 'Title':
-                    self.reset_game_play_model()
-                    self.gameController.load_game_resource(self.gameModel.selectedChart.filePath)
-                    self.uiManager.kill_title_ui()
-                    self.currLoop = 'Game'
-                # 如果是retry
-                elif self.currLoop == 'Score':
-                    self.reset_game_play_model()
-                    print(self.gameModel.selectedChart.filePath)
-                    self.gameController.load_game_resource(self.gameModel.selectedChart.filePath)
-                    self.uiManager.kill_score_ui()
-                    self.currLoop = 'Game'
+            # 偷懒用重开方法
+            if self.gameModel.gameLoop == 'Game' or self.gameModel.gameLoop == 'GameRetry':
+                self.uiManager.kill_game_ui()
+                self.uiManager.kill_title_ui()
+                self.uiManager.kill_score_ui()
+                self.reset_game_play_model()
+                self.gameController.load_game_resource(self.gameModel.selectedChart.filePath)
+                self.gameModel.gameLoop = 'Game'
+                self.currLoop = 'Game'
             elif self.gameModel.gameLoop == 'Score':
                 self.uiManager.kill_game_ui()
                 self.scorePageController.init_score_page()
                 self.currLoop = 'Score'
             elif self.gameModel.gameLoop == 'Title':
+                self.uiManager.kill_game_ui()
                 self.uiManager.kill_score_ui()
                 self.titlePageController.init_title_page()
                 self.currLoop = 'Title'
@@ -117,6 +113,7 @@ class GameController:
         # 音乐结束事件
         pygame.mixer.music.set_endevent(pygame.USEREVENT + 8)
 
+        # 一些flag
         self.isMusicPlayed = False
 
     def load_game_resource(self, chart_path):
@@ -135,7 +132,7 @@ class GameController:
         self.preprocess_notes()
 
         # 读歌曲前清空之前的歌曲
-        pygame.mixer.music.stop()
+        # pygame.mixer.music.stop()
         pygame.mixer.music.load(self.levelModel.currentChart.audioPath)
         pygame.mixer.music.play()
         pygame.mixer.music.pause()
@@ -156,30 +153,13 @@ class GameController:
                 self.levelModel.noteQueue.append([])
                 self.levelModel.lineIndex.append(0)
             self.levelModel.noteList[_lineIndex].append(_note)
-            # new 计算按键总数 LN算2note
-            self.levelModel.totalNotes += 1 if _note.noteType == 0 else 2
-
-    def play_music(self):
-        if self.levelModel.leadInTime > 0:
-            self.levelModel.leadInTime -= self.gameSetting.deltaTime
-            if self.levelModel.leadInTime <= 0:
-                pygame.mixer.music.unpause()
-                self.isMusicPlayed = True
-                self.levelModel.leadInTime = 0
-        # if self.is_game_end():
-        #     pygame.mixer.music.stop()
-
-    def is_game_end(self) -> bool:
-        for i in range(len(self.levelModel.lineIndex)):
-            if self.levelModel.lineIndex[i] < len(self.levelModel.noteList[i]) or len(self.levelModel.noteQueue) != 0:
-                return False
-        return True
-        # if self.levelModel.timer
+            # new 计算按键总数
+            self.levelModel.totalNotes += 1
 
     def spawn_notes(self):
         self.levelModel.noteSpeed = self.gameSetting.noteSpeed * 100
         _currTime = self.levelModel.timer
-        _dropTime = ((self.maniaSetting.noteDestination - self.maniaSetting.noteSpawnPosition) / self.levelModel.noteSpeed) * 1000
+        _dropTime = ((self.maniaSetting.hitPosition - self.maniaSetting.noteSpawnPosition) / self.levelModel.noteSpeed) * 1000
         _lineStart = self.gameSetting.screenWidth / 2 - self.maniaSetting.lineWidth * (self.levelModel.currentChart.columnNum / 2.0 - 0.5)
         for i, lineIndex in enumerate(self.levelModel.lineIndex):
             while self.levelModel.lineIndex[i] < len(self.levelModel.noteList[i]) and self.levelModel.noteList[i][self.levelModel.lineIndex[i]].startTiming <= _currTime + _dropTime:
@@ -188,14 +168,14 @@ class GameController:
                 if self.levelModel.noteList[i][self.levelModel.lineIndex[i]].noteType == 0:
                     _noteObj = self.levelModel.noteSpritePool.get_note(self.maniaSetting.noteSize, self.maniaSetting.noteColor,
                                                                        (_x, self.maniaSetting.noteSpawnPosition),
-                                                                       (_x, self.maniaSetting.noteDestination),
+                                                                       (_x, self.maniaSetting.hitPosition),
                                                                        self.levelModel.noteList[i][
                                                                            self.levelModel.lineIndex[i]].startTiming)
                     self.levelModel.noteQueue[i].append(_noteObj)
                 else:
                     _noteObj = self.levelModel.lnSpritePool.get_note(self.maniaSetting.noteSize, self.maniaSetting.noteColor,
                                                                      (_x, self.maniaSetting.noteSpawnPosition),
-                                                                     (_x, self.maniaSetting.noteDestination),
+                                                                     (_x, self.maniaSetting.hitPosition),
                                                                      self.levelModel.noteList[i][
                                                                          self.levelModel.lineIndex[i]].startTiming,
                                                                      self.levelModel.noteList[i][
@@ -210,6 +190,32 @@ class GameController:
         self.levelModel.lnSpritePool.add_to_group(self.noteSpritesGroup)
         self.noteSpritesGroup.update(self.levelModel.noteSpeed, self.levelModel.timer, self.gameSetting)
         self.noteSpritesGroup.draw(screen)
+
+    # -------------------- 游戏流程控制相关 ---------------------
+    def play_music(self):
+        if self.levelModel.leadInTime > 0:
+            self.levelModel.leadInTime -= self.gameSetting.deltaTime
+            if self.levelModel.leadInTime <= 0:
+                pygame.mixer.music.unpause()
+                self.isMusicPlayed = True
+                self.levelModel.leadInTime = 0
+        # if self.is_game_end():
+        #     pygame.mixer.music.stop()
+
+    def pause_music(self):
+        pygame.mixer.music.pause()
+
+    def resume_music(self):
+        # 防止leadin的时候出问题
+        if self.isMusicPlayed:
+            pygame.mixer.music.unpause()
+
+    def is_game_end(self) -> bool:
+        for i in range(len(self.levelModel.lineIndex)):
+            if self.levelModel.lineIndex[i] < len(self.levelModel.noteList[i]) or len(self.levelModel.noteQueue) != 0:
+                return False
+        return True
+        # if self.levelModel.timer
 
     # --------------------判定相关 UI 逻辑-------------------------
     def hit_note_event(self, key_event):
@@ -244,33 +250,44 @@ class GameController:
 
             # LN判定范围更小 且miss单独处理（可优化？）
             if _note.noteType == 1:
-                # 如果松LN后再按下判定滑条尾
+                # 如果头miss了但中途按下
                 if not is_key_up and _note.isHeadMiss and not _note.isHolding:
+                    _note.isHeld = True
                     _note.isHolding = True
+
                 # 正常按下判定
-                elif _offset <= self.gameSetting.timing_Bad:
+                if _offset <= self.gameSetting.timing_Bad:
                     # LN正常按下
                     if not _note.isHolding:
-                        self.timing_judgement(_offset, _note)
+                        # self.timing_judgement(_offset, _note, 'Head')
                         _note.isHolding = True
-                    # LN尾巴判定且没有提前松手
-                    elif is_key_up and _note.isHolding:
+                        _note.isHeld = True
+                        _note.headOffset = _offset
+                    # LN尾巴判定且没有提前松手且头没miss
+                    elif is_key_up and _note.isHolding and not _note.isHeadMiss:
                         self.timing_judgement(_offset, _note)
                         _note.isHolding = False
                         _note.active = False
                         self.levelModel.noteQueue[line_index].pop(0)
+                    # 如果头miss了 继续按下无论什么时候松都是bad
+                    elif is_key_up and _note.isHolding and _note.isHeadMiss:
+                        _note.isBad = True
                 # 判定保护miss判定
                 elif _offset <= self.gameSetting.timing_Miss:
                     # LN头直接miss
                     if not _note.isHolding:
                         _note.isHeadMiss = True
-                # 长条尾提前松手判定
-                else:
-                    # LN提前松手miss
-                    if is_key_up and _note.isHolding:
-                        _note.isHolding = False
+                        _note.isMiss = True
+                    # 提前松手
+                    elif _note.isHolding:
                         _note.isHeadMiss = True
-                        _note.canJudge = False
+                        _note.isBad = True
+
+                # 长条尾提前松手判定bad
+                elif is_key_up and _note.isHeld:
+                    _note.isBad = True
+                    _note.isHolding = False
+                    _note.isHeadMiss = True
 
             # 普通按键是否在可判定区间内
             elif _note.noteType == 0 and _offset <= self.gameSetting.timing_Miss:
@@ -281,20 +298,38 @@ class GameController:
                 self.levelModel.noteQueue[line_index].pop(0)
 
     # 判定信息显示 + 数据更新
+    # 判定时值为OM Score V1
+    # https://osu.ppy.sh/wiki/en/Gameplay/Judgement/osu%21mania
     def timing_judgement(self, _offset, _note):
-        if _offset <= self.gameSetting.timing_Bad:
-            if _offset <= self.gameSetting.timing_PPerfect:
+        # RC
+        if _note.noteType == 0:
+            if _offset <= self.gameSetting.timing_Bad:
+                if _offset <= self.gameSetting.timing_PPerfect:
+                    self.note_judgement('PPerfect')
+                elif _offset <= self.gameSetting.timing_Perfect:
+                    self.note_judgement('Perfect')
+                elif _offset <= self.gameSetting.timing_Great:
+                    self.note_judgement('Great')
+                elif _offset <= self.gameSetting.timing_Cool:
+                    self.note_judgement('Cool')
+                else:
+                    self.note_judgement('Bad')
+            else:
+                self.note_judgement('Miss')
+        # 正常判定下的LN
+        else:
+            _offset += _note.headOffset
+            print(_offset)
+            if _note.headOffset <= self.gameSetting.timing_PPerfect * 1.2 and _offset <= self.gameSetting.timing_PPerfect * 2.4:
                 self.note_judgement('PPerfect')
-            elif _offset <= self.gameSetting.timing_Perfect:
+            elif _note.headOffset <= self.gameSetting.timing_Perfect * 1.1 and _offset <= self.gameSetting.timing_Perfect * 2.2:
                 self.note_judgement('Perfect')
-            elif _offset <= self.gameSetting.timing_Great:
+            elif _note.headOffset <= self.gameSetting.timing_Great and _offset <= self.gameSetting.timing_Great * 2:
                 self.note_judgement('Great')
-            elif _offset <= self.gameSetting.timing_Cool:
+            elif _note.headOffset <= self.gameSetting.timing_Cool and _offset <= self.gameSetting.timing_Cool * 2:
                 self.note_judgement('Cool')
             else:
                 self.note_judgement('Bad')
-        else:
-            self.note_judgement('Miss')
 
     # 具体判定对view和model的更新
     def note_judgement(self, judge_name):
@@ -332,15 +367,13 @@ class GameController:
                 self.levelModel.noteQueue[i].pop(0)
                 self.note_judgement('Miss')
             # LN头判定
-            for j in range(len(self.levelModel.noteQueue[i])):
-                if len(self.levelModel.noteQueue[i]) > 0 and self.levelModel.noteQueue[i][j].noteType == 1:
-                    if self.levelModel.noteQueue[i][j].isHeadMiss and not self.levelModel.noteQueue[i][j].isHeadMissCount:
-                        self.levelModel.noteQueue[i][j].isHeadMissCount = True
-                        self.note_judgement('Miss')
-                    if self.levelModel.noteQueue[i][j].isTailMiss and not self.levelModel.noteQueue[i][
-                        j].isTailMissCount:
-                        self.levelModel.noteQueue[i][j].isTailMissCount = True
-                        self.note_judgement('Miss')
+            while len(self.levelModel.noteQueue[i]) > 0 and self.levelModel.noteQueue[i][0].noteType == 1 and (self.levelModel.noteQueue[i][0].isMiss or self.levelModel.noteQueue[i][0].isBad):
+                if self.levelModel.noteQueue[i][0].isMiss:
+                    self.note_judgement('Miss')
+                    self.levelModel.noteQueue[i].pop(0)
+                elif self.levelModel.noteQueue[i][0].isBad:
+                    self.note_judgement('Bad')
+                    self.levelModel.noteQueue[i].pop(0)
 
     # Acc (osu mania scorev1)
     def cal_acc(self):
@@ -402,6 +435,16 @@ class GameController:
     # ---------------------事件处理-----------------------------
     def on_key_press_event(self, key_event):
         if self.gameModel.gameLoop == 'Game':
+            if key_event.type == pygame.KEYDOWN:
+                if key_event.key == pygame.K_ESCAPE:
+                    if not self.gameModel.isGamePause:
+                        self.gameModel.isGamePause = True
+                        self.uiManager.show_pause_panel(True)
+                        self.pause_music()
+                    else:
+                        self.gameModel.isGamePause = False
+                        self.uiManager.show_pause_panel(False)
+                        self.resume_music()
             # 按键提示
             self.uiManager.gameSpriteGroup.update(key_event, self.levelModel.currentChart.columnNum)
             self.hit_note_event(key_event)
@@ -421,30 +464,35 @@ class GameController:
         # 每帧调用设置fps
         self.gameSetting.deltaTime = self.pygameClock.tick(1000)
 
-        # 更新Timer
-        self.levelModel.timer = pygame.mixer.music.get_pos() - self.levelModel.leadInTime
-
-        # Lead In
-        if not self.isMusicPlayed:
-            self.play_music()
-
-        # 清空之前的group(在修改group内变量前清空避免报错
-        self.noteSpritesGroup.empty()
-
-        # 一些数据更新
-        self.uiManager.update_variable_text()
+        # Pause的时候UI照常更新
         self.uiManager.update_ui()
-        self.update_note_queue()
-        # self.update_variable_text()
 
-        # 生成按键精灵
-        self.spawn_notes()
+        if not self.gameModel.isGamePause:
+            # 更新Timer
+            self.levelModel.timer = pygame.mixer.music.get_pos() - self.levelModel.leadInTime
 
-        # 渲染 (注意图层)
-        self.uiManager.draw_back_ui(screen)
-        self.draw_notes(screen)
+            # Lead In
+            if not self.isMusicPlayed:
+                self.play_music()
+
+            # 清空之前的group(在修改group内变量前清空避免报错
+            self.noteSpritesGroup.empty()
+
+            # 一些数据更新
+            self.uiManager.update_variable_text()
+            # self.uiManager.update_ui()
+            self.update_note_queue()
+
+            # 生成按键精灵
+            self.spawn_notes()
+
+            # 渲染 (注意图层)
+            self.uiManager.draw_background(screen)
+            self.uiManager.draw_game_sprite(screen)
+            self.draw_notes(screen)
+
+        # 图层
         self.uiManager.draw_front_ui(screen)
-        # self.draw_front_ui(screen)
 
         pygame.display.update()
 

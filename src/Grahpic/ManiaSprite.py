@@ -111,18 +111,19 @@ class LNSprite(pygame.sprite.Sprite):
         self.timing = timing
         self.endTiming = end_timing
         self.timer = 0
-        # 判定是否还能判定
-        self.canJudge = True
         # 显示隐藏用（pool用）
         self.active = True
         # sp判定用
         self.isHeadMiss = False
-        self.isTailMiss = False
+        self.isMiss = False
+        self.isBad = False
         self.isHolding = False
+        self.isHeld = False
+        self.headOffset = 0
         self.length = 0
-        # new标记head miss被抛出
-        self.isHeadMissCount = False
-        self.isTailMissCount = False
+        # new标记miss被抛出
+        self.isMissCount = False
+        self.isBadCount = False
 
     def update(self, speed, timer, game_setting):
         self.check_miss(timer, game_setting)
@@ -183,8 +184,8 @@ class LNSprite(pygame.sprite.Sprite):
             self.isHeadMiss = True
         # 大于timing不允许再判定
         if timer - self.endTiming > game_setting.timing_Bad:
-            self.canJudge = False
-            self.isTailMiss = True
+            self.isMiss = True
+            # self.isTailMiss = True
         # 超出范围隐藏
         if self.rect.top > game_setting.screenHeight:
             self.active = False

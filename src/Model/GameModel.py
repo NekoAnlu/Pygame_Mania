@@ -9,11 +9,13 @@ class GameModel:
     songDict: Dict[str, Song] = {}
     selectedChart: Chart = None
     gameLoop: str = 'Title'
+    isGamePause: bool = False
 
 
 class LevelModel:
     def __init__(self):
         # 按键基础数据
+        self.currentChart = None
         self.backgroundImage = None
         self.noteSpeed: int = 2000
 
@@ -33,8 +35,6 @@ class LevelModel:
 
         # 背景
         self.backgroundImage: Surface
-
-
 
 class ManiaUIModel:
     lineWidth: int = 120
