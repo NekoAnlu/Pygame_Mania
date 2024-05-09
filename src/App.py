@@ -16,7 +16,7 @@ class ManiaPygame:
         self.maniaGame: ManiaGame
 
     def on_init(self):
-        pygame.mixer.pre_init(44100, 16, 2, 1024)
+        pygame.mixer.pre_init(44100, 16, 2, 512)
         pygame.init()
         # temp
         self.screen = pygame.display.set_mode(self.size, pygame.DOUBLEBUF | pygame.HWSURFACE)
