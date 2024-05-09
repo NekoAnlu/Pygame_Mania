@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import pygame_gui
 from pygame import Surface
@@ -399,12 +401,12 @@ class UIManager:
             manager=self.uiManager,
             object_id='##MissCount_Text')
         _FastCountText = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((50, 880), (150, 100)),
+            relative_rect=pygame.Rect((30, 880), (150, 100)),
             text='Fast: ',
             manager=self.uiManager,
             object_id='##FastCount_Text')
         _LateCountText = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect((190, 880), (150, 100)),
+            relative_rect=pygame.Rect((160, 880), (150, 100)),
             text='Late: ',
             manager=self.uiManager,
             object_id='##LateCount_Text')
@@ -573,6 +575,17 @@ class UIManager:
         else:
             self.scoreUIDict['ScoreLabelText'].set_text('D')
 
+    # ------------------- UI Effect ---------------------------
+    # def BounceTextEffect(self):
+    #     # 计算一个基于正弦波的跳动效果
+    #     bounce_height = 10  # 跳动高度
+    #     speed = 2  # 控制跳动的速度
+    #     new_y = 250 + math.sin(time_since_start * speed) * bounce_height
+    #
+    #     # 更新标签位置
+    #     label.set_relative_position((350, new_y))
+
+
     # ------------------------- UI Event -------------------------------
     def init_ui_event(self):
         _uiEventIndex = pygame.USEREVENT + 32
@@ -580,11 +593,12 @@ class UIManager:
         self.JUDGEMENT_HIDE_EVENT = _uiEventIndex + 1
 
     def process_ui_event(self, event):
+        # 自动隐藏判定
+        if event.type == self.JUDGEMENT_HIDE_EVENT:
+            self.hide_judgement_text()
         if event.type == pygame.USEREVENT:
-            if event.type == self.JUDGEMENT_HIDE_EVENT:
-                self.hide_judgement_text()
             # 下拉菜单变更事件
-            elif event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+            if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
                 # 切换选曲触发 更新谱面列表
                 if event.ui_element == self.titleUIDict['SongSelectDropDownMenu']:
                     self.update_title_chart_dropdown(event.text)
@@ -683,7 +697,7 @@ class UIManager:
         for _label in self.judgementLabelDict.values():
             _label.hide()
         self.judgementLabelDict[text].show()
-        pygame.time.set_timer(self.JUDGEMENT_HIDE_EVENT, 500)
+        pygame.time.set_timer(self.JUDGEMENT_HIDE_EVENT, 300)
 
     # # 更新变化信息 在这里调用
     def update_variable_text(self):

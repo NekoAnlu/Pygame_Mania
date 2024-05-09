@@ -135,6 +135,10 @@ class GameController:
         # pygame.mixer.music.stop()
         pygame.mixer.music.load(self.levelModel.currentChart.audioPath)
         pygame.mixer.music.play()
+        # 如果第一个按键离音乐开头太远就直接播
+        if self.levelModel.firstNoteTiming > 5000:
+            pygame.mixer.music.set_pos((self.levelModel.firstNoteTiming - 3000)/1000.0)
+            self.levelModel.leadInTime = 1
         pygame.mixer.music.pause()
 
         # 背景
@@ -147,12 +151,14 @@ class GameController:
     def preprocess_notes(self):
         for _note in self.levelModel.currentChart.noteList:
             _lineIndex = _note.line
-            # new 计算按键总数
+            # 计算按键总数
             self.levelModel.totalNotes += 1
             # new offset
             _note.startTiming += self.gameSetting.offset
             if _note.noteType == 1:
                 _note.endTiming += self.gameSetting.offset
+            # 记录第一个按键
+            self.levelModel.firstNoteTiming = min(self.levelModel.firstNoteTiming, _note.startTiming)
             # 动态判断谱面key数初始化对应数量的队列和列表
             while len(self.levelModel.noteList) <= _lineIndex:
                 self.levelModel.noteList.append([])
@@ -336,7 +342,7 @@ class GameController:
                 self.note_judgement('Miss', _isFast)
         # 正常判定下的LN
         else:
-            print(f'{_offset} {_note.headOffset}')
+            # print(f'{_offset} {_note.headOffset}')
             # 判定fast和late
             _isFast = (_offset + _note.headOffset) > 0
             _offset = abs(_offset) + abs(_note.headOffset)
@@ -473,7 +479,7 @@ class GameController:
                         self.uiManager.show_pause_panel(False)
                         self.resume_music()
             # 按键提示
-            self.uiManager.gameSpriteGroup.update(key_event, self.levelModel.currentChart.columnNum)
+            self.uiManager.gameSpriteGroup.update(key_event, len(self.levelModel.noteQueue))
             self.hit_note_event(key_event)
 
     def process_user_event(self, user_event):

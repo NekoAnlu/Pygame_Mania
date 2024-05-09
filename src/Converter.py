@@ -16,7 +16,7 @@ class MCConverter:
                     _chartFile.append(os.path.join(root, file))
 
         # 先读取其中一个chart获取基本信息
-        with open(_chartFile[0], 'r') as file:
+        with open(_chartFile[0], 'r', encoding='utf-8', errors='ignore') as file:
             data = json.load(file)
             # 歌曲基本信息
             song.title = data['meta']['song']['title']
@@ -29,7 +29,7 @@ class MCConverter:
         # 读取所有mc拿到除按键外所有信息
         for filepath in _chartFile:
             chart = Chart()
-            with open(filepath, 'r') as file:
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as file:
                 data = json.load(file)
                 _basepath = filepath[0:filepath.rfind('\\') + 1]
                 # 跳过非mania的chart
@@ -47,11 +47,20 @@ class MCConverter:
                 if 'preview' in data['meta']:
                     chart.previewTime = data['meta']['preview']
                 chart.filePath = filepath  # temp
-                chart.audioPath = _basepath + _noteData[-1]['sound']  # temp2
-                if 'offset' in _noteData[-1]:
-                    chart.offset = _noteData[-1]['offset']
+                if 'sound' in _noteData[-1]:
+                    chart.audioPath = _basepath + _noteData[-1]['sound']  # temp2
+                    if 'offset' in _noteData[-1]:
+                        chart.offset = _noteData[-1]['offset']
+                    else:
+                        chart.offset = 0
+                    _noteData.pop()  # 删掉第一个note
                 else:
-                    chart.offset = 0
+                    chart.audioPath = _basepath + _noteData[0]['sound']  # temp2
+                    if 'offset' in _noteData[0]:
+                        chart.offset = _noteData[0]['offset']
+                    else:
+                        chart.offset = 0
+                    _noteData.pop(0)  # 删掉第一个note
                 chart.noteNum = len(_noteData) - 1
 
                 chart.bpmList = []
@@ -66,7 +75,7 @@ class MCConverter:
         song = Song()
         chart = Chart()
         
-        with open(path, 'r') as file:
+        with open(path, 'r', encoding='utf-8', errors='ignore') as file:
             data = json.load(file)
             _basepath = path[0:path.rfind('\\')+1]
             # 歌曲基本信息
@@ -89,13 +98,21 @@ class MCConverter:
             if 'preview' in data['meta']:
                 chart.previewTime = data['meta']['preview']
             # chart.filePath = filepath  # temp
-            chart.audioPath = _basepath + _noteData[-1]['sound']  # temp2
-            if 'offset' in _noteData[-1]:
-                chart.offset = _noteData[-1]['offset']
+            if 'sound' in _noteData[-1]:
+                chart.audioPath = _basepath + _noteData[-1]['sound']  # temp2
+                if 'offset' in _noteData[-1]:
+                    chart.offset = _noteData[-1]['offset']
+                else:
+                    chart.offset = 0
+                _noteData.pop()  # 删掉最后一个note
             else:
-                chart.offset = 0
+                chart.audioPath = _basepath + _noteData[0]['sound']  # temp2
+                if 'offset' in _noteData[0]:
+                    chart.offset = _noteData[0]['offset']
+                else:
+                    chart.offset = 0
+                _noteData.pop(0)  # 删掉第一个note
             chart.noteNum = len(_noteData) - 1
-            _noteData.pop()  # 删掉最后一个note
 
             # 单bpm
             chart.bpmList = []

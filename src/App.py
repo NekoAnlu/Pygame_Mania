@@ -35,11 +35,7 @@ class ManiaPygame:
                 self.maniaGame.gameController.on_key_press_event(event)
             elif event.type >= pygame.USEREVENT:
                 self.maniaGame.gameController.process_user_event(event)
-            #     if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
-            #
-            # self.maniaGame.uiManager.process_ui_event(event)
 
-    # on_cleanup call pygame.quit() that quits all PyGame modules. Anything else will be cleaned up by Python.
     def on_cleanup(self):
         pygame.quit()
 
@@ -53,7 +49,6 @@ class ManiaPygame:
 
             self.maniaGame.on_switch_loop()
             self.maniaGame.game_loop()
-
 
         self.on_cleanup()
 

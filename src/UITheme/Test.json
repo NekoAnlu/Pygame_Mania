@@ -151,7 +151,7 @@
     "##PPerfect_Text": {
         "prototype": "#Judgement_Text",
         "colours": {
-            "normal_text": "gold"
+            "normal_text": "rgb(30, 40, 60),#f3f,rgb(50, 60, 70),90deg"
         }
     },
     "##Perfect_Text": {
@@ -163,13 +163,13 @@
     "##Great_Text": {
         "prototype": "#Judgement_Text",
         "colours": {
-            "normal_text": "green"
+            "normal_text": "Lime"
         }
     },
     "##Cool_Text": {
         "prototype": "#Judgement_Text",
         "colours": {
-            "normal_text": "blue"
+            "normal_text": "aqua"
         }
     },
     "##Bad_Text": {
@@ -241,7 +241,7 @@
     "##PPerfectCount_Text": {
         "prototype": "#Counter_Text",
         "colours": {
-            "normal_text": "gold"
+            "normal_text": "rgb(30, 40, 60),#f3f,rgb(50, 60, 70),90deg"
         }
     },
     "##PerfectCount_Text": {
@@ -253,13 +253,13 @@
     "##GreatCount_Text": {
           "prototype": "#Counter_Text",
           "colours": {
-              "normal_text": "green"
+              "normal_text": "Lime"
           }
       },
     "##CoolCount_Text": {
           "prototype": "#Counter_Text",
           "colours": {
-              "normal_text": "blue"
+              "normal_text": "aqua"
           }
       },
     "##BadCount_Text": {
@@ -277,20 +277,14 @@
     "##FastCount_Text": {
               "prototype": "#Counter_Text",
               "colours": {
-                  "normal_text": "blue"
-              },
-                "misc": {
-            "text_horiz_alignment": "left"
-        }
+                  "normal_text": "aqua"
+              }
           },
     "##LateCount_Text": {
               "prototype": "#Counter_Text",
               "colours": {
-                  "normal_text": "red"
-              },
-                "misc": {
-            "text_horiz_alignment": "left"
-        }
+                  "normal_text": "OrangeRed"
+              }
           },
     "#IngameInfo_Text": {
           "font": {

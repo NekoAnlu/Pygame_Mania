@@ -33,6 +33,7 @@ class LevelModel:
         self.lineIndex: List[int] = []
         self.leadInTime: int = 2000
         self.leadOutTime: int = 1000
+        self.firstNoteTiming: float = 10000000
 
         # 背景
         self.backgroundImage: Surface
