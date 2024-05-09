@@ -5,9 +5,6 @@ from typing import List, Dict, Tuple, Sequence
 class GameSetting:
     deltaTime: int
 
-    noteSpeed: int = 20
-    OD: int = 8
-
     # 屏幕大小 浮点方便计算
     screenWidth: float = 1920.0
     screenHeight: float = 1080.0
@@ -22,6 +19,9 @@ class GameSetting:
     timing_Miss = 188
 
     def __init__(self):
+        self.noteSpeed: int = 18
+        self.OD: int = 8
+        self.offset: int = 0
         self.cal_judgement_timing()
 
     def cal_judgement_timing(self):

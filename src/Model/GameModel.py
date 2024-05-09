@@ -32,9 +32,11 @@ class LevelModel:
         self.totalNotes: int = 0
         self.lineIndex: List[int] = []
         self.leadInTime: int = 2000
+        self.leadOutTime: int = 1000
 
         # 背景
         self.backgroundImage: Surface
+
 
 class ManiaUIModel:
     lineWidth: int = 120
@@ -62,3 +64,5 @@ class PlayerModel:
         self.score: int = 0
         self.accuracy: float = 0.0
         self.scoreBonus: int = 100
+        self.fastCount: int = 0
+        self.lateCount: int = 0

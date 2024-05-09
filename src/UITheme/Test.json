@@ -274,6 +274,24 @@
                   "normal_text": "red"
               }
           },
+    "##FastCount_Text": {
+              "prototype": "#Counter_Text",
+              "colours": {
+                  "normal_text": "blue"
+              },
+                "misc": {
+            "text_horiz_alignment": "left"
+        }
+          },
+    "##LateCount_Text": {
+              "prototype": "#Counter_Text",
+              "colours": {
+                  "normal_text": "red"
+              },
+                "misc": {
+            "text_horiz_alignment": "left"
+        }
+          },
     "#IngameInfo_Text": {
           "font": {
                 "name": "Silver",

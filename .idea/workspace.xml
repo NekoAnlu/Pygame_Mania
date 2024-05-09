@@ -4,14 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update multiple key support and config">
+    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="rewrite ln judgement and update pause panel">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ConfigParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ConfigParser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/GameModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/GameModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/SettingModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/SettingModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UIManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UITheme/Test.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/UITheme/Test.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.cfg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,27 +42,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;Python.App.executor&quot;: &quot;Run&quot;,
-    &quot;Python.BeatmapModel.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ConfigParser.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Converter.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.Game.executor&quot;: &quot;Run&quot;,
-    &quot;Python.GameController.executor&quot;: &quot;Run&quot;,
-    &quot;Python.GameModel.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.ManiaSprite.executor&quot;: &quot;Run&quot;,
-    &quot;Python.UIManager.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.__init__.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;G:/PythonProject/Pygame_Mania/beatmaps&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Python.App.executor": "Run",
+    "Python.BeatmapModel.executor": "Run",
+    "Python.ConfigParser.executor": "Run",
+    "Python.Converter.executor": "Debug",
+    "Python.Game.executor": "Run",
+    "Python.GameController.executor": "Debug",
+    "Python.GameModel.executor": "Debug",
+    "Python.ManiaSprite.executor": "Run",
+    "Python.UIManager.executor": "Debug",
+    "Python.__init__.executor": "Run",
+    "Python.test.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "G:/PythonProject/Pygame_Mania/beatmaps"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\PythonProject\Pygame_Mania\beatmaps" />
@@ -143,7 +144,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714991097795</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="rewrite ln judgement and update pause panel">
+      <option name="closed" value="true" />
+      <created>1715075075050</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1715075075050</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -162,7 +171,8 @@
     <MESSAGE value="update" />
     <MESSAGE value="update score page retry and back" />
     <MESSAGE value="update multiple key support and config" />
-    <option name="LAST_COMMIT_MESSAGE" value="update multiple key support and config" />
+    <MESSAGE value="rewrite ln judgement and update pause panel" />
+    <option name="LAST_COMMIT_MESSAGE" value="rewrite ln judgement and update pause panel" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -173,13 +183,33 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
-          <line>167</line>
+          <line>175</line>
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
           <line>127</line>
           <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/UIManager.py</url>
+          <line>86</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/GameController.py</url>
+          <line>218</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/GameController.py</url>
+          <line>463</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/GameController.py</url>
+          <line>272</line>
+          <option name="timeStamp" value="50" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

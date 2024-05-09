@@ -111,7 +111,7 @@ class GameController:
         self.uiManager = ui_manager
 
         # 音乐结束事件
-        pygame.mixer.music.set_endevent(pygame.USEREVENT + 8)
+        # pygame.mixer.music.set_endevent(pygame.USEREVENT + 8)
 
         # 一些flag
         self.isMusicPlayed = False
@@ -147,14 +147,18 @@ class GameController:
     def preprocess_notes(self):
         for _note in self.levelModel.currentChart.noteList:
             _lineIndex = _note.line
+            # new 计算按键总数
+            self.levelModel.totalNotes += 1
+            # new offset
+            _note.startTiming += self.gameSetting.offset
+            if _note.noteType == 1:
+                _note.endTiming += self.gameSetting.offset
             # 动态判断谱面key数初始化对应数量的队列和列表
             while len(self.levelModel.noteList) <= _lineIndex:
                 self.levelModel.noteList.append([])
                 self.levelModel.noteQueue.append([])
                 self.levelModel.lineIndex.append(0)
             self.levelModel.noteList[_lineIndex].append(_note)
-            # new 计算按键总数
-            self.levelModel.totalNotes += 1
 
     def spawn_notes(self):
         self.levelModel.noteSpeed = self.gameSetting.noteSpeed * 100
@@ -212,10 +216,20 @@ class GameController:
 
     def is_game_end(self) -> bool:
         for i in range(len(self.levelModel.lineIndex)):
-            if self.levelModel.lineIndex[i] < len(self.levelModel.noteList[i]) or len(self.levelModel.noteQueue) != 0:
+            if self.levelModel.lineIndex[i] < len(self.levelModel.noteList[i]) or len(self.levelModel.noteQueue[i]) != 0:
                 return False
         return True
         # if self.levelModel.timer
+
+    # 检测游戏结束 并跳转
+    def check_game_end(self):
+        if self.is_game_end():
+            self.levelModel.leadOutTime -= self.gameSetting.deltaTime
+            if self.levelModel.leadOutTime <= 0:
+                pygame.mixer.music.fadeout(500)
+                self.levelModel.leadOutTime = 0
+                pygame.mixer.music.stop()
+                self.gameModel.gameLoop = 'Score'
 
     # --------------------判定相关 UI 逻辑-------------------------
     def hit_note_event(self, key_event):
@@ -242,55 +256,56 @@ class GameController:
             # 计算时间差
             if _note.noteType == 1:
                 if not _note.isHolding:
-                    _offset = abs(_note.timing - timing)
+                    _offset = _note.timing - timing
                 else:
-                    _offset = abs(_note.endTiming - timing)
+                    _offset = _note.endTiming - timing
             else:
-                _offset = abs(_note.timing - timing)
+                _offset = _note.timing - timing
 
-            # LN判定范围更小 且miss单独处理（可优化？）
+            # LN
             if _note.noteType == 1:
                 # 如果头miss了但中途按下
                 if not is_key_up and _note.isHeadMiss and not _note.isHolding:
                     _note.isHeld = True
                     _note.isHolding = True
 
-                # 正常按下判定
-                if _offset <= self.gameSetting.timing_Bad:
-                    # LN正常按下
-                    if not _note.isHolding:
-                        # self.timing_judgement(_offset, _note, 'Head')
-                        _note.isHolding = True
-                        _note.isHeld = True
-                        _note.headOffset = _offset
-                    # LN尾巴判定且没有提前松手且头没miss
-                    elif is_key_up and _note.isHolding and not _note.isHeadMiss:
-                        self.timing_judgement(_offset, _note)
-                        _note.isHolding = False
-                        _note.active = False
-                        self.levelModel.noteQueue[line_index].pop(0)
-                    # 如果头miss了 继续按下无论什么时候松都是bad
-                    elif is_key_up and _note.isHolding and _note.isHeadMiss:
-                        _note.isBad = True
-                # 判定保护miss判定
-                elif _offset <= self.gameSetting.timing_Miss:
-                    # LN头直接miss
-                    if not _note.isHolding:
-                        _note.isHeadMiss = True
-                        _note.isMiss = True
-                    # 提前松手
-                    elif _note.isHolding:
-                        _note.isHeadMiss = True
-                        _note.isBad = True
-
-                # 长条尾提前松手判定bad
-                elif is_key_up and _note.isHeld:
-                    _note.isBad = True
-                    _note.isHolding = False
-                    _note.isHeadMiss = True
+                # LN头判定
+                if not is_key_up:
+                    if abs(_offset) <= self.gameSetting.timing_Cool:
+                        # LN正常按下
+                        if not _note.isHeld and not _note.isHolding:
+                            # self.timing_judgement(_offset, _note, 'Head')
+                            _note.isHolding = True
+                            _note.isHeld = True
+                            _note.headOffset = _offset
+                    elif abs(_offset) <= self.gameSetting.timing_Miss:
+                        if not _note.isHeld and not _note.isHolding:
+                            _note.isHeadMiss = True
+                            _note.isHeld = True
+                            _note.isHolding = True
+                            _note.isBad = True
+                            _note.headOffset = 99999
+                # LN尾巴判定
+                else:
+                    if abs(_offset) <= self.gameSetting.timing_Miss:
+                        if _note.isHolding and not _note.isHeadMiss:
+                            self.timing_judgement(_offset, _note)
+                            _note.isHolding = False
+                            _note.active = False
+                            self.levelModel.noteQueue[line_index].pop(0)
+                        # 如果头miss了 继续按下无论什么时候松都是bad
+                        elif _note.isHolding and _note.isHeadMiss:
+                            _note.isHolding = False
+                            _note.isBad = True
+                    # 长条尾提前松手判定bad
+                    else:
+                        if _note.isHolding:
+                            _note.isBad = True
+                            _note.isHolding = False
+                            _note.isHeadMiss = True
 
             # 普通按键是否在可判定区间内
-            elif _note.noteType == 0 and _offset <= self.gameSetting.timing_Miss:
+            elif _note.noteType == 0 and abs(_offset) <= self.gameSetting.timing_Miss:
                 # 基础判定
                 self.timing_judgement(_offset, _note)
                 # 如果是普通按键直接回收并隐藏
@@ -303,36 +318,41 @@ class GameController:
     def timing_judgement(self, _offset, _note):
         # RC
         if _note.noteType == 0:
+            # 判定fast和late
+            _isFast = _offset > 0
+            _offset = abs(_offset)
             if _offset <= self.gameSetting.timing_Bad:
                 if _offset <= self.gameSetting.timing_PPerfect:
-                    self.note_judgement('PPerfect')
+                    self.note_judgement('PPerfect', _isFast)
                 elif _offset <= self.gameSetting.timing_Perfect:
-                    self.note_judgement('Perfect')
+                    self.note_judgement('Perfect', _isFast)
                 elif _offset <= self.gameSetting.timing_Great:
-                    self.note_judgement('Great')
+                    self.note_judgement('Great', _isFast)
                 elif _offset <= self.gameSetting.timing_Cool:
-                    self.note_judgement('Cool')
+                    self.note_judgement('Cool', _isFast)
                 else:
-                    self.note_judgement('Bad')
+                    self.note_judgement('Bad', _isFast)
             else:
-                self.note_judgement('Miss')
+                self.note_judgement('Miss', _isFast)
         # 正常判定下的LN
         else:
-            _offset += _note.headOffset
-            print(_offset)
+            print(f'{_offset} {_note.headOffset}')
+            # 判定fast和late
+            _isFast = (_offset + _note.headOffset) > 0
+            _offset = abs(_offset) + abs(_note.headOffset)
             if _note.headOffset <= self.gameSetting.timing_PPerfect * 1.2 and _offset <= self.gameSetting.timing_PPerfect * 2.4:
-                self.note_judgement('PPerfect')
+                self.note_judgement('PPerfect', _isFast)
             elif _note.headOffset <= self.gameSetting.timing_Perfect * 1.1 and _offset <= self.gameSetting.timing_Perfect * 2.2:
-                self.note_judgement('Perfect')
+                self.note_judgement('Perfect', _isFast)
             elif _note.headOffset <= self.gameSetting.timing_Great and _offset <= self.gameSetting.timing_Great * 2:
-                self.note_judgement('Great')
+                self.note_judgement('Great', _isFast)
             elif _note.headOffset <= self.gameSetting.timing_Cool and _offset <= self.gameSetting.timing_Cool * 2:
-                self.note_judgement('Cool')
+                self.note_judgement('Cool', _isFast)
             else:
-                self.note_judgement('Bad')
+                self.note_judgement('Bad', _isFast)
 
     # 具体判定对view和model的更新
-    def note_judgement(self, judge_name):
+    def note_judgement(self, judge_name, is_fast=False):
         # self.update_judgement_text(judge_name)
         self.uiManager.update_judgement_text(judge_name)
         if judge_name == 'PPerfect':
@@ -354,6 +374,13 @@ class GameController:
             self.playerModel.missCount += 1
             self.playerModel.maxCombo = max(self.playerModel.combo, self.playerModel.maxCombo)
             self.playerModel.combo = 0
+
+        # fast late 在不是大P和miss的时候记录
+        if judge_name != 'PPerfect' and judge_name != 'Miss':
+            if is_fast:
+                self.playerModel.fastCount += 1
+            else:
+                self.playerModel.lateCount += 1
 
         # 每次判定时计算一次分数
         self.cal_score(judge_name)
@@ -452,11 +479,11 @@ class GameController:
     def process_user_event(self, user_event):
         if user_event.type >= pygame.USEREVENT + 32:
             self.uiManager.process_ui_event(user_event)
-        # 音乐结束事件
-        elif user_event.type == pygame.USEREVENT + 8:
-            # 切换page
-            pygame.mixer.music.stop()
-            self.gameModel.gameLoop = 'Score'
+        # # 音乐结束事件
+        # elif user_event.type == pygame.USEREVENT + 8:
+        #     # 切换page
+        #     pygame.mixer.music.stop()
+        #     self.gameModel.gameLoop = 'Score'
 
     # ------------------------------ 主循环 ------------------------
 
@@ -474,6 +501,9 @@ class GameController:
             # Lead In
             if not self.isMusicPlayed:
                 self.play_music()
+
+            # 结束
+            self.check_game_end()
 
             # 清空之前的group(在修改group内变量前清空避免报错
             self.noteSpritesGroup.empty()

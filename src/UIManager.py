@@ -98,7 +98,7 @@ class UIManager:
             manager=self.uiManager)
 
         _SongSelectDropDownMenu = pygame_gui.elements.UIDropDownMenu(
-            relative_rect=pygame.Rect((1200, 600), (500, 50)),
+            relative_rect=pygame.Rect((1200, 520), (500, 50)),
             options_list=['Select Music......'],
             starting_option='Select Music......',
             manager=self.uiManager,
@@ -112,7 +112,7 @@ class UIManager:
                      'centery': 'centery', 'centery_target': _SongSelectDropDownMenu})
 
         _ChartSelectDropDownMenu = pygame_gui.elements.UIDropDownMenu(
-            relative_rect=pygame.Rect((1200, 680), (500, 50)),
+            relative_rect=pygame.Rect((1200, 600), (500, 50)),
             options_list=['......'],
             starting_option=".......",
             manager=self.uiManager,
@@ -126,9 +126,9 @@ class UIManager:
                      'centery': 'centery', 'centery_target': _ChartSelectDropDownMenu})
 
         _DropSpeedSlider = pygame_gui.elements.UIHorizontalSlider(
-            relative_rect=pygame.Rect((1200, 760), (500, 50)),
-            start_value=20,
-            value_range=(10, 40),
+            relative_rect=pygame.Rect((1200, 680), (500, 50)),
+            start_value=self.gameSetting.noteSpeed,
+            value_range=(5, 40),
             manager=self.uiManager,
             object_id='#DropSpeedSlider')
         _DropSpeedSliderLabel = pygame_gui.elements.UILabel(
@@ -140,15 +140,15 @@ class UIManager:
                      'centery': 'centery', 'centery_target': _DropSpeedSlider})
         _DropSpeedSliderValue = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((30, 10), (100, 80)),
-            text='20',
+            text=str(self.gameSetting.noteSpeed),
             manager=self.uiManager,
             object_id='#Value_Text',
             anchors={'left': 'left', 'left_target': _DropSpeedSlider,
                      'centery': 'centery', 'centery_target': _DropSpeedSlider})
 
         _ODSlider = pygame_gui.elements.UIHorizontalSlider(
-            relative_rect=pygame.Rect((1200, 840), (500, 50)),
-            start_value=8,
+            relative_rect=pygame.Rect((1200, 760), (500, 50)),
+            start_value=self.gameSetting.OD,
             value_range=(0, 10),
             manager=self.uiManager,
             object_id='#DropSpeedSlider')
@@ -161,11 +161,32 @@ class UIManager:
                      'centery': 'centery', 'centery_target': _ODSlider})
         _ODSliderValue = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((30, 10), (100, 80)),
-            text='8',
+            text=str(self.gameSetting.OD),
             manager=self.uiManager,
             object_id='#Value_Text',
             anchors={'left': 'left', 'left_target': _ODSlider,
                      'centery': 'centery', 'centery_target': _ODSlider})
+
+        _OffsetSlider = pygame_gui.elements.UIHorizontalSlider(
+            relative_rect=pygame.Rect((1200, 840), (500, 50)),
+            start_value=self.gameSetting.offset,
+            value_range=(-100, 100),
+            manager=self.uiManager,
+            object_id='#DropSpeedSlider')
+        _OffsetSliderLabel = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((-300, 10), (300, 80)),
+            text='Offset : ',
+            manager=self.uiManager,
+            object_id='#Label_Text',
+            anchors={'right': 'right', 'right_target': _OffsetSlider,
+                     'centery': 'centery', 'centery_target': _OffsetSlider})
+        _OffsetSliderValue = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((30, 10), (100, 80)),
+            text=str(self.gameSetting.offset)+'ms',
+            manager=self.uiManager,
+            object_id='#Value_Text',
+            anchors={'left': 'left', 'left_target': _OffsetSlider,
+                     'centery': 'centery', 'centery_target': _OffsetSlider})
 
         _GameStartButton = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((1500, 920), (200, 100)),
@@ -187,6 +208,9 @@ class UIManager:
         self.titleUIDict["ODSlider"] = _ODSlider
         self.titleUIDict["ODSliderLabel"] = _ODSliderLabel
         self.titleUIDict["ODSliderValue"] = _ODSliderValue
+        self.titleUIDict["OffsetSlider"] = _OffsetSlider
+        self.titleUIDict["OffsetSliderLabel"] = _OffsetSliderLabel
+        self.titleUIDict["OffsetSliderValue"] = _OffsetSliderValue
         self.titleUIDict["GameStartButton"] = _GameStartButton
 
     def fill_title_dropdown_menu(self):
@@ -374,6 +398,16 @@ class UIManager:
             text='Miss: ',
             manager=self.uiManager,
             object_id='##MissCount_Text')
+        _FastCountText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((50, 880), (150, 100)),
+            text='Fast: ',
+            manager=self.uiManager,
+            object_id='##FastCount_Text')
+        _LateCountText = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect((190, 880), (150, 100)),
+            text='Late: ',
+            manager=self.uiManager,
+            object_id='##LateCount_Text')
 
         _FpsText = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect((-55, -55), (50, 50)),
@@ -403,6 +437,8 @@ class UIManager:
         self.variableLabelDict['CoolCount'] = _CoolCountText
         self.variableLabelDict['BadCount'] = _BadCountText
         self.variableLabelDict['MissCount'] = _MissCountText
+        self.variableLabelDict['FastCount'] = _FastCountText
+        self.variableLabelDict['LateCount'] = _LateCountText
 
     # -------------------------- 结算UI ------------------------------
     def init_score_ui(self):
@@ -596,6 +632,10 @@ class UIManager:
                     self.gameSetting.OD = event.value
                     self.gameSetting.cal_judgement_timing()
                     self.titleUIDict["ODSliderValue"].set_text(str(event.value))
+                elif event.ui_element == self.titleUIDict['OffsetSlider']:
+                    # 更新值和UI
+                    self.gameSetting.offset = event.value
+                    self.titleUIDict["OffsetSliderValue"].set_text(str(event.value)+'ms')
         self.uiManager.process_events(event)
 
     # 定时隐藏判定信息事件
@@ -661,6 +701,8 @@ class UIManager:
         self.variableLabelDict['CoolCount'].set_text(f"{'Cool: '} {self.playerModel.coolCount:>{5}}")
         self.variableLabelDict['BadCount'].set_text(f"{'Bad: '} {self.playerModel.badCount:>{5}}")
         self.variableLabelDict['MissCount'].set_text(f"{'Miss: '} {self.playerModel.missCount:>{5}}")
+        self.variableLabelDict['FastCount'].set_text(f"{'Fast: '} {self.playerModel.fastCount:>{5}}")
+        self.variableLabelDict['LateCount'].set_text(f"{'Late: '} {self.playerModel.lateCount:>{5}}")
 
         self.variableLabelDict['Fps'].set_text(str(round(self.pygameClock.get_fps())))
 

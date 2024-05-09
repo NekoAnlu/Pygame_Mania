@@ -131,6 +131,7 @@ class LNSprite(pygame.sprite.Sprite):
         if self.active:
             # sp 可优化？
             _dropTime = ((self.targetPosition[1] - self.spawnPosition[1]) / float(speed)) * 1000.0
+            _scale_factor = float(self.realSize[0]) / self.drawSize[0]
             # 每毫秒移动的距离 in px
             _speedInUnit = 1000.0 / speed
             # 当前时间
@@ -141,39 +142,47 @@ class LNSprite(pygame.sprite.Sprite):
             # print(_moveY)
             # LN拉长 需要减去droptime！
             if _currTime <= self.endTiming - _dropTime:
-                self.length += (self.targetPosition[1] + _moveY) - self.rect.bottom
-                _newSize = (self.drawSize[0], self.drawSize[1] + self.length / 5.0)
+                if self.isHeld:
+                    self.length += (self.targetPosition[1] + _tail_moveY - self.realSize[0] / 2.0) - self.rect.top
+                else:
+                    self.length += (self.targetPosition[1] + _moveY) - self.rect.bottom
+                self.length = max(self.length, 0)
+                _newSize = (self.drawSize[0], self.drawSize[1] + self.length / _scale_factor)
                 self.re_draw(_newSize, 'bottom')
 
             # 移动控制(再次续长条的时候不会印象长条长度)
             if not self.isHeadMiss and self.isHolding:
-                self.length -= (self.targetPosition[1] + _tail_moveY - 50) - self.rect.top
+                self.length -= (self.targetPosition[1] + _tail_moveY - self.realSize[0]/2.0) - self.rect.top
+                # 因提前固定导致的拉长
+                # print(self.targetPosition[1] + self.realSize[0] / 2.0 - self.rect.bottom)
+                self.length += max(self.targetPosition[1] + self.realSize[0] / 2.0 - self.rect.bottom, 0)
                 self.length = max(self.length, 0)
-                _newSize = (self.drawSize[0], self.drawSize[1] + self.length / 5.0)
+                _newSize = (self.drawSize[0], self.drawSize[1] + self.length / _scale_factor)
                 self.re_draw(_newSize, 'top')
                 # 移动（-50定位点修正）
-                self.rect.top = self.targetPosition[1] + _tail_moveY - 50
-                # test
-                self.rect.bottom = self.targetPosition[1] + 50
+                self.rect.top = self.targetPosition[1] + _tail_moveY - self.realSize[0] / 2.0
+                # 固定
+                self.rect.bottom = self.targetPosition[1] + self.realSize[0] / 2.0
 
-            elif not self.isHolding and self.isHeadMiss:
-                self.rect.top = self.targetPosition[1] + _tail_moveY - 50
+            elif self.isHeld:
+                self.rect.top = self.targetPosition[1] + _tail_moveY - self.realSize[0] / 2.0
 
             else:
                 # 移动
                 self.rect.bottom = self.targetPosition[1] + _moveY
-
-            #print(self.length)
+            # if self.rect.top > self.rect.bottom:
+            #     print(f"{self.rect.top} {self.rect.bottom}")
 
     def re_draw(self, _newSize, anchor):
+        _scale_factor = float(self.realSize[0]) / self.drawSize[0]
         self.image = pygame.Surface(_newSize).convert()
         self.image.fill((0, 0, 0))
         self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
         pygame.draw.circle(self.image, self.color, (10, 10), 10)
-        self.lnBodyRect = pygame.draw.rect(self.image, self.color, (0, 10, 20, _newSize[1] - 20))
+        pygame.draw.rect(self.image, self.color, (0, 10, 20, _newSize[1] - 20))
         pygame.draw.circle(self.image, self.color, (10, _newSize[1] - 10), 10)
         # print(self.timing)
-        self.image = pygame.transform.scale(self.image, (self.realSize[0], _newSize[1] * 5))
+        self.image = pygame.transform.scale(self.image, (self.realSize[0], _newSize[1] * _scale_factor))
         if anchor == 'bottom':
             self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
         else:
