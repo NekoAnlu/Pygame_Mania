@@ -4,26 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="rewrite ln judgement and update pause panel">
-      <change afterPath="$PROJECT_DIR$/.idea/jsonSchemas.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Manager/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Manager/ui.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Utils/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update">
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_11077/0/1564639924.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_11077/0/1608379607.mc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/beatmaps/_song_11077/0/1608379607.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Grahpic/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ConfigParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utils/ConfigParser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Converter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utils/Converter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/GameController.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/SettingModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/SettingModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UIManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/UIManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UITheme/Test.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/config.cfg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/GameController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/GameModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/GameModel.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,7 +158,23 @@
       <option name="project" value="LOCAL" />
       <updated>1715075075050</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="update">
+      <option name="closed" value="true" />
+      <created>1715500901506</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1715500901506</updated>
+    </task>
+    <task id="LOCAL-00010" summary="update">
+      <option name="closed" value="true" />
+      <created>1715500906068</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1715500906068</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -183,11 +190,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first init" />
-    <MESSAGE value="update" />
     <MESSAGE value="update score page retry and back" />
     <MESSAGE value="update multiple key support and config" />
     <MESSAGE value="rewrite ln judgement and update pause panel" />
-    <option name="LAST_COMMIT_MESSAGE" value="rewrite ln judgement and update pause panel" />
+    <MESSAGE value="update" />
+    <option name="LAST_COMMIT_MESSAGE" value="update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -198,12 +205,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
-          <line>176</line>
+          <line>175</line>
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
-          <line>128</line>
+          <line>127</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">

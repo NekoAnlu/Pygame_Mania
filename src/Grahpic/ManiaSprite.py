@@ -1,7 +1,6 @@
 from typing import List
 
 import pygame
-from pygame.locals import *
 
 from src.Model.SettingModel import *
 #from src.Model.BeatmapModel import *

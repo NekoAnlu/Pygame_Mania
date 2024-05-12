@@ -34,6 +34,7 @@ class LevelModel:
         self.leadInTime: int = 2000
         self.leadOutTime: int = 1000
         self.firstNoteTiming: float = 10000000
+        self.skipTime: float = 0
 
         # 背景
         self.backgroundImage: Surface

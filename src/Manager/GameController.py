@@ -128,12 +128,14 @@ class GameController:
 
         # 读歌曲前清空之前的歌曲
         # pygame.mixer.music.stop()
+        pygame.mixer.music.set_volume(80)
         pygame.mixer.music.load(self.levelModel.currentChart.audioPath)
         pygame.mixer.music.play()
         # 如果第一个按键离音乐开头太远就直接播
         if self.levelModel.firstNoteTiming > 5000:
             pygame.mixer.music.set_pos((self.levelModel.firstNoteTiming - 3000)/1000.0)
             self.levelModel.leadInTime = 1
+            self.levelModel.skipTime = self.levelModel.firstNoteTiming - 3000
         pygame.mixer.music.pause()
 
         # 背景
@@ -499,7 +501,9 @@ class GameController:
 
         if not self.gameModel.isGamePause:
             # 更新Timer
-            self.levelModel.timer = pygame.mixer.music.get_pos() - self.levelModel.leadInTime
+            self.levelModel.timer = pygame.mixer.music.get_pos() - self.levelModel.leadInTime + self.levelModel.skipTime
+
+            print(pygame.mixer.music.get_pos())
 
             # Lead In
             if not self.isMusicPlayed:
