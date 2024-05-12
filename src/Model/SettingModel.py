@@ -43,6 +43,7 @@ class ManiaSetting:
     judgementPosition: int = 500
     comboPosition: int = 300
     noteColor: Sequence[int]
+    lnBodyColor: Sequence[int]
     # Key Bind
     keyBindDict: Dict[int, List[int]] = {}
     # judgementTextSpriteDict: Dict[str, JudgementTextSprite] = {}

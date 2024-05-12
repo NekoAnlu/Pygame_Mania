@@ -91,7 +91,7 @@ class NoteSpritePool:
 class LNSprite(pygame.sprite.Sprite):
     drawSize = (20, 20)
 
-    def __init__(self, size, color, spawn_position, target_position, timing, end_timing):
+    def __init__(self, size, color, ln_color, spawn_position, target_position, timing, end_timing):
         super().__init__()
         self.realSize = (size, size)
         self.noteType = 1
@@ -99,6 +99,7 @@ class LNSprite(pygame.sprite.Sprite):
         self.image.fill((0, 0, 0))
         self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
         self.color = color
+        self.lnColor = ln_color
         pygame.draw.circle(self.image, self.color, (10, 10), 10)
         # 小图放大做出像素效果
         self.image = pygame.transform.scale(self.image, self.realSize)
@@ -178,8 +179,8 @@ class LNSprite(pygame.sprite.Sprite):
         self.image = pygame.Surface(_newSize).convert()
         self.image.fill((0, 0, 0))
         self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
-        pygame.draw.circle(self.image, self.color, (10, 10), 10)
-        pygame.draw.rect(self.image, self.color, (0, 10, 20, _newSize[1] - 20))
+        pygame.draw.circle(self.image, self.lnColor, (10, 10), 10)
+        pygame.draw.rect(self.image, self.lnColor, (0, 10, 20, _newSize[1] - 20))
         pygame.draw.circle(self.image, self.color, (10, _newSize[1] - 10), 10)
         # print(self.timing)
         self.image = pygame.transform.scale(self.image, (self.realSize[0], _newSize[1] * _scale_factor))
@@ -192,8 +193,11 @@ class LNSprite(pygame.sprite.Sprite):
         if not self.isHolding and timer - self.timing > game_setting.timing_Miss:
             self.isHeadMiss = True
         # 大于timing不允许再判定
-        if timer - self.endTiming > game_setting.timing_Bad:
-            self.isMiss = True
+        if timer - self.endTiming > game_setting.timing_Miss:
+            if self.isHeld:
+                self.isBad = True
+            else:
+                self.isMiss = True
             # self.isTailMiss = True
         # 超出范围隐藏
         if self.rect.top > game_setting.screenHeight:
@@ -205,14 +209,14 @@ class LNSpritePool:
     def __init__(self):
         self.notePool: List[LNSprite] = []
 
-    def get_note(self, size, color, spawn_position, target_position, timing, end_timing) -> LNSprite:
+    def get_note(self, size, color, ln_color, spawn_position, target_position, timing, end_timing) -> LNSprite:
         for note in self.notePool:
             if not note.active:
-                note.__init__(size, color, spawn_position, target_position, timing, end_timing)
+                note.__init__(size, color, ln_color, spawn_position, target_position, timing, end_timing)
                 return note
 
         # 如果无则扩展池
-        new_note = LNSprite(size, color, spawn_position, target_position, timing, end_timing)
+        new_note = LNSprite(size, color, ln_color, spawn_position, target_position, timing, end_timing)
         self.notePool.append(new_note)
         return new_note
 
@@ -243,7 +247,7 @@ class HitPositionSprite(pygame.sprite.Sprite):
         if event.type == pygame.KEYDOWN:
             if event.key == self.keyBindDict[_columnNum][self.index]:
                 self.draw_fill()
-        if event.type == pygame.KEYUP:
+        elif event.type == pygame.KEYUP:
             if event.key == self.keyBindDict[_columnNum][self.index]:
                 self.draw_unfill()
 

@@ -1,11 +1,10 @@
 import pygame
-import pygame_gui
 
-from GameController import ManiaGame
+from src.Manager.GameController import ManiaGame
 from src.Model.SettingModel import GameSetting
 
 
-class ManiaPygame:
+class App:
     maniaGame: ManiaGame
 
     def __init__(self):
@@ -52,9 +51,5 @@ class ManiaPygame:
 
         self.on_cleanup()
 
-
-theApp = ManiaPygame()
-theApp.on_init()
-theApp.on_execute()
 
 

@@ -1,7 +1,7 @@
 import json
 import os
 import sys
-from Model.BeatmapModel import *
+from src.Model.BeatmapModel import *
 
 
 class MCConverter:

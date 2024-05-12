@@ -1,16 +1,11 @@
 import os
 from math import sqrt
 
-import pygame
-import pygame_gui
-from pygame_gui.elements import *
-
-from src.ConfigParser import ConfigParser
-from src.Grahpic.ManiaSprite import *
-from Model.GameModel import *
-from Model.SettingModel import *
-from Converter import *
-from UIManager import *
+from src.Utils.ConfigParser import ConfigParser
+from src.Model.GameModel import *
+from src.Model.SettingModel import *
+from src.Utils.Converter import *
+from src.Manager.UIManager import *
 
 
 class ManiaGame:
@@ -184,6 +179,7 @@ class GameController:
                     self.levelModel.noteQueue[i].append(_noteObj)
                 else:
                     _noteObj = self.levelModel.lnSpritePool.get_note(self.maniaSetting.noteSize, self.maniaSetting.noteColor,
+                                                                     self.maniaSetting.lnBodyColor,
                                                                      (_x, self.maniaSetting.noteSpawnPosition),
                                                                      (_x, self.maniaSetting.hitPosition),
                                                                      self.levelModel.noteList[i][
@@ -375,6 +371,7 @@ class GameController:
             self.playerModel.combo += 1
         elif judge_name == 'Bad':
             self.playerModel.badCount += 1
+            self.playerModel.maxCombo = max(self.playerModel.combo, self.playerModel.maxCombo)
             self.playerModel.combo = 0
         elif judge_name == 'Miss':
             self.playerModel.missCount += 1
@@ -555,7 +552,7 @@ class TitlePageController:
         pygame.display.update()
 
     def preload_beatmap(self):
-        for root, dirs, files in os.walk("../beatmaps"):
+        for root, dirs, files in os.walk("./beatmaps"):
             for file in files:
                 if file.endswith('.mc'):
                     if root not in self.beatmapsModel.songDict:

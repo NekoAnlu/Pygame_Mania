@@ -4,19 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update">
+    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="rewrite ln judgement and update pause panel">
+      <change afterPath="$PROJECT_DIR$/.idea/jsonSchemas.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Manager/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Manager/ui.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utils/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Pygame_Mania.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Beginner.mc" beforeDir="false" afterPath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Beginner.mc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Hyper.mc" beforeDir="false" afterPath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Hyper.mc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Normal.mc" beforeDir="false" afterPath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Normal.mc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Converter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Converter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/GameModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/GameModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UIManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/UIManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UITheme/Test.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/UITheme/Test.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ConfigParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utils/ConfigParser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Converter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utils/Converter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/GameController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/SettingModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/SettingModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UIManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/UIManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UITheme/Test.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/config.cfg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,30 +57,34 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "Python.App.executor": "Run",
     "Python.BeatmapModel.executor": "Run",
-    "Python.Converter.executor": "Run",
+    "Python.ConfigParser.executor": "Run",
+    "Python.Converter.executor": "Debug",
     "Python.Game.executor": "Run",
-    "Python.GameController.executor": "Run",
-    "Python.GameModel.executor": "Run",
+    "Python.GameController.executor": "Debug",
+    "Python.GameModel.executor": "Debug",
     "Python.ManiaSprite.executor": "Run",
-    "Python.UIManager.executor": "Run",
+    "Python.UIManager.executor": "Debug",
     "Python.__init__.executor": "Run",
+    "Python.run.executor": "Run",
     "Python.test.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/Anlu/PycharmProjects/Pygame_Mania/beatmaps",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+    "last_opened_file_path": "G:/PythonProject/Pygame_Mania/beatmaps"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Anlu\PycharmProjects\Pygame_Mania\beatmaps" />
-      <recent name="G:\PythonProject\Pygame_Mania\font" />
       <recent name="G:\PythonProject\Pygame_Mania\beatmaps" />
+      <recent name="G:\PythonProject\Pygame_Mania\font" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\PythonProject\Pygame_Mania\src\Manager" />
       <recent name="G:\PythonProject\Pygame_Mania\src" />
+      <recent name="G:\PythonProject\Pygame_Mania" />
+      <recent name="G:\PythonProject\Pygame_Mania\src\Utils" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -118,13 +129,45 @@
     </task>
     <task id="LOCAL-00004" summary="update">
       <option name="closed" value="true" />
-      <created>1714224878097</created>
+      <created>1714477917157</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1714224878097</updated>
+      <updated>1714477917157</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="update">
+      <option name="closed" value="true" />
+      <created>1714561244242</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1714561244242</updated>
+    </task>
+    <task id="LOCAL-00006" summary="update score page retry and back">
+      <option name="closed" value="true" />
+      <created>1714812535034</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1714812535034</updated>
+    </task>
+    <task id="LOCAL-00007" summary="update multiple key support and config">
+      <option name="closed" value="true" />
+      <created>1714991097795</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1714991097795</updated>
+    </task>
+    <task id="LOCAL-00008" summary="rewrite ln judgement and update pause panel">
+      <option name="closed" value="true" />
+      <created>1715075075050</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1715075075050</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -141,7 +184,10 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first init" />
     <MESSAGE value="update" />
-    <option name="LAST_COMMIT_MESSAGE" value="update" />
+    <MESSAGE value="update score page retry and back" />
+    <MESSAGE value="update multiple key support and config" />
+    <MESSAGE value="rewrite ln judgement and update pause panel" />
+    <option name="LAST_COMMIT_MESSAGE" value="rewrite ln judgement and update pause panel" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -151,14 +197,39 @@
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/UIManager.py</url>
-          <line>262</line>
-          <option name="timeStamp" value="16" />
+          <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
+          <line>176</line>
+          <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/UIManager.py</url>
-          <line>353</line>
-          <option name="timeStamp" value="20" />
+          <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
+          <line>128</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/Manager/UIManager.py</url>
+          <line>88</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/Manager/GameController.py</url>
+          <line>224</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/Manager/GameController.py</url>
+          <line>470</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/Manager/GameController.py</url>
+          <line>278</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/Manager/UIManager.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="51" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -15,12 +15,12 @@ class UIManager:
         self.uiManager = pygame_gui.UIManager((1920, 1080))
 
         # 字体
-        self.uiManager.add_font_paths('Silver', '../font/Silver.ttf')
+        self.uiManager.add_font_paths('Silver', './font/Silver.ttf')
         self.uiManager.print_unused_fonts()
         self.uiManager.preload_fonts([{'name': 'Silver', 'point_size': 14, 'style': 'regular'}])
 
         # 主题(要在读字体后)
-        self.uiManager.get_theme().load_theme('UITheme/Test.json')
+        self.uiManager.get_theme().load_theme("./src/Manager/ui.json")
 
         # 数据模型
         self.levelModel = level_model

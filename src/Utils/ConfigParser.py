@@ -7,7 +7,7 @@ import ast
 class ConfigParser:
     def __init__(self):
         self.config = configparser.ConfigParser()
-        self.config.read('config.cfg')
+        self.config.read('././config.cfg')
 
     def init_mania_setting(self, mania_setting: ManiaSetting):
         # hc
@@ -41,12 +41,15 @@ class ConfigParser:
         mania_setting.judgementPosition = ast.literal_eval(self.config.get('Skin', 'judgementPosition'))
         mania_setting.comboPosition = ast.literal_eval(self.config.get('Skin', 'comboPosition'))
         mania_setting.noteColor = ast.literal_eval(self.config.get('Skin', 'noteColor'))
+        mania_setting.lnBodyColor = ast.literal_eval(self.config.get('Skin', 'lnBodyColor'))
 
         # 预防bug
         if mania_setting.noteSize > mania_setting.lineWidth:
             mania_setting.lineWidth = mania_setting.noteSize + 20
         if not self.is_valid_color(mania_setting.noteColor):
             mania_setting.noteColor = (255, 121, 174)
+        if not self.is_valid_color(mania_setting.lnBodyColor):
+            mania_setting.lnBodyColor = (117, 117, 120)
 
     def is_valid_color(self, color):
         if not isinstance(color, tuple):

@@ -1,0 +1,7 @@
+annotated-types==0.6.0
+pydantic==2.7.0
+pydantic_core==2.18.1
+pygame-ce==2.4.1
+pygame_gui==0.6.10
+python-i18n==0.3.9
+typing_extensions==4.11.0
