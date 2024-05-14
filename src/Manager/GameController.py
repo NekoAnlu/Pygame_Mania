@@ -503,8 +503,6 @@ class GameController:
             # 更新Timer
             self.levelModel.timer = pygame.mixer.music.get_pos() - self.levelModel.leadInTime + self.levelModel.skipTime
 
-            print(pygame.mixer.music.get_pos())
-
             # Lead In
             if not self.isMusicPlayed:
                 self.play_music()

@@ -1,9 +1,6 @@
-from typing import List
-
 import pygame
 
 from src.Model.SettingModel import *
-#from src.Model.BeatmapModel import *
 
 
 class NoteSprite(pygame.sprite.Sprite):
@@ -21,7 +18,7 @@ class NoteSprite(pygame.sprite.Sprite):
         # 小图放大做出像素效果
         self.image = pygame.transform.scale(self.image, self.realSize)
         # 控制sprite位置
-        self.rect = self.image.get_rect(center=spawn_position)
+        self.rect = self.image.get_rect(midbottom=spawn_position)
         # 移动用变量
         self.spawnPosition = spawn_position
         self.targetPosition = target_position
@@ -37,7 +34,7 @@ class NoteSprite(pygame.sprite.Sprite):
         self.targetPosition = target_position
         self.timing = timing
 
-        self.rect = self.image.get_rect(center=spawn_position)
+        self.rect = self.image.get_rect(midbottom=spawn_position)
 
         self.canJudge = True
         self.active = True
@@ -53,7 +50,7 @@ class NoteSprite(pygame.sprite.Sprite):
             _currTime = timer
             # 移动距离
             _moveY = (_currTime - self.timing) / _speedInUnit
-            self.rect.centery = self.targetPosition[1] + _moveY
+            self.rect.bottom = self.targetPosition[1] + _moveY
 
     def check_miss(self, timer, game_setting):
         # 大于timing不允许再判定
@@ -160,12 +157,12 @@ class LNSprite(pygame.sprite.Sprite):
                 _newSize = (self.drawSize[0], self.drawSize[1] + self.length / _scale_factor)
                 self.re_draw(_newSize, 'top')
                 # 移动（-50定位点修正）
-                self.rect.top = self.targetPosition[1] + _tail_moveY - self.realSize[0] / 2.0
+                self.rect.top = self.targetPosition[1] + _tail_moveY
                 # 固定
-                self.rect.bottom = self.targetPosition[1] + self.realSize[0] / 2.0
+                self.rect.bottom = self.targetPosition[1]
 
             elif self.isHeld:
-                self.rect.top = self.targetPosition[1] + _tail_moveY - self.realSize[0] / 2.0
+                self.rect.top = self.targetPosition[1] + _tail_moveY
 
             else:
                 # 移动
@@ -254,13 +251,13 @@ class HitPositionSprite(pygame.sprite.Sprite):
         self.image = pygame.Surface(self.drawSize).convert()
         pygame.draw.circle(self.image, self.color, (10, 10), 10)
         self.image = pygame.transform.scale(self.image, self.realSize)
-        self.rect = self.image.get_rect(center=self.position)
+        self.rect = self.image.get_rect(midbottom=self.position)
 
     def draw_unfill(self):
         self.image = pygame.Surface(self.drawSize).convert()
         pygame.draw.circle(self.image, self.color, (10, 10), 10, 1)
         self.image = pygame.transform.scale(self.image, self.realSize)
-        self.rect = self.image.get_rect(center=self.position)
+        self.rect = self.image.get_rect(midbottom=self.position)
 
 
 class ManiaPanelSprite(pygame.sprite.Sprite):

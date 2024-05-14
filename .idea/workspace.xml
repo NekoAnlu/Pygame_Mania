@@ -4,17 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update">
+    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update readme">
       <change afterPath="$PROJECT_DIR$/beatmaps/_song_11077/0/1564639924.jpg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/beatmaps/_song_11077/0/1608379607.mc" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/beatmaps/_song_11077/0/1608379607.ogg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Grahpic/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config.cfg.backup" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/config.cfg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grahpic/ManiaSprite.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Manager/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/GameController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/GameModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/GameModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/UIManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/UIManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utils/ConfigParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utils/ConfigParser.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +32,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -43,38 +47,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Python.App.executor": "Run",
-    "Python.BeatmapModel.executor": "Run",
-    "Python.ConfigParser.executor": "Run",
-    "Python.Converter.executor": "Debug",
-    "Python.Game.executor": "Run",
-    "Python.GameController.executor": "Debug",
-    "Python.GameModel.executor": "Debug",
-    "Python.ManiaSprite.executor": "Run",
-    "Python.UIManager.executor": "Debug",
-    "Python.__init__.executor": "Run",
-    "Python.run.executor": "Run",
-    "Python.test.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "G:/PythonProject/Pygame_Mania/beatmaps"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Python.App.executor&quot;: &quot;Run&quot;,
+    &quot;Python.BeatmapModel.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ConfigParser.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Converter.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.Game.executor&quot;: &quot;Run&quot;,
+    &quot;Python.GameController.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.GameModel.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.ManiaSprite.executor&quot;: &quot;Run&quot;,
+    &quot;Python.UIManager.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.__init__.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;G:/PythonProject/Pygame_Mania/beatmaps&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\PythonProject\Pygame_Mania\beatmaps" />
       <recent name="G:\PythonProject\Pygame_Mania\font" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\PythonProject\Pygame_Mania" />
       <recent name="G:\PythonProject\Pygame_Mania\src\Manager" />
       <recent name="G:\PythonProject\Pygame_Mania\src" />
-      <recent name="G:\PythonProject\Pygame_Mania" />
       <recent name="G:\PythonProject\Pygame_Mania\src\Utils" />
     </key>
   </component>
@@ -174,7 +178,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715500906068</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="update readme">
+      <option name="closed" value="true" />
+      <created>1715519113301</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1715519113301</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -194,7 +206,8 @@
     <MESSAGE value="update multiple key support and config" />
     <MESSAGE value="rewrite ln judgement and update pause panel" />
     <MESSAGE value="update" />
-    <option name="LAST_COMMIT_MESSAGE" value="update" />
+    <MESSAGE value="update readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="update readme" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -205,12 +218,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
-          <line>175</line>
+          <line>172</line>
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/Grahpic/ManiaSprite.py</url>
-          <line>127</line>
+          <line>124</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">

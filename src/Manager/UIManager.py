@@ -601,9 +601,14 @@ class UIManager:
             if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
                 # 切换选曲触发 更新谱面列表
                 if event.ui_element == self.titleUIDict['SongSelectDropDownMenu']:
-                    self.update_title_chart_dropdown(event.text)
-                    self.titleUIDict['ChartSelectDropDownMenu'].enable()
-                    self.titleUIDict["SongCoverImage"].image = self.load_cover((640, 360), 20)
+                    if event.text != 'Select Music......':
+                        self.update_title_chart_dropdown(event.text)
+                        self.titleUIDict['ChartSelectDropDownMenu'].enable()
+                        self.titleUIDict["SongCoverImage"].image = self.load_cover((640, 360), 20)
+                    else:
+                        self.gameModel.selectedChart = None
+                        self.titleUIDict['ChartSelectDropDownMenu'].disable()
+                        self.titleUIDict["SongCoverImage"].image = self.load_cover((640, 360), 20)
                 # 更新当前所选chart
                 elif event.ui_element == self.titleUIDict['ChartSelectDropDownMenu']:
                     self.gameModel.selectedChart = self.chartDropDownMenuDict[event.text]

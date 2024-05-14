@@ -7,7 +7,7 @@ import ast
 class ConfigParser:
     def __init__(self):
         self.config = configparser.ConfigParser()
-        self.config.read('././config.cfg')
+        self.config.read('././config.cfg', encoding='utf-8')
 
     def init_mania_setting(self, mania_setting: ManiaSetting):
         # hc

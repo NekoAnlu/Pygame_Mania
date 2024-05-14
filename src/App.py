@@ -17,7 +17,7 @@ class App:
     def on_init(self):
         pygame.mixer.pre_init(44100, 16, 2, 1024)
         pygame.init()
-        # temp
+        pygame.display.set_caption('PyMania')
         self.screen = pygame.display.set_mode(self.size, pygame.DOUBLEBUF | pygame.HWSURFACE)
         # 要在pygame初始化后初始化
         self.maniaGame = ManiaGame(self.screen)
@@ -39,13 +39,8 @@ class App:
         pygame.quit()
 
     def on_execute(self):
-        # if not self.on_init():
-        #     self._running = False
-
         while self.running:
-            # event()
             self.on_event()
-
             self.maniaGame.on_switch_loop()
             self.maniaGame.game_loop()
 
