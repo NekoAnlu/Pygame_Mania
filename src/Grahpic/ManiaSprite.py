@@ -100,7 +100,7 @@ class LNSprite(pygame.sprite.Sprite):
         # 小图放大做出像素效果
         self.image = pygame.transform.scale(self.image, self.realSize)
         # 控制sprite位置
-        self.rect = self.image.get_rect(center=spawn_position)
+        self.rect = self.image.get_rect(midbottom=spawn_position)
         # 移动用变量
         self.spawnPosition = spawn_position
         self.targetPosition = target_position
@@ -139,10 +139,10 @@ class LNSprite(pygame.sprite.Sprite):
             # print(_moveY)
             # LN拉长 需要减去droptime！
             if _currTime <= self.endTiming - _dropTime:
-                if self.isHeld:
-                    self.length += (self.targetPosition[1] + _tail_moveY - self.realSize[0] / 2.0) - self.rect.top
-                else:
-                    self.length += (self.targetPosition[1] + _moveY) - self.rect.bottom
+                # if self.isHeld:
+                #     self.length += (self.targetPosition[1] + _tail_moveY - self.realSize[0] / 2.0) - self.rect.top
+                # else:
+                self.length += (self.targetPosition[1] + _moveY) - self.rect.bottom
                 self.length = max(self.length, 0)
                 _newSize = (self.drawSize[0], self.drawSize[1] + self.length / _scale_factor)
                 self.re_draw(_newSize, 'bottom')
