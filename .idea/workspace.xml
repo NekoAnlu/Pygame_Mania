@@ -4,12 +4,42 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update readme">
-      <change afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/beatmaps/_song_11077/0/1564639924.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/beatmaps/_song_11077/0/1608379607.mc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/beatmaps/_song_11077/0/1608379607.ogg" afterDir="false" />
+    <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="update mit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_29031/0/1656115205.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_29031/0/1662900541.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_29031/0/1663078783.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_29031/0/1665928801.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_29031/0/ez.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_29031/0/tmp_1657514725.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_31461/0/ARForest - Rainbow Magic!!.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_31461/0/ARForest - Rainbow Magic!!.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_31461/0/ARForest - Rainbow Magic!!.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Beginner.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Hyper.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_4900/0/Key4Normal.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_4900/0/Latitude.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_4900/0/bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_5860/0/1520751709.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_5860/0/1520751709.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_5860/0/1520754736.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_5860/0/1520755741.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_5860/0/1520758045.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_5860/0/tmp_1521989116.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_5860/0/tmp_1521989224.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_5860/0/tmp_1521989254.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_5860/0/tmp_1521989272.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_6044/0/MisoilePunch ~Takenoko Soe~ - Fin.ArcDeaR.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_6044/0/MisoilePunch ~Takenoko Soe~ - Fin.ArcDeaR.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_6044/0/Various Artists - Malody 4K Extra Dan v3-Stream (ex3).mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_9590/0/1545317450.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_9590/0/1582189649.mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_9590/0/tmp_1545312245.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_978/0/bg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_978/0/iowo-DREAM-KEY BEGINNER LV..mc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/beatmaps/_song_978/0/song-bg.ogg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/SettingModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/SettingModel.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,7 +227,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715670126606</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="update mit">
+      <option name="closed" value="true" />
+      <created>1715670344239</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1715670344239</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -218,7 +256,8 @@
     <MESSAGE value="rewrite ln judgement and update pause panel" />
     <MESSAGE value="update" />
     <MESSAGE value="update readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="update readme" />
+    <MESSAGE value="update mit" />
+    <option name="LAST_COMMIT_MESSAGE" value="update mit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

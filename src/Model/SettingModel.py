@@ -46,5 +46,3 @@ class ManiaSetting:
     lnBodyColor: Sequence[int]
     # Key Bind
     keyBindDict: Dict[int, List[int]] = {}
-    # judgementTextSpriteDict: Dict[str, JudgementTextSprite] = {}
-    # variableTextList: Dict[str, VariableTextSprite] = {}  # 用于监控数值变化后调用对应sprite的update更新view

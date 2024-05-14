@@ -10,7 +10,7 @@
 
 ## 部署方法
 
-1. clone该项目到任意文件夹，注意目录路径不要有中文文件夹
+1. Clone该项目到任意文件夹，注意目录路径不要有中文文件夹
 
    ```git
    git clone https://github.com/NekoAnlu/Pygame_Mania.git
@@ -18,7 +18,7 @@
 
 2. 安装插件所需模块：`pip install -r requirements.txt`
 
-3. 自行在Malody或点击下载链接下载谱面文件到`./beatmaps`文件夹中
+3. **因版权原因项目不自带任何谱面和歌曲**，自行在Malody游戏中或点击下载链接下载谱面并放在到`./beatmaps`文件夹中。
 
 4. 使用powershell在项目根目录文件夹中输入`py run.py`，启动游戏，默认按键映射见下文config设置
 
