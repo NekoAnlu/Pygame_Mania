@@ -96,7 +96,7 @@ class LNSprite(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0))  # 设置黑色为透明色
         self.color = color
         self.lnColor = ln_color
-        pygame.draw.circle(self.image, self.color, (10, 10), 10)
+        # pygame.draw.circle(self.image, self.color, (10, 10), 10)
         # 小图放大做出像素效果
         self.image = pygame.transform.scale(self.image, self.realSize)
         # 控制sprite位置
