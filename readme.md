@@ -2,6 +2,10 @@
 
 基于pygame-ce开发的像素风**下落式音乐游戏**。判定基于**Osu!Mania ScoreV1**，可以读取**Malody Key模式**4k-9k谱面进行游玩，可于游戏内自行调节判定难度，下落速度等设置，也可通过config文件调节判定位置，按键颜色，按键大小，设置按键等功能，**除字体外无任何额外美术资源**。
 
+项目地址：https://github.com/NekoAnlu/Pygame_Mania
+
+视频演示：https://www.bilibili.com/video/BV1jb421B7HN
+
 ## 须知
 
 渣代码警告，0优化警告，0错误处理警告，bug警告，随时跑路警告
@@ -24,7 +28,7 @@
 
 **注意本项目使用的是pygame-ce库而不是pygame库，请在步骤2安装模块前提前使用`pip uninstall pygame`卸载pygame库。如在配置本项目前您的电脑上安装了pygame库，可能遇到一些奇怪的报错问题，如遇到报错，请删除pygame和pygame-ce两个库并重新安装pygame-ce库，可能解决问题。**
 
-## Config配置
+## Config
 
 可以通过修改根目录下`config.cfg`文件实现一些配置，具体如下
 
@@ -83,6 +87,7 @@ lnBodyColor = (117,117,120)
 1. osu!mania谱面支持
 1. 皮肤自定义，目前只有球皮
 1. 自定义窗口大小，目前仅为1920x1080
+1. 按键音
 
 ## 已知问题
 

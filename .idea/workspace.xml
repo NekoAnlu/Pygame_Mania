@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29cc6121-2d20-4ecd-9632-140c985afa95" name="Changes" comment="fix ln">
-      <change afterPath="$PROJECT_DIR$/beatmaps/beatmaps.zip" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/beatmaps/beatmaps/_song_10612/0/1638191526.mc" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/beatmaps/beatmaps/_song_10612/0/1638192462.ogg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/beatmaps/beatmaps/_song_10612/0/1652433186.mc" afterDir="false" />
@@ -88,7 +87,6 @@
       <change afterPath="$PROJECT_DIR$/beatmaps/beatmaps/_song_9886/0/Chroma - Hoshi ga Furanai Machi (Hylotl)[key].mc" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/beatmaps/beatmaps/_song_9886/0/bg.jpg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/beatmaps/beatmaps/_song_9886/0/hoshiga.ogg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ss/SS3.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/config.cfg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
@@ -334,7 +332,23 @@
       <option name="project" value="LOCAL" />
       <updated>1715676256795</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="fix ln">
+      <option name="closed" value="true" />
+      <created>1715677305857</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1715677305857</updated>
+    </task>
+    <task id="LOCAL-00020" summary="fix ln">
+      <option name="closed" value="true" />
+      <created>1715677408282</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1715677408282</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
